@@ -11,9 +11,12 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VowelsRouteImport } from './routes/vowels'
 import { Route as VocabularyRouteImport } from './routes/vocabulary'
+import { Route as TypingRouteImport } from './routes/typing'
 import { Route as SyllableChartRouteImport } from './routes/syllable-chart'
+import { Route as StrokeOrderRouteImport } from './routes/stroke-order'
 import { Route as QuizRouteImport } from './routes/quiz'
 import { Route as PronounceRouteImport } from './routes/pronounce'
+import { Route as ProgressRouteImport } from './routes/progress'
 import { Route as ConsonantsRouteImport } from './routes/consonants'
 import { Route as BuilderRouteImport } from './routes/builder'
 import { Route as IndexRouteImport } from './routes/index'
@@ -28,9 +31,19 @@ const VocabularyRoute = VocabularyRouteImport.update({
   path: '/vocabulary',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TypingRoute = TypingRouteImport.update({
+  id: '/typing',
+  path: '/typing',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SyllableChartRoute = SyllableChartRouteImport.update({
   id: '/syllable-chart',
   path: '/syllable-chart',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StrokeOrderRoute = StrokeOrderRouteImport.update({
+  id: '/stroke-order',
+  path: '/stroke-order',
   getParentRoute: () => rootRouteImport,
 } as any)
 const QuizRoute = QuizRouteImport.update({
@@ -41,6 +54,11 @@ const QuizRoute = QuizRouteImport.update({
 const PronounceRoute = PronounceRouteImport.update({
   id: '/pronounce',
   path: '/pronounce',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProgressRoute = ProgressRouteImport.update({
+  id: '/progress',
+  path: '/progress',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ConsonantsRoute = ConsonantsRouteImport.update({
@@ -63,9 +81,12 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/builder': typeof BuilderRoute
   '/consonants': typeof ConsonantsRoute
+  '/progress': typeof ProgressRoute
   '/pronounce': typeof PronounceRoute
   '/quiz': typeof QuizRoute
+  '/stroke-order': typeof StrokeOrderRoute
   '/syllable-chart': typeof SyllableChartRoute
+  '/typing': typeof TypingRoute
   '/vocabulary': typeof VocabularyRoute
   '/vowels': typeof VowelsRoute
 }
@@ -73,9 +94,12 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/builder': typeof BuilderRoute
   '/consonants': typeof ConsonantsRoute
+  '/progress': typeof ProgressRoute
   '/pronounce': typeof PronounceRoute
   '/quiz': typeof QuizRoute
+  '/stroke-order': typeof StrokeOrderRoute
   '/syllable-chart': typeof SyllableChartRoute
+  '/typing': typeof TypingRoute
   '/vocabulary': typeof VocabularyRoute
   '/vowels': typeof VowelsRoute
 }
@@ -84,9 +108,12 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/builder': typeof BuilderRoute
   '/consonants': typeof ConsonantsRoute
+  '/progress': typeof ProgressRoute
   '/pronounce': typeof PronounceRoute
   '/quiz': typeof QuizRoute
+  '/stroke-order': typeof StrokeOrderRoute
   '/syllable-chart': typeof SyllableChartRoute
+  '/typing': typeof TypingRoute
   '/vocabulary': typeof VocabularyRoute
   '/vowels': typeof VowelsRoute
 }
@@ -96,9 +123,12 @@ export interface FileRouteTypes {
     | '/'
     | '/builder'
     | '/consonants'
+    | '/progress'
     | '/pronounce'
     | '/quiz'
+    | '/stroke-order'
     | '/syllable-chart'
+    | '/typing'
     | '/vocabulary'
     | '/vowels'
   fileRoutesByTo: FileRoutesByTo
@@ -106,9 +136,12 @@ export interface FileRouteTypes {
     | '/'
     | '/builder'
     | '/consonants'
+    | '/progress'
     | '/pronounce'
     | '/quiz'
+    | '/stroke-order'
     | '/syllable-chart'
+    | '/typing'
     | '/vocabulary'
     | '/vowels'
   id:
@@ -116,9 +149,12 @@ export interface FileRouteTypes {
     | '/'
     | '/builder'
     | '/consonants'
+    | '/progress'
     | '/pronounce'
     | '/quiz'
+    | '/stroke-order'
     | '/syllable-chart'
+    | '/typing'
     | '/vocabulary'
     | '/vowels'
   fileRoutesById: FileRoutesById
@@ -127,9 +163,12 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BuilderRoute: typeof BuilderRoute
   ConsonantsRoute: typeof ConsonantsRoute
+  ProgressRoute: typeof ProgressRoute
   PronounceRoute: typeof PronounceRoute
   QuizRoute: typeof QuizRoute
+  StrokeOrderRoute: typeof StrokeOrderRoute
   SyllableChartRoute: typeof SyllableChartRoute
+  TypingRoute: typeof TypingRoute
   VocabularyRoute: typeof VocabularyRoute
   VowelsRoute: typeof VowelsRoute
 }
@@ -150,11 +189,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VocabularyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/typing': {
+      id: '/typing'
+      path: '/typing'
+      fullPath: '/typing'
+      preLoaderRoute: typeof TypingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/syllable-chart': {
       id: '/syllable-chart'
       path: '/syllable-chart'
       fullPath: '/syllable-chart'
       preLoaderRoute: typeof SyllableChartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/stroke-order': {
+      id: '/stroke-order'
+      path: '/stroke-order'
+      fullPath: '/stroke-order'
+      preLoaderRoute: typeof StrokeOrderRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/quiz': {
@@ -169,6 +222,13 @@ declare module '@tanstack/react-router' {
       path: '/pronounce'
       fullPath: '/pronounce'
       preLoaderRoute: typeof PronounceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/progress': {
+      id: '/progress'
+      path: '/progress'
+      fullPath: '/progress'
+      preLoaderRoute: typeof ProgressRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/consonants': {
@@ -199,9 +259,12 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BuilderRoute: BuilderRoute,
   ConsonantsRoute: ConsonantsRoute,
+  ProgressRoute: ProgressRoute,
   PronounceRoute: PronounceRoute,
   QuizRoute: QuizRoute,
+  StrokeOrderRoute: StrokeOrderRoute,
   SyllableChartRoute: SyllableChartRoute,
+  TypingRoute: TypingRoute,
   VocabularyRoute: VocabularyRoute,
   VowelsRoute: VowelsRoute,
 }

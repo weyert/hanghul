@@ -15,7 +15,6 @@ export const Route = createFileRoute('/vowels')({
 function CharacterCard({ char }: { char: HangulCharacter }) {
   const [flipped, setFlipped] = useState(false)
   const { language } = useLanguage()
-  const speakText = char.examples[0]?.korean ?? char.char
 
   return (
     <div
@@ -42,7 +41,7 @@ function CharacterCard({ char }: { char: HangulCharacter }) {
           </div>
           <div className="text-xs mt-2" style={{ color: 'var(--c-4)' }}>tap to flip</div>
           <div className="absolute bottom-2 right-2" onClick={(e) => e.stopPropagation()}>
-            <SpeakButton text={speakText} />
+            <SpeakButton text={char.char} />
           </div>
         </div>
         {/* Back */}
@@ -57,14 +56,15 @@ function CharacterCard({ char }: { char: HangulCharacter }) {
             {char.descriptions[language]}
           </div>
           {char.examples[0] && (
-            <div className="mt-0.5 text-xs text-center">
+            <div className="mt-0.5 text-xs text-center flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
               <span className="korean-text font-semibold text-zinc-200">{char.examples[0].korean}</span>
-              <span className="mx-1 text-zinc-600">·</span>
+              <span className="text-zinc-600">·</span>
               <span className="text-zinc-500">{char.examples[0].meaning}</span>
+              <SpeakButton text={char.examples[0].korean} size="sm" className="text-zinc-500 hover:text-emerald-400" />
             </div>
           )}
           <div className="absolute bottom-2 right-2" onClick={(e) => e.stopPropagation()}>
-            <SpeakButton text={speakText} />
+            <SpeakButton text={char.char} />
           </div>
         </div>
       </div>
@@ -81,7 +81,7 @@ function VowelsPage() {
     <div className="space-y-12">
       <div>
         <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Vowels</h1>
-        <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>모음 Mo-eum — Tap a card to reveal details, tap the speaker to hear an example word</p>
+        <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>모음 Mo-eum — Tap a card to reveal details. Speaker plays the vowel sound; the example word has its own speaker on the back.</p>
       </div>
 
       <section>
@@ -132,7 +132,7 @@ function VowelsPage() {
                     <td className="px-5 py-3">
                       <div className="flex items-center gap-2">
                         <span className="text-2xl korean-text font-bold" style={{ color: 'var(--c-1)' }}>{char.char}</span>
-                        <SpeakButton text={char.examples[0]?.korean ?? char.char} />
+                        <SpeakButton text={char.char} />
                       </div>
                     </td>
                     <td className="px-5 py-3 font-bold text-emerald-400">{char.romanization}</td>
@@ -140,10 +140,10 @@ function VowelsPage() {
                     <td className="px-5 py-3 text-zinc-500 hidden md:table-cell max-w-xs">{char.descriptions[language]}</td>
                     <td className="px-5 py-3 hidden lg:table-cell">
                       {char.examples[0] && (
-                        <span>
+                        <span className="flex items-center gap-1.5">
                           <span className="korean-text font-semibold text-zinc-200">{char.examples[0].korean}</span>
-                          {' '}
                           <span className="text-zinc-600">({char.examples[0].meaning})</span>
+                          <SpeakButton text={char.examples[0].korean} className="text-zinc-600 hover:text-emerald-400" />
                         </span>
                       )}
                     </td>

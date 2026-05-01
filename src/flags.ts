@@ -5,6 +5,11 @@ export const FLAGS = {
   SYLLABLE_CHART: 'syllable-chart',
   VOCABULARY: 'vocabulary',
   SPACED_REPETITION: 'spaced-repetition',
+  LISTEN_QUIZ: 'listen-quiz',
+  WORD_QUIZ: 'word-quiz',
+  TYPING_PRACTICE: 'typing-practice',
+  PROGRESS_DASHBOARD: 'progress-dashboard',
+  STROKE_ORDER: 'stroke-order',
 } as const
 
 // SSR / initial render: serve flags immediately from the shared definitions

@@ -1,11 +1,14 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useBooleanFlagValue } from '@openfeature/react-sdk'
 import { FLAGS } from '../flags'
 import { consonants, vowels, allCharacters } from '../data/hangul'
 import type { HangulCharacter } from '../data/hangul'
+import { QUIZ_VOCAB } from '../data/vocabulary'
+import type { VocabEntry } from '../data/vocabulary'
 import { useLanguage } from '../contexts/LanguageContext'
 import { SpeakButton } from '../components/SpeakButton'
+import { useSpeech } from '../hooks/useSpeech'
 import { useSpacedRepetition } from '../hooks/useSpacedRepetition'
 
 export const Route = createFileRoute('/quiz')({
@@ -17,12 +20,10 @@ export const Route = createFileRoute('/quiz')({
 
 const QUIZ_LENGTH = 10
 
-type QuizMode = 'consonants' | 'vowels' | 'all'
+type QuizMode = 'consonants' | 'vowels' | 'all' | 'listen' | 'words'
 
-interface Question {
-  correct: HangulCharacter
-  options: HangulCharacter[]
-}
+interface Question    { correct: HangulCharacter; options: HangulCharacter[] }
+interface WordQuestion { correct: VocabEntry;        options: VocabEntry[] }
 
 function shuffle<T>(arr: T[]): T[] {
   return [...arr].sort(() => Math.random() - 0.5)
@@ -34,24 +35,39 @@ function buildQuestion(pool: HangulCharacter[], pick: (pool: HangulCharacter[]) 
   return { correct, options: shuffle([...wrongs, correct]) }
 }
 
-function getPool(mode: QuizMode): HangulCharacter[] {
+function buildWordQuestion(): WordQuestion {
+  const shuffled = shuffle(QUIZ_VOCAB)
+  const correct  = shuffled[0]
+  const wrongs   = shuffled.slice(1, 4)
+  return { correct, options: shuffle([...wrongs, correct]) }
+}
+
+function getCharPool(mode: 'consonants' | 'vowels' | 'all' | 'listen'): HangulCharacter[] {
   if (mode === 'consonants') return consonants
   if (mode === 'vowels') return vowels
   return allCharacters
 }
 
+// ── Mode card ──────────────────────────────────────────────────────
+
 interface ModeCardProps {
-  mode: QuizMode; label: string; subLabel: string; count: string; char: string
+  mode: QuizMode; label: string; subLabel: string; count: string; char: React.ReactNode
+  accent?: 'violet' | 'emerald' | 'amber'
   onStart: (mode: QuizMode) => void
 }
 
-function ModeCard({ mode, label, subLabel, count, char, onStart }: ModeCardProps) {
+function ModeCard({ mode, label, subLabel, count, char, accent = 'violet', onStart }: ModeCardProps) {
+  const glows = {
+    violet: 'rgba(167,139,250,0.25)',
+    emerald: 'rgba(52,211,153,0.25)',
+    amber: 'rgba(251,191,36,0.25)',
+  }[accent]
   return (
     <button
       onClick={() => onStart(mode)}
       className="glass-card glass-card-hover rounded-2xl p-6 text-center cursor-pointer w-full"
     >
-      <div className="text-4xl korean-text font-black mb-3 leading-none" style={{ color: 'var(--c-1)', textShadow: '0 0 20px rgba(167,139,250,0.25)' }}>
+      <div className="text-4xl korean-text font-black mb-3 leading-none" style={{ color: 'var(--c-1)', textShadow: `0 0 20px ${glows}` }}>
         {char}
       </div>
       <h2 className="text-sm font-bold" style={{ color: 'var(--c-1)' }}>{label}</h2>
@@ -61,16 +77,22 @@ function ModeCard({ mode, label, subLabel, count, char, onStart }: ModeCardProps
   )
 }
 
-function QuizPage() {
-  const srEnabled = useBooleanFlagValue(FLAGS.SPACED_REPETITION, false)
-  const { pick, record, getStats, reset: resetSRS } = useSpacedRepetition()
+// ── QuizPage ───────────────────────────────────────────────────────
 
-  const [mode, setMode] = useState<QuizMode | null>(null)
-  const [question, setQuestion] = useState<Question | null>(null)
+function QuizPage() {
+  const srEnabled      = useBooleanFlagValue(FLAGS.SPACED_REPETITION, false)
+  const listenEnabled  = useBooleanFlagValue(FLAGS.LISTEN_QUIZ, false)
+  const wordEnabled    = useBooleanFlagValue(FLAGS.WORD_QUIZ, false)
+  const { pick, record, getStats, reset: resetSRS } = useSpacedRepetition()
+  const { speak } = useSpeech()
+
+  const [mode, setMode]               = useState<QuizMode | null>(null)
+  const [question, setQuestion]       = useState<Question | null>(null)
+  const [wordQuestion, setWordQuestion] = useState<WordQuestion | null>(null)
   const [questionNumber, setQuestionNumber] = useState(0)
-  const [score, setScore] = useState(0)
-  const [selected, setSelected] = useState<string | null>(null)
-  const [finished, setFinished] = useState(false)
+  const [score, setScore]             = useState(0)
+  const [selected, setSelected]       = useState<string | null>(null)
+  const [finished, setFinished]       = useState(false)
   const { language } = useLanguage()
 
   const pickFn = useCallback(
@@ -78,18 +100,31 @@ function QuizPage() {
     [srEnabled, pick],
   )
 
+  // Auto-play in listen mode when a new question loads
+  useEffect(() => {
+    if (mode === 'listen' && question && !selected) {
+      speak(question.correct.char)
+    }
+  }, [question, mode, selected, speak])
+
   const startQuiz = useCallback((m: QuizMode) => {
     setMode(m); setScore(0); setQuestionNumber(1)
     setSelected(null); setFinished(false)
-    setQuestion(buildQuestion(getPool(m), pickFn))
+    if (m === 'words') {
+      setWordQuestion(buildWordQuestion())
+      setQuestion(null)
+    } else {
+      setQuestion(buildQuestion(getCharPool(m), pickFn))
+      setWordQuestion(null)
+    }
   }, [pickFn])
 
   const handleSelect = (id: string) => {
-    if (selected !== null || !question) return
+    if (selected !== null) return
     setSelected(id)
-    const correct = id === question.correct.id
+    const correct = wordQuestion ? id === wordQuestion.correct.id : id === question!.correct.id
     if (correct) setScore((s) => s + 1)
-    if (srEnabled) record(question.correct.id, correct)
+    if (srEnabled && question) record(question.correct.id, correct)
   }
 
   const handleNext = useCallback(() => {
@@ -97,7 +132,11 @@ function QuizPage() {
     if (questionNumber >= QUIZ_LENGTH) { setFinished(true); return }
     setQuestionNumber((n) => n + 1)
     setSelected(null)
-    setQuestion(buildQuestion(getPool(mode), pickFn))
+    if (mode === 'words') {
+      setWordQuestion(buildWordQuestion())
+    } else {
+      setQuestion(buildQuestion(getCharPool(mode), pickFn))
+    }
   }, [mode, questionNumber, pickFn])
 
   /* ── Mode selection ──────────────────────────────────── */
@@ -128,14 +167,52 @@ function QuizPage() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <ModeCard mode="consonants" label="Consonants" subLabel="자음" count="19 characters" char="ㄱㄴㄷ" onStart={startQuiz} />
-          <ModeCard mode="vowels"     label="Vowels"     subLabel="모음" count="21 characters" char="ㅏㅓㅗ" onStart={startQuiz} />
-          <ModeCard mode="all"        label="All"        subLabel="전체" count="40 characters" char="한글"   onStart={startQuiz} />
+        <div>
+          <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--c-3)' }}>Character Recognition</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <ModeCard mode="consonants" label="Consonants" subLabel="자음" count="19 characters" char="ㄱㄴㄷ" onStart={startQuiz} />
+            <ModeCard mode="vowels"     label="Vowels"     subLabel="모음" count="21 characters" char="ㅏㅓㅗ" onStart={startQuiz} />
+            <ModeCard mode="all"        label="All"        subLabel="전체" count="40 characters" char="한글"   onStart={startQuiz} />
+          </div>
         </div>
 
+        {(listenEnabled || wordEnabled) && (
+          <div>
+            <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--c-3)' }}>More Modes</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {listenEnabled && (
+                <ModeCard
+                  mode="listen"
+                  label="Listen"
+                  subLabel="듣기 Deut-gi"
+                  count="Hear a sound → pick the character"
+                  accent="emerald"
+                  char={
+                    <svg className="w-10 h-10 mx-auto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 001.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06zM18.584 5.106a.75.75 0 011.06 0c3.808 3.807 3.808 9.98 0 13.788a.75.75 0 01-1.06-1.06 8.25 8.25 0 000-11.668.75.75 0 010-1.06z" />
+                      <path d="M15.932 7.757a.75.75 0 011.061 0 6 6 0 010 8.486.75.75 0 01-1.06-1.061 4.5 4.5 0 000-6.364.75.75 0 010-1.06z" />
+                    </svg>
+                  }
+                  onStart={startQuiz}
+                />
+              )}
+              {wordEnabled && (
+                <ModeCard
+                  mode="words"
+                  label="Vocabulary"
+                  subLabel="어휘 Eo-hwi"
+                  count="Korean word → English meaning"
+                  accent="amber"
+                  char="가방→bag"
+                  onStart={startQuiz}
+                />
+              )}
+            </div>
+          </div>
+        )}
+
         <div className="rounded-xl px-4 py-3 text-sm" style={{ color: 'var(--c-2)', background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
-          Each quiz is <strong style={{ color: 'var(--c-1)' }}>{QUIZ_LENGTH} questions</strong>. See a character, pick the correct romanization from 4 options.
+          Each quiz is <strong style={{ color: 'var(--c-1)' }}>{QUIZ_LENGTH} questions</strong>. Character modes: see a character, pick the romanization. Listen: hear it, pick the character. Vocabulary: see a word, pick the meaning.
         </div>
       </div>
     )
@@ -176,16 +253,100 @@ function QuizPage() {
     )
   }
 
+  /* ── Word quiz ────────────────────────────────────────── */
+  if (mode === 'words' && wordQuestion) {
+    const isAnswered = selected !== null
+    const isCorrect  = selected === wordQuestion.correct.id
+
+    return (
+      <div className="max-w-lg mx-auto space-y-5">
+        <div className="space-y-2">
+          <div className="flex justify-between text-xs" style={{ color: 'var(--c-3)' }}>
+            <span>Question {questionNumber} of {QUIZ_LENGTH}</span>
+            <span className="font-semibold" style={{ color: 'var(--c-2)' }}>Score: {score}</span>
+          </div>
+          <div className="rounded-full h-1" style={{ background: 'var(--c-border-card)' }}>
+            <div className="h-1 rounded-full transition-all duration-300"
+              style={{ width: `${((questionNumber - 1) / QUIZ_LENGTH) * 100}%`, background: 'linear-gradient(90deg, #d97706, #f59e0b)' }} />
+          </div>
+        </div>
+
+        <div className="glass-card rounded-2xl py-12 px-6 text-center relative">
+          <p className="text-xs text-zinc-600 uppercase tracking-widest mb-5 font-bold">What does this mean?</p>
+          <div className="korean-text font-black leading-none" style={{ fontSize: 'clamp(3rem, 12vw, 5.5rem)', color: 'var(--c-1)', textShadow: '0 0 60px rgba(251,191,36,0.25)' }}>
+            {wordQuestion.correct.korean}
+          </div>
+          <p className="text-sm mt-3 font-medium" style={{ color: 'var(--c-3)' }}>{wordQuestion.correct.romanized}</p>
+          <div className="absolute bottom-4 right-4">
+            <SpeakButton text={wordQuestion.correct.korean} size="md" />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2.5">
+          {wordQuestion.options.map((option) => {
+            const isThisSelected = selected === option.id
+            const isThisCorrect  = option.id === wordQuestion.correct.id
+            let style: React.CSSProperties = {}
+            let cls = 'rounded-xl border p-4 text-center font-semibold text-sm transition-all '
+
+            if (!isAnswered) {
+              style = { background: 'var(--c-input)', borderColor: 'var(--c-border)', color: 'var(--c-1)' }
+              cls += 'hover:border-amber-400/50 hover:bg-amber-500/10 cursor-pointer'
+            } else if (isThisCorrect) {
+              style = { background: 'rgba(16,185,129,0.15)', borderColor: 'rgba(16,185,129,0.4)', color: '#6ee7b7' }
+            } else if (isThisSelected) {
+              style = { background: 'rgba(239,68,68,0.12)', borderColor: 'rgba(239,68,68,0.4)', color: '#fca5a5' }
+            } else {
+              style = { background: 'var(--c-surface)', borderColor: 'var(--c-border-sub)', color: 'var(--c-4)' }
+            }
+
+            return (
+              <button key={option.id} className={cls} style={style}
+                onClick={() => handleSelect(option.id)} disabled={isAnswered}
+              >
+                {option.meaning}
+              </button>
+            )
+          })}
+        </div>
+
+        {isAnswered && (
+          <div className="space-y-3">
+            <div className="rounded-xl p-4 text-center" style={
+              isCorrect
+                ? { background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.25)' }
+                : { background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)' }
+            }>
+              {isCorrect ? (
+                <p className="font-bold text-emerald-400">Correct! 정답이에요!</p>
+              ) : (
+                <div className="flex items-center justify-center gap-2 flex-wrap">
+                  <p className="font-bold text-red-400">
+                    It means <strong className="text-red-300">{wordQuestion.correct.meaning}</strong>
+                  </p>
+                  <SpeakButton text={wordQuestion.correct.korean} size="sm" className="text-red-500 hover:text-red-300" />
+                </div>
+              )}
+            </div>
+            <button onClick={handleNext} className="btn-primary w-full text-white py-3.5 rounded-xl font-bold cursor-pointer text-sm">
+              {questionNumber >= QUIZ_LENGTH ? 'See Results' : 'Next Question →'}
+            </button>
+          </div>
+        )}
+      </div>
+    )
+  }
+
   if (!question) return null
 
   const isAnswered = selected !== null
   const isCorrect  = selected === question.correct.id
   const stats      = srEnabled ? getStats(question.correct.id) : null
+  const isListen   = mode === 'listen'
 
-  /* ── Active question ─────────────────────────────────── */
+  /* ── Listen / character quiz ─────────────────────────── */
   return (
     <div className="max-w-lg mx-auto space-y-5">
-      {/* Progress */}
       <div className="space-y-2">
         <div className="flex justify-between text-xs" style={{ color: 'var(--c-3)' }}>
           <span>Question {questionNumber} of {QUIZ_LENGTH}</span>
@@ -198,24 +359,48 @@ function QuizPage() {
         </div>
         <div className="rounded-full h-1" style={{ background: 'var(--c-border-card)' }}>
           <div className="h-1 rounded-full transition-all duration-300"
-            style={{ width: `${((questionNumber - 1) / QUIZ_LENGTH) * 100}%`, background: 'linear-gradient(90deg, #7c3aed, #4f46e5)' }}
+            style={{
+              width: `${((questionNumber - 1) / QUIZ_LENGTH) * 100}%`,
+              background: isListen ? 'linear-gradient(90deg, #059669, #10b981)' : 'linear-gradient(90deg, #7c3aed, #4f46e5)',
+            }}
           />
         </div>
       </div>
 
       {/* Question card */}
       <div className="glass-card rounded-2xl py-12 px-6 text-center relative">
-        <p className="text-xs text-zinc-600 uppercase tracking-widest mb-5 font-bold">Romanization?</p>
-        <div
-          className="korean-text font-black leading-none"
-          style={{ fontSize: 'clamp(5rem, 18vw, 9rem)', color: 'var(--c-1)', textShadow: '0 0 60px rgba(167,139,250,0.35)' }}
-        >
-          {question.correct.char}
-        </div>
-        <p className="text-xs text-zinc-600 mt-4">{question.correct.name}</p>
-        <div className="absolute bottom-4 right-4">
-          <SpeakButton text={question.correct.examples[0]?.korean ?? question.correct.char} size="md" />
-        </div>
+        {isListen ? (
+          <>
+            <p className="text-xs text-zinc-600 uppercase tracking-widest mb-6 font-bold">Which character is this?</p>
+            <div className="flex flex-col items-center gap-4">
+              <button
+                onClick={() => speak(question.correct.char)}
+                className="w-24 h-24 rounded-full flex items-center justify-center transition-all cursor-pointer"
+                style={{ background: 'rgba(16,185,129,0.15)', border: '2px solid rgba(52,211,153,0.4)' }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(16,185,129,0.25)')}
+                onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(16,185,129,0.15)')}
+                aria-label="Play sound"
+              >
+                <svg className="w-10 h-10 text-emerald-400" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 001.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06zM18.584 5.106a.75.75 0 011.06 0c3.808 3.807 3.808 9.98 0 13.788a.75.75 0 01-1.06-1.06 8.25 8.25 0 000-11.668.75.75 0 010-1.06z" />
+                  <path d="M15.932 7.757a.75.75 0 011.061 0 6 6 0 010 8.486.75.75 0 01-1.06-1.061 4.5 4.5 0 000-6.364.75.75 0 010-1.06z" />
+                </svg>
+              </button>
+              <p className="text-xs text-zinc-600">Tap to replay</p>
+            </div>
+          </>
+        ) : (
+          <>
+            <p className="text-xs text-zinc-600 uppercase tracking-widest mb-5 font-bold">Romanization?</p>
+            <div className="korean-text font-black leading-none" style={{ fontSize: 'clamp(5rem, 18vw, 9rem)', color: 'var(--c-1)', textShadow: '0 0 60px rgba(167,139,250,0.35)' }}>
+              {question.correct.char}
+            </div>
+            <p className="text-xs text-zinc-600 mt-4">{question.correct.name}</p>
+            <div className="absolute bottom-4 right-4">
+              <SpeakButton text={question.correct.char} size="md" />
+            </div>
+          </>
+        )}
       </div>
 
       {/* Options */}
@@ -224,11 +409,13 @@ function QuizPage() {
           const isThisSelected = selected === option.id
           const isThisCorrect  = option.id === question.correct.id
           let style: React.CSSProperties = {}
-          let cls = 'rounded-xl border p-4 text-center font-bold text-base transition-all '
+          let cls = 'rounded-xl border p-4 text-center font-bold transition-all '
 
           if (!isAnswered) {
             style = { background: 'var(--c-input)', borderColor: 'var(--c-border)', color: 'var(--c-1)' }
-            cls += 'hover:border-violet-400/50 hover:bg-violet-500/10 cursor-pointer'
+            cls += isListen
+              ? 'hover:border-emerald-400/50 hover:bg-emerald-500/10 cursor-pointer'
+              : 'hover:border-violet-400/50 hover:bg-violet-500/10 cursor-pointer'
           } else if (isThisCorrect) {
             style = { background: 'rgba(16,185,129,0.15)', borderColor: 'rgba(16,185,129,0.4)', color: '#6ee7b7' }
           } else if (isThisSelected) {
@@ -241,7 +428,11 @@ function QuizPage() {
             <button key={option.id} className={cls} style={style}
               onClick={() => handleSelect(option.id)} disabled={isAnswered}
             >
-              {option.romanization}
+              {isListen ? (
+                <span className="text-2xl korean-text">{option.char}</span>
+              ) : (
+                <span className="text-base">{option.romanization}</span>
+              )}
             </button>
           )
         })}
@@ -261,18 +452,18 @@ function QuizPage() {
               <div className="space-y-1">
                 <div className="flex items-center justify-center gap-2 flex-wrap">
                   <p className="font-bold text-red-400">
-                    The answer is <strong className="text-red-300">{question.correct.romanization}</strong>
+                    {isListen
+                      ? <>That is <strong className="text-red-300 korean-text text-xl">{question.correct.char}</strong> ({question.correct.romanization})</>
+                      : <>The answer is <strong className="text-red-300">{question.correct.romanization}</strong></>
+                    }
                   </p>
-                  <SpeakButton text={question.correct.examples[0]?.korean ?? question.correct.char} size="sm" className="text-red-500 hover:text-red-300" />
+                  <SpeakButton text={question.correct.char} size="sm" className="text-red-500 hover:text-red-300" />
                 </div>
                 <p className="text-xs text-red-500/80">{question.correct.descriptions[language]}</p>
               </div>
             )}
           </div>
-          <button
-            onClick={handleNext}
-            className="btn-primary w-full text-white py-3.5 rounded-xl font-bold cursor-pointer text-sm"
-          >
+          <button onClick={handleNext} className="btn-primary w-full text-white py-3.5 rounded-xl font-bold cursor-pointer text-sm">
             {questionNumber >= QUIZ_LENGTH ? 'See Results' : 'Next Question →'}
           </button>
         </div>

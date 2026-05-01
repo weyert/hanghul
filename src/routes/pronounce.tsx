@@ -110,7 +110,7 @@ function PronouncePage() {
             value={input}
             onChange={(e) => { setInput(e.target.value); handleAnalyze(e.target.value) }}
             placeholder="Type Korean here… e.g. 안녕하세요"
-            className="flex-1 input-dark rounded-xl px-4 py-3 text-lg korean-text"
+            className="flex-1 input-field rounded-xl px-4 py-3 text-lg korean-text"
           />
           {input && (
             <button

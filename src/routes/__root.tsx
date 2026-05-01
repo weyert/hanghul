@@ -152,23 +152,35 @@ function ThemeToggle() {
 // ─── Flagged nav links ────────────────────────────────────────────────
 
 function FlaggedNavLinks({ onLinkClick }: { onLinkClick?: () => void }) {
-  const syllableChart = useBooleanFlagValue(FLAGS.SYLLABLE_CHART, false)
-  const vocabulary = useBooleanFlagValue(FLAGS.VOCABULARY, false)
+  const syllableChart    = useBooleanFlagValue(FLAGS.SYLLABLE_CHART, false)
+  const vocabulary       = useBooleanFlagValue(FLAGS.VOCABULARY, false)
+  const typingPractice   = useBooleanFlagValue(FLAGS.TYPING_PRACTICE, false)
+  const progressDash     = useBooleanFlagValue(FLAGS.PROGRESS_DASHBOARD, false)
+  const strokeOrder      = useBooleanFlagValue(FLAGS.STROKE_ORDER, false)
   return (
     <>
-      {syllableChart && <NavLink to="/syllable-chart" onClick={onLinkClick}>Chart</NavLink>}
-      {vocabulary && <NavLink to="/vocabulary" onClick={onLinkClick}>Vocabulary</NavLink>}
+      {syllableChart  && <NavLink to="/syllable-chart" onClick={onLinkClick}>Chart</NavLink>}
+      {vocabulary     && <NavLink to="/vocabulary"     onClick={onLinkClick}>Vocabulary</NavLink>}
+      {strokeOrder    && <NavLink to="/stroke-order"   onClick={onLinkClick}>Strokes</NavLink>}
+      {typingPractice && <NavLink to="/typing"         onClick={onLinkClick}>Typing</NavLink>}
+      {progressDash   && <NavLink to="/progress"       onClick={onLinkClick}>Progress</NavLink>}
     </>
   )
 }
 
 function FlaggedMobileNavLinks({ onLinkClick }: { onLinkClick?: () => void }) {
-  const syllableChart = useBooleanFlagValue(FLAGS.SYLLABLE_CHART, false)
-  const vocabulary = useBooleanFlagValue(FLAGS.VOCABULARY, false)
+  const syllableChart    = useBooleanFlagValue(FLAGS.SYLLABLE_CHART, false)
+  const vocabulary       = useBooleanFlagValue(FLAGS.VOCABULARY, false)
+  const typingPractice   = useBooleanFlagValue(FLAGS.TYPING_PRACTICE, false)
+  const progressDash     = useBooleanFlagValue(FLAGS.PROGRESS_DASHBOARD, false)
+  const strokeOrder      = useBooleanFlagValue(FLAGS.STROKE_ORDER, false)
   return (
     <>
-      {syllableChart && <MobileNavLink to="/syllable-chart" onClick={onLinkClick}>Chart</MobileNavLink>}
-      {vocabulary && <MobileNavLink to="/vocabulary" onClick={onLinkClick}>Vocabulary</MobileNavLink>}
+      {syllableChart  && <MobileNavLink to="/syllable-chart" onClick={onLinkClick}>Chart</MobileNavLink>}
+      {vocabulary     && <MobileNavLink to="/vocabulary"     onClick={onLinkClick}>Vocabulary</MobileNavLink>}
+      {strokeOrder    && <MobileNavLink to="/stroke-order"   onClick={onLinkClick}>Strokes</MobileNavLink>}
+      {typingPractice && <MobileNavLink to="/typing"         onClick={onLinkClick}>Typing</MobileNavLink>}
+      {progressDash   && <MobileNavLink to="/progress"       onClick={onLinkClick}>Progress</MobileNavLink>}
     </>
   )
 }
