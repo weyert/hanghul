@@ -3,7 +3,7 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { useBooleanFlagValue } from '@openfeature/react-sdk'
 import { FLAGS } from '../flags'
 import { consonants, vowels } from '../data/hangul'
-import { STROKE_ORDER } from '../data/strokeOrder'
+import { STROKE_ORDER, type StrokeData } from '../data/strokeOrder'
 import { SpeakButton } from '../components/SpeakButton'
 
 export const Route = createFileRoute('/stroke-order')({
@@ -22,9 +22,55 @@ const RULES = [
 
 const CANVAS_SIZE = 240
 
-function DrawingCanvas({ char }: { char: string }) {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const drawing = useRef(false)
+type StrokeDirection = 'horizontal' | 'vertical' | 'diagonal-sw' | 'diagonal-se' | 'circle'
+
+function parseDirection(description: string): StrokeDirection | null {
+  const d = description.toLowerCase()
+  if (d.includes('↺') || d.includes('circle')) return 'circle'
+  if (d.includes('↙')) return 'diagonal-sw'
+  if (d.includes('↘')) return 'diagonal-se'
+  if (d.includes('→') || d.includes('horizontal') || d.includes('tick')) return 'horizontal'
+  if (d.includes('↓') || d.includes('vertical')) return 'vertical'
+  return null
+}
+
+function checkStroke(dir: StrokeDirection | null, pts: { x: number; y: number }[]): boolean {
+  if (!dir || pts.length < 5) return true
+  const s = pts[0], e = pts[pts.length - 1]
+  const dx = e.x - s.x, dy = e.y - s.y
+  const ax = Math.abs(dx), ay = Math.abs(dy)
+  switch (dir) {
+    case 'horizontal':   return dx > 5  && ax > ay * 1.2
+    case 'vertical':     return dy > 5  && ay > ax * 1.2
+    case 'diagonal-sw':  return dx < -5 && dy > 5
+    case 'diagonal-se':  return dx > 5  && dy > 5
+    case 'circle': {
+      const dist = Math.hypot(dx, dy)
+      let len = 0
+      for (let i = 1; i < pts.length; i++) len += Math.hypot(pts[i].x - pts[i-1].x, pts[i].y - pts[i-1].y)
+      return len > 20 && dist < len * 0.45
+    }
+  }
+}
+
+const DIR_HINT: Record<StrokeDirection, string> = {
+  horizontal:   '→ Draw left to right',
+  vertical:     '↓ Draw top to bottom',
+  'diagonal-sw':'↙ Draw from center down-left',
+  'diagonal-se':'↘ Draw from center down-right',
+  circle:       '↺ Draw a counterclockwise circle',
+}
+
+function DrawingCanvas({ char, data }: { char: string; data: StrokeData }) {
+  const canvasRef   = useRef<HTMLCanvasElement>(null)
+  const drawing     = useRef(false)
+  const savedPixels = useRef<ImageData | null>(null)
+  const strokePts   = useRef<{ x: number; y: number }[]>([])
+
+  const [strokeIdx, setStrokeIdx] = useState(0)
+  const [results, setResults]     = useState<(boolean | null)[]>(() => Array(data.strokes).fill(null))
+  const [feedback, setFeedback]   = useState<{ msg: string; ok: boolean } | null>(null)
+  const done = strokeIdx >= data.strokes
 
   const drawGhost = useCallback(() => {
     const canvas = canvasRef.current
@@ -40,9 +86,15 @@ function DrawingCanvas({ char }: { char: string }) {
   }, [char])
 
   useEffect(() => {
-    // Wait for fonts to be ready so Korean glyphs render correctly
     document.fonts.ready.then(() => drawGhost())
   }, [drawGhost])
+
+  const handleReset = () => {
+    drawGhost()
+    setStrokeIdx(0)
+    setResults(Array(data.strokes).fill(null))
+    setFeedback(null)
+  }
 
   const getPos = (e: React.PointerEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current
@@ -55,22 +107,27 @@ function DrawingCanvas({ char }: { char: string }) {
   }
 
   const onPointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    if (done) return
     e.preventDefault()
     drawing.current = true
-    canvasRef.current?.setPointerCapture(e.pointerId)
+    strokePts.current = []
+    const canvas = canvasRef.current
+    canvas?.setPointerCapture(e.pointerId)
+    const ctx = canvas?.getContext('2d')
+    if (ctx) savedPixels.current = ctx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE)
     const pos = getPos(e)
-    if (!pos) return
-    const ctx = canvasRef.current?.getContext('2d')
-    if (!ctx) return
+    if (!pos || !ctx) return
+    strokePts.current.push(pos)
     ctx.beginPath()
     ctx.moveTo(pos.x, pos.y)
   }
 
   const onPointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
-    e.preventDefault()
     if (!drawing.current) return
+    e.preventDefault()
     const pos = getPos(e)
     if (!pos) return
+    strokePts.current.push(pos)
     const ctx = canvasRef.current?.getContext('2d')
     if (!ctx) return
     ctx.lineWidth = 6
@@ -81,39 +138,119 @@ function DrawingCanvas({ char }: { char: string }) {
     ctx.stroke()
   }
 
-  const onPointerUp = () => { drawing.current = false }
+  const onPointerUp = () => {
+    if (!drawing.current) return
+    drawing.current = false
+    const pts = strokePts.current
+    strokePts.current = []
+    if (pts.length < 3 || done) return
+
+    const step     = data.steps[strokeIdx]
+    const dir      = parseDirection(step)
+    const correct  = checkStroke(dir, pts)
+
+    if (correct) {
+      const isLast = strokeIdx === data.strokes - 1
+      setResults(prev => { const r = [...prev]; r[strokeIdx] = true; return r })
+      setStrokeIdx(i => i + 1)
+      setFeedback({ msg: isLast ? '완료! All strokes done!' : '✓ Correct', ok: true })
+    } else {
+      // Restore canvas to state before this failed stroke
+      const ctx = canvasRef.current?.getContext('2d')
+      if (ctx && savedPixels.current) ctx.putImageData(savedPixels.current, 0, 0)
+      setResults(prev => { const r = [...prev]; r[strokeIdx] = false; return r })
+      setFeedback({ msg: dir ? DIR_HINT[dir] : 'Try again', ok: false })
+    }
+
+    setTimeout(() => setFeedback(null), 2500)
+  }
 
   return (
-    <div className="space-y-2">
-      <div className="relative">
-        <canvas
-          ref={canvasRef}
-          width={CANVAS_SIZE}
-          height={CANVAS_SIZE}
-          className="w-full rounded-xl cursor-crosshair"
-          style={{
-            background: 'var(--c-surface)',
-            border: '1px solid var(--c-border)',
-            touchAction: 'none',
-          }}
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={onPointerUp}
-          onPointerLeave={onPointerUp}
-        />
+    <div className="space-y-3">
+      {/* Current stroke prompt */}
+      <div className="rounded-lg px-3 py-2 text-xs" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+        {done ? (
+          <span className="font-semibold" style={{ color: '#6ee7b7' }}>완료! All {data.strokes} strokes complete!</span>
+        ) : (
+          <div className="flex items-baseline gap-2 flex-wrap">
+            <span className="font-black shrink-0" style={{ color: 'var(--c-accent-text)' }}>
+              Stroke {strokeIdx + 1} / {data.strokes}
+            </span>
+            <span style={{ color: 'var(--c-2)' }}>{data.steps[strokeIdx]}</span>
+          </div>
+        )}
       </div>
+
+      {/* Canvas */}
+      <canvas
+        ref={canvasRef}
+        width={CANVAS_SIZE}
+        height={CANVAS_SIZE}
+        className="w-full rounded-xl"
+        style={{
+          background: 'var(--c-surface)',
+          border: '1px solid var(--c-border)',
+          touchAction: 'none',
+          cursor: done ? 'default' : 'crosshair',
+        }}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerLeave={onPointerUp}
+      />
+
+      {/* Stroke progress bubbles */}
+      <div className="flex items-center gap-1.5 justify-center flex-wrap">
+        {data.steps.map((_, i) => {
+          const res       = results[i]
+          const isCurrent = i === strokeIdx && !done
+          return (
+            <span
+              key={i}
+              className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-black"
+              style={{
+                background: res === true  ? 'rgba(16,185,129,0.25)'
+                          : res === false ? 'rgba(239,68,68,0.15)'
+                          : isCurrent     ? 'rgba(139,92,246,0.3)'
+                          : 'var(--c-surface)',
+                border: `1px solid ${
+                  res === true  ? 'rgba(52,211,153,0.4)'
+                : res === false ? 'rgba(239,68,68,0.4)'
+                : isCurrent    ? 'rgba(139,92,246,0.4)'
+                : 'var(--c-border)'
+                }`,
+                color: res === true ? '#6ee7b7' : res === false ? '#fca5a5' : '#c4b5fd',
+              }}
+            >
+              {i + 1}
+            </span>
+          )
+        })}
+      </div>
+
+      {/* Feedback */}
+      {feedback && (
+        <div
+          className="text-xs text-center px-3 py-2 rounded-lg font-semibold"
+          style={{
+            background: feedback.ok ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)',
+            border: `1px solid ${feedback.ok ? 'rgba(52,211,153,0.3)' : 'rgba(239,68,68,0.3)'}`,
+            color: feedback.ok ? '#6ee7b7' : '#fca5a5',
+          }}
+        >
+          {feedback.msg}
+        </div>
+      )}
+
       <button
-        onClick={drawGhost}
+        onClick={handleReset}
         className="w-full text-xs font-semibold py-1.5 rounded-lg cursor-pointer transition-colors"
         style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)', color: 'var(--c-3)' }}
         onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--c-1)' }}
         onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--c-3)' }}
       >
-        Clear
+        Reset
       </button>
-      <p className="text-xs text-center text-zinc-600">
-        Trace the faint guide following the stroke order on the left
-      </p>
     </div>
   )
 }
@@ -339,7 +476,7 @@ function StrokeOrderPage() {
                     <p className="text-xs text-zinc-600">Click a stroke to highlight it, or use ‹ › to step through.</p>
                   </>
                 ) : (
-                  <DrawingCanvas key={data.char} char={data.char} />
+                  <DrawingCanvas key={data.char} char={data.char} data={data} />
                 )}
               </div>
             ) : (
