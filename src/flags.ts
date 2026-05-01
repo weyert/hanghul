@@ -1,0 +1,25 @@
+import { OpenFeature, InMemoryProvider } from '@openfeature/react-sdk'
+import { FLAG_DEFINITIONS } from './flagDefinitions'
+
+export const FLAGS = {
+  SYLLABLE_CHART: 'syllable-chart',
+  VOCABULARY: 'vocabulary',
+  SPACED_REPETITION: 'spaced-repetition',
+} as const
+
+// SSR / initial render: serve flags immediately from the shared definitions
+// so the server-rendered HTML matches what the client will show.
+OpenFeature.setProvider(new InMemoryProvider(FLAG_DEFINITIONS))
+
+// Client: replace with the OFREP remote provider once the browser is ready.
+// Dynamic import keeps the OFREP bundle out of the server build.
+if (typeof window !== 'undefined') {
+  import('@openfeature/ofrep-web-provider').then(({ OFREPWebProvider }) => {
+    OpenFeature.setProvider(
+      new OFREPWebProvider({
+        baseUrl: '',       // hits /ofrep/v1/evaluate/flags on the same origin
+        pollInterval: 30_000,
+      }),
+    )
+  })
+}
