@@ -52,12 +52,12 @@ function SyllableChartPage() {
                 <tr key={ci}>
                   <td className="h-11 px-2">
                     <div style={{
-                      background: highlighted?.row === ci ? 'rgba(167,139,250,0.12)' : undefined,
+                      background: highlighted?.row === ci ? 'var(--c-accent-muted)' : undefined,
                       borderRadius: 6, padding: '2px 6px',
                       transition: 'background 0.15s',
                     }}>
-                      <div className="korean-text text-sm font-black" style={{ color: highlighted?.row === ci ? '#c4b5fd' : '#7c3aed' }}>{c}</div>
-                      <div className="text-xs font-medium" style={{ color: highlighted?.row === ci ? '#c4b5fd' : '#4c1d95', fontSize: '0.6rem' }}>
+                      <div className="korean-serif text-sm font-black" style={{ color: highlighted?.row === ci ? 'var(--c-accent-text)' : 'var(--c-initial)' }}>{c}</div>
+                      <div className="text-xs font-medium" style={{ color: highlighted?.row === ci ? 'var(--c-accent-text)' : 'var(--c-3)', fontSize: '0.6rem' }}>
                         {CHOSEONG_ROMAN[ci] || 'ø'}
                       </div>
                     </div>
@@ -76,7 +76,7 @@ function SyllableChartPage() {
                         style={{
                           border: '1px solid var(--c-border-sub)',
                           background: isExact
-                            ? 'rgba(139,92,246,0.25)'
+                            ? 'rgba(200,67,43,0.18)'
                             : isCross
                             ? 'var(--c-row-hover)'
                             : undefined,
@@ -87,7 +87,7 @@ function SyllableChartPage() {
                       >
                         <span
                           className="korean-text font-black text-base"
-                          style={{ color: isExact ? '#e9d5ff' : isColHighlighted ? '#6ee7b7' : isRowHighlighted ? '#c4b5fd' : 'var(--c-2)' }}
+                          style={{ color: isExact ? 'var(--c-1)' : isColHighlighted ? 'var(--c-vowel-text)' : isRowHighlighted ? 'var(--c-accent-text)' : 'var(--c-2)' }}
                         >
                           {syllable}
                         </span>
@@ -106,7 +106,7 @@ function SyllableChartPage() {
 
       <p className="text-xs text-zinc-600">
         Hover a cell to highlight its row (초성) and column (중성). Each cell shows the basic syllable without a final consonant — add one in the{' '}
-        <Link to="/builder" className="text-violet-400 hover:text-violet-300 underline underline-offset-2">Builder</Link>.
+        <Link to="/builder" className="underline underline-offset-2" style={{ color: 'var(--c-accent-text)' }}>Builder</Link>.
       </p>
     </div>
   )

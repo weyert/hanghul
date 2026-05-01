@@ -149,7 +149,7 @@ function TypingPracticePage() {
         </div>
         <div className="rounded-full h-1" style={{ background: 'var(--c-border-card)' }}>
           <div className="h-1 rounded-full transition-all duration-300"
-            style={{ width: `${((questionNumber - 1) / ROUND_LENGTH) * 100}%`, background: 'linear-gradient(90deg, #7c3aed, #4f46e5)' }} />
+            style={{ width: `${((questionNumber - 1) / ROUND_LENGTH) * 100}%`, background: 'var(--c-accent)' }} />
         </div>
       </div>
 

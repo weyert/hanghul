@@ -20,12 +20,12 @@ function PickButton({
   selected, onClick, char, label, accent,
 }: {
   selected: boolean; onClick: () => void; char: string; label: string
-  accent: 'violet' | 'emerald' | 'amber'
+  accent: 'initial' | 'vowel' | 'final'
 }) {
-  const colors = {
-    violet: { active: 'rgba(109,40,217,0.3)', activeBorder: 'rgba(167,139,250,0.5)', labelColor: '#c4b5fd' },
-    emerald: { active: 'rgba(5,150,105,0.25)', activeBorder: 'rgba(52,211,153,0.5)', labelColor: '#6ee7b7' },
-    amber: { active: 'rgba(180,100,0,0.25)', activeBorder: 'rgba(252,211,77,0.5)', labelColor: '#fcd34d' },
+  const vars = {
+    initial: { activeBg: 'var(--c-accent-muted)', activeBorder: 'var(--c-accent-border)', labelColor: 'var(--c-initial-text)' },
+    vowel:   { activeBg: 'rgba(74,158,138,0.15)',  activeBorder: 'rgba(74,158,138,0.35)',  labelColor: 'var(--c-vowel-text)' },
+    final:   { activeBg: 'rgba(196,154,60,0.15)',  activeBorder: 'rgba(196,154,60,0.35)',  labelColor: 'var(--c-final-text)' },
   }[accent]
 
   return (
@@ -33,24 +33,24 @@ function PickButton({
       onClick={onClick}
       className="rounded-lg py-2 flex flex-col items-center gap-0.5 transition-all cursor-pointer"
       style={selected
-        ? { background: colors.active, border: `1px solid ${colors.activeBorder}`, boxShadow: `0 0 12px ${colors.active}` }
+        ? { background: vars.activeBg, border: `1px solid ${vars.activeBorder}` }
         : { background: 'var(--c-surface)', border: '1px solid var(--c-border-card)' }
       }
       onMouseEnter={(e) => {
-        if (!selected) e.currentTarget.style.borderColor = colors.activeBorder
+        if (!selected) e.currentTarget.style.borderColor = vars.activeBorder
       }}
       onMouseLeave={(e) => {
         if (!selected) e.currentTarget.style.borderColor = 'var(--c-border-card)'
       }}
     >
-      <span className="text-xl korean-text font-black" style={{ color: 'var(--c-1)' }}>{char}</span>
-      <span className="text-xs font-semibold" style={{ color: selected ? colors.labelColor : 'var(--c-4)' }}>{label}</span>
+      <span className="text-xl korean-serif font-black" style={{ color: 'var(--c-1)' }}>{char}</span>
+      <span className="text-xs font-semibold" style={{ color: selected ? vars.labelColor : 'var(--c-4)' }}>{label}</span>
     </button>
   )
 }
 
-function SectionHeader({ dot, title, accent }: { dot: string; title: string; accent: 'violet' | 'emerald' | 'amber' }) {
-  const dotColor = { violet: '#a78bfa', emerald: '#34d399', amber: '#fbbf24' }[accent]
+function SectionHeader({ dot, title }: { dot: 'initial' | 'vowel' | 'final'; title: string; accent?: string }) {
+  const dotColor = { initial: 'var(--c-initial)', vowel: 'var(--c-vowel)', final: 'var(--c-final)' }[dot]
   return (
     <h2 className="text-xs font-bold uppercase tracking-widest mb-2.5 flex items-center gap-2" style={{ color: 'var(--c-3)' }}>
       <span className="w-2 h-2 rounded-full inline-block" style={{ background: dotColor }} />
@@ -75,28 +75,28 @@ function BuilderPage() {
   const PreviewContent = () => syllable ? (
     <>
       <div
-        className="korean-text font-black leading-none"
-        style={{ fontSize: 'clamp(4rem, 12vw, 6rem)', color: 'var(--c-1)', textShadow: '0 0 60px rgba(167,139,250,0.4)' }}
+        className="korean-serif font-black leading-none"
+        style={{ fontSize: 'clamp(4rem, 12vw, 6rem)', color: 'var(--c-1)' }}
       >
         {syllable}
       </div>
       <div className="text-xl font-bold" style={{ color: 'var(--c-2)' }}>{romanization}</div>
       <div className="w-full space-y-2.5 pt-4" style={{ borderTop: '1px solid var(--c-border-sub)' }}>
         <div className="flex items-center justify-between text-sm">
-          <span className="text-violet-400 font-bold text-xs">초성</span>
-          <span className="korean-text font-black text-violet-300 text-xl">{CHOSEONG[initialIdx!]}</span>
-          <span className="text-violet-500 text-xs">{CHOSEONG_ROMAN[initialIdx!] || 'silent'}</span>
+          <span className="font-bold text-xs" style={{ color: 'var(--c-initial-text)' }}>초성</span>
+          <span className="korean-serif font-black text-xl" style={{ color: 'var(--c-initial-text)' }}>{CHOSEONG[initialIdx!]}</span>
+          <span className="text-xs" style={{ color: 'var(--c-initial)' }}>{CHOSEONG_ROMAN[initialIdx!] || 'silent'}</span>
         </div>
         <div className="flex items-center justify-between text-sm">
-          <span className="text-emerald-400 font-bold text-xs">중성</span>
-          <span className="korean-text font-black text-emerald-300 text-xl">{JUNGSEONG[vowelIdx!]}</span>
-          <span className="text-emerald-500 text-xs">{JUNGSEONG_ROMAN[vowelIdx!]}</span>
+          <span className="font-bold text-xs" style={{ color: 'var(--c-vowel-text)' }}>중성</span>
+          <span className="korean-serif font-black text-xl" style={{ color: 'var(--c-vowel-text)' }}>{JUNGSEONG[vowelIdx!]}</span>
+          <span className="text-xs" style={{ color: 'var(--c-vowel)' }}>{JUNGSEONG_ROMAN[vowelIdx!]}</span>
         </div>
         {finalIdx !== 0 && (
           <div className="flex items-center justify-between text-sm">
-            <span className="text-amber-400 font-bold text-xs">종성</span>
-            <span className="korean-text font-black text-amber-300 text-xl">{JONGSEONG[finalIdx]}</span>
-            <span className="text-amber-500 text-xs">{JONGSEONG_ROMAN[finalIdx]}</span>
+            <span className="font-bold text-xs" style={{ color: 'var(--c-final-text)' }}>종성</span>
+            <span className="korean-serif font-black text-xl" style={{ color: 'var(--c-final-text)' }}>{JONGSEONG[finalIdx]}</span>
+            <span className="text-xs" style={{ color: 'var(--c-final)' }}>{JONGSEONG_ROMAN[finalIdx]}</span>
           </div>
         )}
       </div>
@@ -130,10 +130,10 @@ function BuilderPage() {
         {/* Selectors */}
         <div className="lg:col-span-2 space-y-6">
           <section>
-            <SectionHeader dot="violet" title="Initial Consonant — 초성" accent="violet" />
+            <SectionHeader dot="initial" title="Initial Consonant — 초성" />
             <div className="grid grid-cols-5 sm:grid-cols-7 gap-1.5">
               {CHOSEONG.map((ch, i) => (
-                <PickButton key={i} char={ch} label={CHOSEONG_ROMAN[i] || 'ø'} accent="violet"
+                <PickButton key={i} char={ch} label={CHOSEONG_ROMAN[i] || 'ø'} accent="initial"
                   selected={initialIdx === i} onClick={() => setInitialIdx(initialIdx === i ? null : i)}
                 />
               ))}
@@ -141,10 +141,10 @@ function BuilderPage() {
           </section>
 
           <section>
-            <SectionHeader dot="emerald" title="Vowel — 중성" accent="emerald" />
+            <SectionHeader dot="vowel" title="Vowel — 중성" />
             <div className="grid grid-cols-5 sm:grid-cols-7 gap-1.5">
               {JUNGSEONG.map((ch, i) => (
-                <PickButton key={i} char={ch} label={JUNGSEONG_ROMAN[i]} accent="emerald"
+                <PickButton key={i} char={ch} label={JUNGSEONG_ROMAN[i]} accent="vowel"
                   selected={vowelIdx === i} onClick={() => setVowelIdx(vowelIdx === i ? null : i)}
                 />
               ))}
@@ -153,7 +153,7 @@ function BuilderPage() {
 
           <section>
             <div className="flex items-center justify-between mb-2.5">
-              <SectionHeader dot="amber" title="Final Consonant — 종성 (optional)" accent="amber" />
+              <SectionHeader dot="final" title="Final Consonant — 종성 (optional)" />
               <button
                 onClick={() => setShowClusters((s) => !s)}
                 className="text-xs text-zinc-600 hover:text-zinc-300 underline underline-offset-2 cursor-pointer"
@@ -162,14 +162,14 @@ function BuilderPage() {
               </button>
             </div>
             <div className="grid grid-cols-5 sm:grid-cols-8 gap-1.5">
-              <PickButton char="—" label="none" accent="amber" selected={finalIdx === 0} onClick={() => setFinalIdx(0)} />
+              <PickButton char="—" label="none" accent="final" selected={finalIdx === 0} onClick={() => setFinalIdx(0)} />
               {JONGSEONG_SIMPLE.map((idx) => (
-                <PickButton key={idx} char={JONGSEONG[idx]} label={JONGSEONG_ROMAN[idx]} accent="amber"
+                <PickButton key={idx} char={JONGSEONG[idx]} label={JONGSEONG_ROMAN[idx]} accent="final"
                   selected={finalIdx === idx} onClick={() => setFinalIdx(finalIdx === idx ? 0 : idx)}
                 />
               ))}
               {showClusters && JONGSEONG_CLUSTER.map((idx) => (
-                <PickButton key={idx} char={JONGSEONG[idx]} label={JONGSEONG_ROMAN[idx]} accent="amber"
+                <PickButton key={idx} char={JONGSEONG[idx]} label={JONGSEONG_ROMAN[idx]} accent="final"
                   selected={finalIdx === idx} onClick={() => setFinalIdx(finalIdx === idx ? 0 : idx)}
                 />
               ))}

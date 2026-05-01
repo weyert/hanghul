@@ -126,7 +126,7 @@ function ProgressPage() {
           <div className="rounded-full h-2" style={{ background: 'var(--c-border-card)' }}>
             <div
               className="h-2 rounded-full transition-all duration-700"
-              style={{ width: `${overallAcc}%`, background: 'linear-gradient(90deg, #7c3aed, #6ee7b7)' }}
+              style={{ width: `${overallAcc}%`, background: 'var(--c-accent)' }}
             />
           </div>
         </div>

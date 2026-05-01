@@ -30,7 +30,7 @@ export const Route = createRootRoute({
       { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous' },
       {
         rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Inter:wght@400;500;600;700;800;900&display=swap',
+        href: 'https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Noto+Sans+KR:wght@300;400;500;700;900&family=Noto+Serif+KR:wght@600;700;900&family=Inter:wght@400;500;600;700;800;900&display=swap',
       },
     ],
   }),
@@ -47,9 +47,9 @@ function NavLink({ to, children, onClick }: { to: string; children: ReactNode; o
       to={to}
       onClick={onClick}
       className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-150 cursor-pointer ${
-        isActive ? 'text-violet-400 bg-violet-500/10' : 'hover:bg-white/5'
+        isActive ? 'bg-[var(--c-accent-muted)]' : 'hover:bg-white/5'
       }`}
-      style={{ color: isActive ? undefined : 'var(--c-2)' }}
+      style={{ color: isActive ? 'var(--c-accent-text)' : 'var(--c-2)' }}
       onMouseEnter={(e) => { if (!isActive) (e.currentTarget as HTMLElement).style.color = 'var(--c-1)' }}
       onMouseLeave={(e) => { if (!isActive) (e.currentTarget as HTMLElement).style.color = 'var(--c-2)' }}
     >
@@ -66,9 +66,9 @@ function MobileNavLink({ to, children, onClick }: { to: string; children: ReactN
       to={to}
       onClick={onClick}
       className={`block px-4 py-3 rounded-xl text-base font-medium transition-colors duration-150 cursor-pointer ${
-        isActive ? 'text-violet-400 bg-violet-500/10' : 'hover:bg-white/5'
+        isActive ? 'bg-[var(--c-accent-muted)]' : 'hover:bg-white/5'
       }`}
-      style={{ color: isActive ? undefined : 'var(--c-2)' }}
+      style={{ color: isActive ? 'var(--c-accent-text)' : 'var(--c-2)' }}
     >
       {children}
     </Link>
@@ -88,9 +88,12 @@ function LanguageSwitcher() {
           onClick={() => setLanguage(code)}
           title={`Switch to ${label}`}
           className={`px-2.5 py-1 rounded-md text-xs font-bold transition-all duration-150 cursor-pointer ${
-            language === code ? 'bg-violet-500 text-white shadow-sm' : 'hover:text-violet-400'
+            language === code ? 'text-white shadow-sm' : ''
           }`}
-          style={{ color: language === code ? undefined : 'var(--c-3)' }}
+          style={{
+            background: language === code ? 'var(--c-accent)' : undefined,
+            color: language === code ? undefined : 'var(--c-3)',
+          }}
         >
           {code.toUpperCase()}
         </button>
@@ -220,10 +223,17 @@ function MenuIcon({ open }: { open: boolean }) {
 
 function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
   const [menuOpen, setMenuOpen] = useState(false)
+  const { language } = useLanguage()
   const closeMenu = () => setMenuOpen(false)
 
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.documentElement.setAttribute('lang', language)
+    }
+  }, [language])
+
   return (
-    <html lang="en">
+    <html lang={language}>
       <head>
         {/* Anti-FOUC: apply saved/system theme before first paint */}
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
@@ -243,7 +253,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
           <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
             {/* Logo */}
             <Link to="/" onClick={closeMenu} className="flex items-center gap-2.5 cursor-pointer">
-              <span className="text-2xl font-black korean-text gradient-brand">한글</span>
+              <span className="text-2xl font-black korean-serif" style={{ color: 'var(--c-accent-text)' }}>한글</span>
               <span className="text-xs font-semibold tracking-widest uppercase" style={{ color: 'var(--c-5)' }}>배우기</span>
             </Link>
 
