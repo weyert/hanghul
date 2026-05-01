@@ -13,6 +13,7 @@ export const FLAGS = {
   IPA_DISPLAY: 'ipa-display',
   CULTURAL_CONTEXT: 'cultural-context',
   MIXED_QUIZ: 'mixed-quiz',
+  STROKE_PRACTICE: 'stroke-practice',
 } as const
 
 // SSR / initial render: serve flags immediately from the shared definitions
