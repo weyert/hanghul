@@ -1,9 +1,32 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState, useRef } from 'react'
+import { useBooleanFlagValue } from '@openfeature/react-sdk'
+import { FLAGS } from '../flags'
 import { analyzeText } from '../utils/hangul'
 import type { SyllableAnalysis, OtherChar } from '../utils/hangul'
 import { SpeakButton } from '../components/SpeakButton'
 import { useSpeech } from '../hooks/useSpeech'
+
+function buildIpaTranscription(analyzed: Array<SyllableAnalysis | OtherChar>): string {
+  const parts: string[] = []
+  let currentSyllables: string[] = []
+
+  for (const c of analyzed) {
+    if (c.type === 'other') {
+      if (c.char === ' ') {
+        if (currentSyllables.length) {
+          parts.push(currentSyllables.join('.'))
+          currentSyllables = []
+        }
+        parts.push(' ')
+      }
+    } else {
+      currentSyllables.push((c.initialIpa || '') + c.vowelIpa + (c.finalIpa || ''))
+    }
+  }
+  if (currentSyllables.length) parts.push(currentSyllables.join('.'))
+  return parts.join('').trim()
+}
 
 export const Route = createFileRoute('/pronounce')({
   component: PronouncePage,
@@ -47,20 +70,20 @@ function SyllableCard({ item }: { item: SyllableAnalysis | OtherChar }) {
         {/* Breakdown */}
         <div style={{ borderTop: '1px solid var(--c-border-sub)' }}>
           <div className="flex items-center gap-1.5 px-2 py-1.5" style={{ borderBottom: '1px solid var(--c-border-sub)' }}>
-            <span className="text-xs font-bold text-violet-400 w-3">초</span>
-            <span className="text-base korean-text font-bold text-violet-300">{item.initial || '—'}</span>
-            <span className="text-xs text-violet-500 ml-auto">{item.initialRoman || ''}</span>
+            <span className="text-xs font-bold w-3" style={{ color: 'var(--c-initial-text)' }}>초</span>
+            <span className="text-base korean-serif font-bold" style={{ color: 'var(--c-initial-text)' }}>{item.initial || '—'}</span>
+            <span className="text-xs ml-auto" style={{ color: 'var(--c-initial)' }}>{item.initialRoman || ''}</span>
           </div>
           <div className="flex items-center gap-1.5 px-2 py-1.5" style={{ borderBottom: '1px solid var(--c-border-sub)' }}>
-            <span className="text-xs font-bold text-emerald-400 w-3">중</span>
-            <span className="text-base korean-text font-bold text-emerald-300">{item.vowel}</span>
-            <span className="text-xs text-emerald-500 ml-auto">{item.vowelRoman}</span>
+            <span className="text-xs font-bold w-3" style={{ color: 'var(--c-vowel-text)' }}>중</span>
+            <span className="text-base korean-serif font-bold" style={{ color: 'var(--c-vowel-text)' }}>{item.vowel}</span>
+            <span className="text-xs ml-auto" style={{ color: 'var(--c-vowel)' }}>{item.vowelRoman}</span>
           </div>
           {item.finalIdx !== 0 && (
             <div className="flex items-center gap-1.5 px-2 py-1.5">
-              <span className="text-xs font-bold text-amber-400 w-3">종</span>
-              <span className="text-base korean-text font-bold text-amber-300">{item.final}</span>
-              <span className="text-xs text-amber-500 ml-auto">{item.finalRoman}</span>
+              <span className="text-xs font-bold w-3" style={{ color: 'var(--c-final-text)' }}>종</span>
+              <span className="text-base korean-serif font-bold" style={{ color: 'var(--c-final-text)' }}>{item.final}</span>
+              <span className="text-xs ml-auto" style={{ color: 'var(--c-final)' }}>{item.finalRoman}</span>
             </div>
           )}
         </div>
@@ -76,6 +99,7 @@ function PronouncePage() {
   const [copied, setCopied] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const { speak } = useSpeech()
+  const ipaEnabled = useBooleanFlagValue(FLAGS.IPA_DISPLAY, false)
 
   const handleAnalyze = (text: string) => {
     const trimmed = text.trim()
@@ -85,11 +109,48 @@ function PronouncePage() {
   const romanization = analyzed
     .map((c) => c.romanization).join('').replace(/\s+/g, ' ').trim()
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(romanization).then(() => {
+  const ipaTranscription = ipaEnabled ? buildIpaTranscription(analyzed) : ''
+
+  const handleCopy = async () => {
+    if (!romanization) return
+
+    const resetCopied = () => setTimeout(() => setCopied(false), 2000)
+
+    try {
+      if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(romanization)
+      } else {
+        const textarea = document.createElement('textarea')
+        textarea.value = romanization
+        textarea.setAttribute('readonly', '')
+        textarea.style.position = 'absolute'
+        textarea.style.left = '-9999px'
+        document.body.appendChild(textarea)
+
+        const selection = document.getSelection()
+        const originalRange = selection && selection.rangeCount > 0 ? selection.getRangeAt(0) : null
+
+        textarea.select()
+        textarea.setSelectionRange(0, textarea.value.length)
+
+        const success = document.execCommand('copy')
+
+        if (originalRange) {
+          selection?.removeAllRanges()
+          selection?.addRange(originalRange)
+        }
+
+        document.body.removeChild(textarea)
+
+        if (!success) throw new Error('Copy command failed')
+      }
+
       setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    })
+      resetCopied()
+    } catch (error) {
+      console.error('Failed to copy text', error)
+      setCopied(false)
+    }
   }
 
   const hasSyllables = analyzed.some((c) => c.type === 'syllable')
@@ -159,9 +220,9 @@ function PronouncePage() {
 
           {/* Legend */}
           <div className="flex flex-wrap gap-5 text-xs pt-4" style={{ borderTop: '1px solid var(--c-border-sub)' }}>
-            <span className="flex items-center gap-1.5 text-zinc-500"><span className="w-2 h-2 rounded-full bg-violet-400 inline-block" />초성 initial</span>
-            <span className="flex items-center gap-1.5 text-zinc-500"><span className="w-2 h-2 rounded-full bg-emerald-400 inline-block" />중성 vowel</span>
-            <span className="flex items-center gap-1.5 text-zinc-500"><span className="w-2 h-2 rounded-full bg-amber-400 inline-block" />종성 final</span>
+            <span className="flex items-center gap-1.5" style={{ color: 'var(--c-3)' }}><span className="w-2 h-2 rounded-full inline-block" style={{ background: 'var(--c-initial)' }} />초성 initial</span>
+            <span className="flex items-center gap-1.5" style={{ color: 'var(--c-3)' }}><span className="w-2 h-2 rounded-full inline-block" style={{ background: 'var(--c-vowel)' }} />중성 vowel</span>
+            <span className="flex items-center gap-1.5" style={{ color: 'var(--c-3)' }}><span className="w-2 h-2 rounded-full inline-block" style={{ background: 'var(--c-final)' }} />종성 final</span>
           </div>
 
           {/* Romanization */}
@@ -172,8 +233,8 @@ function PronouncePage() {
                 <SpeakButton text={input.trim()} size="sm" />
                 <button
                   onClick={handleCopy}
-                  className="text-xs text-zinc-500 hover:text-violet-400 transition-colors px-2 py-1 rounded-md cursor-pointer"
-                  style={{ background: copied ? 'rgba(139,92,246,0.15)' : undefined }}
+                  className="text-xs transition-colors px-2 py-1 rounded-md cursor-pointer"
+                  style={{ color: copied ? 'var(--c-accent-text)' : 'var(--c-3)', background: copied ? 'var(--c-accent-muted)' : undefined }}
                 >
                   {copied ? 'Copied!' : 'Copy'}
                 </button>
@@ -181,6 +242,20 @@ function PronouncePage() {
             </div>
             <p className="text-xl font-bold tracking-wide" style={{ color: 'var(--c-1)' }}>{romanization}</p>
           </div>
+
+          {/* IPA Transcription */}
+          {ipaEnabled && ipaTranscription && (
+            <div className="glass-card rounded-xl p-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-bold text-zinc-600 uppercase tracking-widest">IPA Transcription</span>
+                <span className="text-xs" style={{ color: 'var(--c-4)' }}>phonemic</span>
+              </div>
+              <p className="text-xl font-mono tracking-wide" style={{ color: 'var(--c-1)' }}>/{ipaTranscription}/</p>
+              <p className="text-xs mt-2" style={{ color: 'var(--c-4)' }}>
+                Canonical values — actual pronunciation varies with assimilation across syllable boundaries.
+              </p>
+            </div>
+          )}
         </div>
       )}
 

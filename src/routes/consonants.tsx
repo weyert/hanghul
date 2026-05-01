@@ -1,9 +1,20 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { useState } from 'react'
+import { createFileRoute, Link } from '@tanstack/react-router'
+import { useState, type KeyboardEvent } from 'react'
+import { useBooleanFlagValue } from '@openfeature/react-sdk'
+import { FLAGS } from '../flags'
 import { consonants } from '../data/hangul'
 import type { HangulCharacter } from '../data/hangul'
 import { useLanguage } from '../contexts/LanguageContext'
 import { SpeakButton } from '../components/SpeakButton'
+
+function ArrowRight() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="2" y1="7" x2="12" y2="7" />
+      <polyline points="8,3 12,7 8,11" />
+    </svg>
+  )
+}
 
 export const Route = createFileRoute('/consonants')({
   component: ConsonantsPage,
@@ -12,16 +23,27 @@ export const Route = createFileRoute('/consonants')({
   }),
 })
 
-function CharacterCard({ char }: { char: HangulCharacter }) {
+function CharacterCard({ char, ipaEnabled }: { char: HangulCharacter; ipaEnabled: boolean }) {
   const [flipped, setFlipped] = useState(false)
   const { language } = useLanguage()
+  const toggle = () => setFlipped((f) => !f)
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault()
+      toggle()
+    }
+  }
 
   return (
     <div
       className="flip-card"
       style={{ height: '10rem' }}
-      onClick={() => setFlipped((f) => !f)}
+      onClick={toggle}
+      onKeyDown={handleKeyDown}
+      tabIndex={0}
       role="button"
+      aria-pressed={flipped}
       aria-label={`${char.char} — click to reveal`}
     >
       <div className={`flip-card-inner ${flipped ? 'flipped' : ''}`}>
@@ -36,7 +58,7 @@ function CharacterCard({ char }: { char: HangulCharacter }) {
           onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--c-border-focus)')}
           onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--c-border-card)')}
         >
-          <div className="text-5xl font-black korean-text leading-none" style={{ color: 'var(--c-1)', textShadow: '0 0 30px rgba(167,139,250,0.3)' }}>
+          <div className="text-5xl font-black korean-serif leading-none" style={{ color: 'var(--c-1)' }}>
             {char.char}
           </div>
           <div className="text-xs mt-2" style={{ color: 'var(--c-4)' }}>tap to flip</div>
@@ -47,10 +69,15 @@ function CharacterCard({ char }: { char: HangulCharacter }) {
         {/* Back */}
         <div
           className="flip-card-back flex flex-col items-center justify-center gap-0.5 p-2 relative"
-          style={{ background: 'linear-gradient(135deg, rgba(109,40,217,0.35), rgba(79,70,229,0.25))', border: '1px solid rgba(167,139,250,0.3)' }}
+          style={{ background: 'var(--c-surface-2)', border: '1px solid var(--c-accent-border)' }}
         >
-          <div className="text-2xl font-black text-white korean-text">{char.char}</div>
-          <div className="text-sm font-bold text-violet-300">{char.romanization}</div>
+          <div className="text-2xl font-black korean-serif" style={{ color: 'var(--c-1)' }}>{char.char}</div>
+          <div className="flex items-center justify-center gap-1.5">
+            <span className="text-sm font-bold" style={{ color: 'var(--c-accent-text)' }}>{char.romanization}</span>
+            {ipaEnabled && (
+              <span className="text-xs font-mono" style={{ color: 'var(--c-3)' }}>/{char.ipa}/</span>
+            )}
+          </div>
           <div className="text-xs text-zinc-400 text-center font-medium">{char.name}</div>
           <div className="text-xs text-zinc-400 text-center leading-snug mt-0.5 px-1 line-clamp-2">
             {char.descriptions[language]}
@@ -60,7 +87,7 @@ function CharacterCard({ char }: { char: HangulCharacter }) {
               <span className="korean-text font-semibold text-zinc-200">{char.examples[0].korean}</span>
               <span className="text-zinc-600">·</span>
               <span className="text-zinc-500">{char.examples[0].meaning}</span>
-              <SpeakButton text={char.examples[0].korean} size="sm" className="text-zinc-500 hover:text-emerald-400" />
+              <SpeakButton text={char.examples[0].korean} size="sm" className="text-zinc-500 hover:text-[var(--c-accent-text)]" />
             </div>
           )}
           <div className="absolute bottom-2 right-2" onClick={(e) => e.stopPropagation()}>
@@ -72,16 +99,10 @@ function CharacterCard({ char }: { char: HangulCharacter }) {
   )
 }
 
-function SectionLabel({ count, label, color }: { count: number; label: string; color: 'violet' | 'amber' }) {
-  const styles = {
-    violet: { badge: 'rgba(139,92,246,0.15)', badgeBorder: 'rgba(139,92,246,0.3)', badgeText: '#c4b5fd' },
-    amber:  { badge: 'rgba(245,158,11,0.12)', badgeBorder: 'rgba(245,158,11,0.3)', badgeText: '#fcd34d' },
-  }[color]
+function SectionLabel({ count, label }: { count: number; label: string; color?: string }) {
   return (
     <h2 className="text-sm font-bold mb-4 flex items-center gap-2.5" style={{ color: 'var(--c-2)' }}>
-      <span className="px-2 py-0.5 rounded-full text-xs font-black"
-        style={{ background: styles.badge, border: `1px solid ${styles.badgeBorder}`, color: styles.badgeText }}
-      >{count}</span>
+      <span className="px-2 py-0.5 rounded-full text-xs font-black tag-badge">{count}</span>
       {label}
     </h2>
   )
@@ -89,20 +110,37 @@ function SectionLabel({ count, label, color }: { count: number; label: string; c
 
 function ConsonantsPage() {
   const { language } = useLanguage()
+  const ipaEnabled     = useBooleanFlagValue(FLAGS.IPA_DISPLAY, false)
+  const culturalEnabled = useBooleanFlagValue(FLAGS.CULTURAL_CONTEXT, false)
   const basic = consonants.filter((c) => c.category === 'basic-consonant')
   const tense = consonants.filter((c) => c.category === 'tense-consonant')
 
   return (
     <div className="space-y-12">
-      <div>
-        <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Consonants</h1>
-        <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>자음 Ja-eum — Tap a card to reveal details. Speaker plays the letter; the example word has its own speaker on the back.</p>
+      <div className="space-y-4">
+        <div>
+          <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Consonants</h1>
+          <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>자음 Ja-eum — Tap a card to reveal details. Speaker plays the letter; the example word has its own speaker on the back.</p>
+        </div>
+        {culturalEnabled && (
+          <div className="rounded-xl p-4 flex gap-3 items-start" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+            <svg className="flex-shrink-0 mt-0.5" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--c-accent-text)' }}>
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <div>
+              <p className="text-xs font-bold mb-1" style={{ color: 'var(--c-2)' }}>Did you know?</p>
+              <p className="text-xs leading-relaxed" style={{ color: 'var(--c-3)' }}>
+                Each consonant shape was designed to mirror the position of the tongue and lips when producing the sound — ㅁ traces closed lips, ㄴ shows the tongue tip touching the palate, ㄱ depicts the back of the tongue raised toward the throat. King Sejong's 1443 commission made Hangul one of the most scientifically designed writing systems ever created.
+              </p>
+            </div>
+          </div>
+        )}
       </div>
 
       <section>
         <SectionLabel count={14} label="Basic Consonants" color="violet" />
         <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-7 gap-2.5">
-          {basic.map((char) => <CharacterCard key={char.id} char={char} />)}
+          {basic.map((char) => <CharacterCard key={char.id} char={char} ipaEnabled={ipaEnabled} />)}
         </div>
       </section>
 
@@ -112,7 +150,7 @@ function ConsonantsPage() {
           Doubled consonants with a tense, unaspirated quality — like holding tension just before the sound.
         </p>
         <div className="grid grid-cols-3 sm:grid-cols-5 gap-2.5">
-          {tense.map((char) => <CharacterCard key={char.id} char={char} />)}
+          {tense.map((char) => <CharacterCard key={char.id} char={char} ipaEnabled={ipaEnabled} />)}
         </div>
       </section>
 
@@ -142,7 +180,12 @@ function ConsonantsPage() {
                         <SpeakButton text={char.char} />
                       </div>
                     </td>
-                    <td className="px-5 py-3 font-bold text-violet-400">{char.romanization}</td>
+                    <td className="px-5 py-3">
+                      <div className="font-bold" style={{ color: 'var(--c-accent-text)' }}>{char.romanization}</div>
+                      {ipaEnabled && (
+                        <div className="text-xs font-mono mt-0.5" style={{ color: 'var(--c-3)' }}>/{char.ipa}/</div>
+                      )}
+                    </td>
                     <td className="px-5 py-3 text-zinc-400 hidden sm:table-cell">{char.name}</td>
                     <td className="px-5 py-3 text-zinc-500 hidden md:table-cell max-w-xs">{char.descriptions[language]}</td>
                     <td className="px-5 py-3 hidden lg:table-cell">
@@ -150,7 +193,7 @@ function ConsonantsPage() {
                         <span className="flex items-center gap-1.5">
                           <span className="korean-text font-semibold text-zinc-200">{char.examples[0].korean}</span>
                           <span className="text-zinc-600">({char.examples[0].meaning})</span>
-                          <SpeakButton text={char.examples[0].korean} className="text-zinc-600 hover:text-emerald-400" />
+                          <SpeakButton text={char.examples[0].korean} className="text-zinc-600 hover:text-[var(--c-accent-text)]" />
                         </span>
                       )}
                     </td>
@@ -161,6 +204,22 @@ function ConsonantsPage() {
           </div>
         </div>
       </section>
+
+      {/* ── Next Step ─────────────────────────────────────── */}
+      <div className="glass-card rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <p className="font-bold" style={{ color: 'var(--c-1)' }}>Ready for vowels?</p>
+          <p className="text-sm mt-0.5" style={{ color: 'var(--c-3)' }}>
+            You've seen all 19 consonants. Learn the 21 vowels to start building syllable blocks.
+          </p>
+        </div>
+        <Link
+          to="/vowels"
+          className="btn-primary whitespace-nowrap inline-flex items-center gap-2 text-white font-bold px-5 py-2.5 rounded-xl text-sm cursor-pointer"
+        >
+          Learn Vowels <ArrowRight />
+        </Link>
+      </div>
     </div>
   )
 }

@@ -10,6 +10,9 @@ export const FLAGS = {
   TYPING_PRACTICE: 'typing-practice',
   PROGRESS_DASHBOARD: 'progress-dashboard',
   STROKE_ORDER: 'stroke-order',
+  IPA_DISPLAY: 'ipa-display',
+  CULTURAL_CONTEXT: 'cultural-context',
+  MIXED_QUIZ: 'mixed-quiz',
 } as const
 
 // SSR / initial render: serve flags immediately from the shared definitions

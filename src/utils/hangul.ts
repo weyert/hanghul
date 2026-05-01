@@ -20,6 +20,11 @@ export const CHOSEONG_ROMAN = [
   'ss','','j','jj','ch','k','t','p','h',
 ] as const
 
+export const CHOSEONG_IPA = [
+  'ɡ','k͈','n','d','t͈','ɾ','m','b','p͈','s',
+  's͈','','dʑ','t͈ɕ','tɕʰ','kʰ','tʰ','pʰ','h',
+] as const
+
 // ─── Vowels (중성) — 21 ────────────────────────────────────────────────────
 export const JUNGSEONG = [
   'ㅏ','ㅐ','ㅑ','ㅒ','ㅓ','ㅔ','ㅕ','ㅖ','ㅗ','ㅘ',
@@ -29,6 +34,11 @@ export const JUNGSEONG = [
 export const JUNGSEONG_ROMAN = [
   'a','ae','ya','yae','eo','e','yeo','ye','o','wa',
   'wae','oe','yo','u','wo','we','wi','yu','eu','ui','i',
+] as const
+
+export const JUNGSEONG_IPA = [
+  'a','ɛ','ja','jɛ','ʌ','e','jʌ','je','o','wa',
+  'wɛ','ø','jo','u','wʌ','we','wi','ju','ɯ','ɯi','i',
 ] as const
 
 // ─── Final consonants (종성 / 받침) — 28, index 0 = none ──────────────────
@@ -42,6 +52,12 @@ export const JONGSEONG_ROMAN = [
   '','k','k','k','n','n','n','t','l','k',
   'm','p','l','l','p','l','m','p','p','t',
   't','ng','t','t','k','t','p','t',
+] as const
+
+export const JONGSEONG_IPA = [
+  '','k̚','k̚','k̚','n','n','n','t̚','l','k̚',
+  'm','p̚','l','l','p̚','l','m','p̚','p̚','t̚',
+  't̚','ŋ','t̚','t̚','k̚','t̚','p̚','t̚',
 ] as const
 
 // Indices of single-consonant finals (for the builder UI)
@@ -64,6 +80,9 @@ export interface SyllableAnalysis {
   vowelRoman: string
   finalRoman: string
   romanization: string
+  initialIpa: string
+  vowelIpa: string
+  finalIpa: string
 }
 
 export interface OtherChar {
@@ -115,6 +134,9 @@ export function analyzeText(text: string): AnalyzedChar[] {
         CHOSEONG_ROMAN[d.initialIdx] +
         JUNGSEONG_ROMAN[d.vowelIdx] +
         JONGSEONG_ROMAN[d.finalIdx],
+      initialIpa: CHOSEONG_IPA[d.initialIdx],
+      vowelIpa: JUNGSEONG_IPA[d.vowelIdx],
+      finalIpa: JONGSEONG_IPA[d.finalIdx],
     }
   })
 }

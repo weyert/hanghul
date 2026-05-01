@@ -20,7 +20,7 @@ export const Route = createFileRoute('/quiz')({
 
 const QUIZ_LENGTH = 10
 
-type QuizMode = 'consonants' | 'vowels' | 'all' | 'listen' | 'words'
+type QuizMode = 'consonants' | 'vowels' | 'all' | 'listen' | 'words' | 'mixed'
 
 interface Question    { correct: HangulCharacter; options: HangulCharacter[] }
 interface WordQuestion { correct: VocabEntry;        options: VocabEntry[] }
@@ -35,10 +35,9 @@ function buildQuestion(pool: HangulCharacter[], pick: (pool: HangulCharacter[]) 
   return { correct, options: shuffle([...wrongs, correct]) }
 }
 
-function buildWordQuestion(): WordQuestion {
-  const shuffled = shuffle(QUIZ_VOCAB)
-  const correct  = shuffled[0]
-  const wrongs   = shuffled.slice(1, 4)
+function buildWordQuestion(pickFn?: (pool: VocabEntry[]) => VocabEntry): WordQuestion {
+  const correct = pickFn ? pickFn(QUIZ_VOCAB) : shuffle(QUIZ_VOCAB)[0]
+  const wrongs  = shuffle(QUIZ_VOCAB.filter((e) => e.id !== correct.id)).slice(0, 3)
   return { correct, options: shuffle([...wrongs, correct]) }
 }
 
@@ -56,23 +55,18 @@ interface ModeCardProps {
   onStart: (mode: QuizMode) => void
 }
 
-function ModeCard({ mode, label, subLabel, count, char, accent = 'violet', onStart }: ModeCardProps) {
-  const glows = {
-    violet: 'rgba(167,139,250,0.25)',
-    emerald: 'rgba(52,211,153,0.25)',
-    amber: 'rgba(251,191,36,0.25)',
-  }[accent]
+function ModeCard({ mode, label, subLabel, count, char, onStart }: ModeCardProps) {
   return (
     <button
       onClick={() => onStart(mode)}
       className="glass-card glass-card-hover rounded-2xl p-6 text-center cursor-pointer w-full"
     >
-      <div className="text-4xl korean-text font-black mb-3 leading-none" style={{ color: 'var(--c-1)', textShadow: `0 0 20px ${glows}` }}>
+      <div className="text-4xl korean-serif font-black mb-3 leading-none" style={{ color: 'var(--c-1)' }}>
         {char}
       </div>
-      <h2 className="text-sm font-bold" style={{ color: 'var(--c-1)' }}>{label}</h2>
-      <p className="text-xs font-semibold text-violet-400 mt-0.5">{subLabel}</p>
-      <p className="text-xs text-zinc-600 mt-1.5">{count}</p>
+      <h2 className="text-sm font-bold font-display" style={{ color: 'var(--c-1)' }}>{label}</h2>
+      <p className="text-xs font-semibold mt-0.5" style={{ color: 'var(--c-accent-text)' }}>{subLabel}</p>
+      <p className="text-xs mt-1.5" style={{ color: 'var(--c-3)' }}>{count}</p>
     </button>
   )
 }
@@ -83,6 +77,7 @@ function QuizPage() {
   const srEnabled      = useBooleanFlagValue(FLAGS.SPACED_REPETITION, false)
   const listenEnabled  = useBooleanFlagValue(FLAGS.LISTEN_QUIZ, false)
   const wordEnabled    = useBooleanFlagValue(FLAGS.WORD_QUIZ, false)
+  const mixedEnabled   = useBooleanFlagValue(FLAGS.MIXED_QUIZ, false)
   const { pick, record, getStats, reset: resetSRS } = useSpacedRepetition()
   const { speak } = useSpeech()
 
@@ -93,6 +88,7 @@ function QuizPage() {
   const [score, setScore]             = useState(0)
   const [selected, setSelected]       = useState<string | null>(null)
   const [finished, setFinished]       = useState(false)
+  const [mixedIsWord, setMixedIsWord] = useState(false)
   const { language } = useLanguage()
 
   const pickFn = useCallback(
@@ -107,37 +103,59 @@ function QuizPage() {
     }
   }, [question, mode, selected, speak])
 
+  const wordPickFn = useCallback(
+    (pool: VocabEntry[]) => pick(pool),
+    [pick],
+  )
+
   const startQuiz = useCallback((m: QuizMode) => {
     setMode(m); setScore(0); setQuestionNumber(1)
-    setSelected(null); setFinished(false)
+    setSelected(null); setFinished(false); setMixedIsWord(false)
     if (m === 'words') {
-      setWordQuestion(buildWordQuestion())
+      setWordQuestion(buildWordQuestion(srEnabled ? wordPickFn : undefined))
       setQuestion(null)
+    } else if (m === 'mixed') {
+      setQuestion(buildQuestion(allCharacters, pickFn))
+      setWordQuestion(null)
     } else {
       setQuestion(buildQuestion(getCharPool(m), pickFn))
       setWordQuestion(null)
     }
-  }, [pickFn])
+  }, [pickFn, srEnabled, wordPickFn])
 
   const handleSelect = (id: string) => {
     if (selected !== null) return
     setSelected(id)
     const correct = wordQuestion ? id === wordQuestion.correct.id : id === question!.correct.id
     if (correct) setScore((s) => s + 1)
-    if (srEnabled && question) record(question.correct.id, correct)
+    if (srEnabled) {
+      if (question) record(question.correct.id, correct)
+      else if (wordQuestion) record(wordQuestion.correct.id, correct)
+    }
   }
 
   const handleNext = useCallback(() => {
     if (!mode) return
     if (questionNumber >= QUIZ_LENGTH) { setFinished(true); return }
-    setQuestionNumber((n) => n + 1)
+    const nextNum = questionNumber + 1
+    setQuestionNumber(nextNum)
     setSelected(null)
     if (mode === 'words') {
-      setWordQuestion(buildWordQuestion())
+      setWordQuestion(buildWordQuestion(srEnabled ? wordPickFn : undefined))
+    } else if (mode === 'mixed') {
+      const nextIsWord = nextNum % 3 === 0
+      setMixedIsWord(nextIsWord)
+      if (nextIsWord) {
+        setWordQuestion(buildWordQuestion(srEnabled ? wordPickFn : undefined))
+        setQuestion(null)
+      } else {
+        setQuestion(buildQuestion(allCharacters, pickFn))
+        setWordQuestion(null)
+      }
     } else {
       setQuestion(buildQuestion(getCharPool(mode), pickFn))
     }
-  }, [mode, questionNumber, pickFn])
+  }, [mode, questionNumber, pickFn, srEnabled, wordPickFn])
 
   /* ── Mode selection ──────────────────────────────────── */
   if (!mode) {
@@ -157,7 +175,7 @@ function QuizPage() {
 
         {srEnabled && (
           <div className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm"
-            style={{ background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.2)', color: '#c4b5fd' }}
+            style={{ background: 'var(--c-accent-muted)', border: '1px solid var(--c-accent-border)', color: 'var(--c-accent-text)' }}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
               <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z" />
@@ -176,7 +194,7 @@ function QuizPage() {
           </div>
         </div>
 
-        {(listenEnabled || wordEnabled) && (
+        {(listenEnabled || wordEnabled || mixedEnabled) && (
           <div>
             <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--c-3)' }}>More Modes</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -204,6 +222,16 @@ function QuizPage() {
                   count="Korean word → English meaning"
                   accent="amber"
                   char="가방→bag"
+                  onStart={startQuiz}
+                />
+              )}
+              {mixedEnabled && (
+                <ModeCard
+                  mode="mixed"
+                  label="Mixed"
+                  subLabel="혼합 Honhap"
+                  count="Characters + vocabulary interleaved"
+                  char="가→ㄱ"
                   onStart={startQuiz}
                 />
               )}
@@ -253,8 +281,8 @@ function QuizPage() {
     )
   }
 
-  /* ── Word quiz ────────────────────────────────────────── */
-  if (mode === 'words' && wordQuestion) {
+  /* ── Word quiz (also used for mixed-mode word turns) ─── */
+  if ((mode === 'words' || (mode === 'mixed' && mixedIsWord)) && wordQuestion) {
     const isAnswered = selected !== null
     const isCorrect  = selected === wordQuestion.correct.id
 
@@ -267,13 +295,13 @@ function QuizPage() {
           </div>
           <div className="rounded-full h-1" style={{ background: 'var(--c-border-card)' }}>
             <div className="h-1 rounded-full transition-all duration-300"
-              style={{ width: `${((questionNumber - 1) / QUIZ_LENGTH) * 100}%`, background: 'linear-gradient(90deg, #d97706, #f59e0b)' }} />
+              style={{ width: `${((questionNumber - 1) / QUIZ_LENGTH) * 100}%`, background: 'var(--c-accent)' }} />
           </div>
         </div>
 
         <div className="glass-card rounded-2xl py-12 px-6 text-center relative">
           <p className="text-xs text-zinc-600 uppercase tracking-widest mb-5 font-bold">What does this mean?</p>
-          <div className="korean-text font-black leading-none" style={{ fontSize: 'clamp(3rem, 12vw, 5.5rem)', color: 'var(--c-1)', textShadow: '0 0 60px rgba(251,191,36,0.25)' }}>
+          <div className="korean-serif font-black leading-none" style={{ fontSize: 'clamp(3rem, 12vw, 5.5rem)', color: 'var(--c-1)' }}>
             {wordQuestion.correct.korean}
           </div>
           <p className="text-sm mt-3 font-medium" style={{ color: 'var(--c-3)' }}>{wordQuestion.correct.romanized}</p>
@@ -291,7 +319,7 @@ function QuizPage() {
 
             if (!isAnswered) {
               style = { background: 'var(--c-input)', borderColor: 'var(--c-border)', color: 'var(--c-1)' }
-              cls += 'hover:border-amber-400/50 hover:bg-amber-500/10 cursor-pointer'
+              cls += 'hover:border-[var(--c-accent-border)] hover:bg-[var(--c-accent-muted)] cursor-pointer'
             } else if (isThisCorrect) {
               style = { background: 'rgba(16,185,129,0.15)', borderColor: 'rgba(16,185,129,0.4)', color: '#6ee7b7' }
             } else if (isThisSelected) {
@@ -318,7 +346,7 @@ function QuizPage() {
                 : { background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)' }
             }>
               {isCorrect ? (
-                <p className="font-bold text-emerald-400">Correct! 정답이에요!</p>
+                <p className="font-bold text-[var(--c-vowel-text)]">Correct! 정답이에요!</p>
               ) : (
                 <div className="flex items-center justify-center gap-2 flex-wrap">
                   <p className="font-bold text-red-400">
@@ -361,7 +389,7 @@ function QuizPage() {
           <div className="h-1 rounded-full transition-all duration-300"
             style={{
               width: `${((questionNumber - 1) / QUIZ_LENGTH) * 100}%`,
-              background: isListen ? 'linear-gradient(90deg, #059669, #10b981)' : 'linear-gradient(90deg, #7c3aed, #4f46e5)',
+              background: 'var(--c-accent)',
             }}
           />
         </div>
@@ -376,12 +404,12 @@ function QuizPage() {
               <button
                 onClick={() => speak(question.correct.char)}
                 className="w-24 h-24 rounded-full flex items-center justify-center transition-all cursor-pointer"
-                style={{ background: 'rgba(16,185,129,0.15)', border: '2px solid rgba(52,211,153,0.4)' }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(16,185,129,0.25)')}
-                onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(16,185,129,0.15)')}
+                style={{ background: 'var(--c-accent-muted)', border: '2px solid var(--c-accent-border)' }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(200,67,43,0.18)')}
+                onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--c-accent-muted)')}
                 aria-label="Play sound"
               >
-                <svg className="w-10 h-10 text-emerald-400" viewBox="0 0 24 24" fill="currentColor">
+                <svg className="w-10 h-10" style={{ color: 'var(--c-accent-text)' }} viewBox="0 0 24 24" fill="currentColor">
                   <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 001.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06zM18.584 5.106a.75.75 0 011.06 0c3.808 3.807 3.808 9.98 0 13.788a.75.75 0 01-1.06-1.06 8.25 8.25 0 000-11.668.75.75 0 010-1.06z" />
                   <path d="M15.932 7.757a.75.75 0 011.061 0 6 6 0 010 8.486.75.75 0 01-1.06-1.061 4.5 4.5 0 000-6.364.75.75 0 010-1.06z" />
                 </svg>
@@ -392,7 +420,7 @@ function QuizPage() {
         ) : (
           <>
             <p className="text-xs text-zinc-600 uppercase tracking-widest mb-5 font-bold">Romanization?</p>
-            <div className="korean-text font-black leading-none" style={{ fontSize: 'clamp(5rem, 18vw, 9rem)', color: 'var(--c-1)', textShadow: '0 0 60px rgba(167,139,250,0.35)' }}>
+            <div className="korean-serif font-black leading-none" style={{ fontSize: 'clamp(5rem, 18vw, 9rem)', color: 'var(--c-1)' }}>
               {question.correct.char}
             </div>
             <p className="text-xs text-zinc-600 mt-4">{question.correct.name}</p>
@@ -413,9 +441,7 @@ function QuizPage() {
 
           if (!isAnswered) {
             style = { background: 'var(--c-input)', borderColor: 'var(--c-border)', color: 'var(--c-1)' }
-            cls += isListen
-              ? 'hover:border-emerald-400/50 hover:bg-emerald-500/10 cursor-pointer'
-              : 'hover:border-violet-400/50 hover:bg-violet-500/10 cursor-pointer'
+            cls += 'hover:border-[var(--c-accent-border)] hover:bg-[var(--c-accent-muted)] cursor-pointer'
           } else if (isThisCorrect) {
             style = { background: 'rgba(16,185,129,0.15)', borderColor: 'rgba(16,185,129,0.4)', color: '#6ee7b7' }
           } else if (isThisSelected) {
@@ -447,7 +473,7 @@ function QuizPage() {
               : { background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)' }
           }>
             {isCorrect ? (
-              <p className="font-bold text-emerald-400">Correct! 정답이에요!</p>
+              <p className="font-bold text-[var(--c-vowel-text)]">Correct! 정답이에요!</p>
             ) : (
               <div className="space-y-1">
                 <div className="flex items-center justify-center gap-2 flex-wrap">

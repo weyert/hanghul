@@ -2,13 +2,9 @@
 // This module is imported by both the OFREP endpoint (server) and the
 // InMemoryProvider fallback used during SSR.
 
-export interface FlagDefinition {
-  disabled: boolean
-  variants: Record<string, unknown>
-  defaultVariant: string
-}
+import type { InMemoryFlagConfiguration } from '@openfeature/web-sdk'
 
-export const FLAG_DEFINITIONS: Record<string, FlagDefinition> = {
+export const FLAG_DEFINITIONS = {
   'syllable-chart': {
     disabled: false,
     variants: { on: true, off: false },
@@ -49,4 +45,21 @@ export const FLAG_DEFINITIONS: Record<string, FlagDefinition> = {
     variants: { on: true, off: false },
     defaultVariant: 'on',
   },
-}
+  'ipa-display': {
+    disabled: false,
+    variants: { on: true, off: false },
+    defaultVariant: 'on',
+  },
+  'cultural-context': {
+    disabled: false,
+    variants: { on: true, off: false },
+    defaultVariant: 'on',
+  },
+  'mixed-quiz': {
+    disabled: false,
+    variants: { on: true, off: false },
+    defaultVariant: 'on',
+  },
+} as const satisfies InMemoryFlagConfiguration
+
+export type FlagDefinition = (typeof FLAG_DEFINITIONS)[keyof typeof FLAG_DEFINITIONS]

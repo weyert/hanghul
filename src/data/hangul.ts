@@ -6,6 +6,7 @@ export interface HangulCharacter {
   id: string
   char: string
   romanization: string
+  ipa: string
   name: string
   descriptions: Record<Language, string>
   examples: Array<{ korean: string; romanized: string; meaning: string }>
@@ -17,6 +18,7 @@ export const consonants: HangulCharacter[] = [
     id: 'giyeok',
     char: 'ㄱ',
     romanization: 'g/k',
+    ipa: 'ɡ',
     name: '기역 Giyeok',
     descriptions: {
       en: "Like 'g' in 'go' at start; 'k' at syllable end",
@@ -32,6 +34,7 @@ export const consonants: HangulCharacter[] = [
     id: 'nieun',
     char: 'ㄴ',
     romanization: 'n',
+    ipa: 'n',
     name: '니은 Nieun',
     descriptions: {
       en: "Like 'n' in 'no'",
@@ -47,6 +50,7 @@ export const consonants: HangulCharacter[] = [
     id: 'digeut',
     char: 'ㄷ',
     romanization: 'd/t',
+    ipa: 'd',
     name: '디귿 Digeut',
     descriptions: {
       en: "Like 'd' in 'do' at start; 't' at syllable end",
@@ -62,6 +66,7 @@ export const consonants: HangulCharacter[] = [
     id: 'rieul',
     char: 'ㄹ',
     romanization: 'r/l',
+    ipa: 'ɾ',
     name: '리을 Rieul',
     descriptions: {
       en: "Flapped 'r' (like the 't' in butter) at start; 'l' at end",
@@ -77,6 +82,7 @@ export const consonants: HangulCharacter[] = [
     id: 'mieum',
     char: 'ㅁ',
     romanization: 'm',
+    ipa: 'm',
     name: '미음 Mieum',
     descriptions: {
       en: "Like 'm' in 'me'",
@@ -92,6 +98,7 @@ export const consonants: HangulCharacter[] = [
     id: 'bieup',
     char: 'ㅂ',
     romanization: 'b/p',
+    ipa: 'b',
     name: '비읍 Bieup',
     descriptions: {
       en: "Like 'b' in 'be' at start; 'p' at syllable end",
@@ -107,10 +114,11 @@ export const consonants: HangulCharacter[] = [
     id: 'siot',
     char: 'ㅅ',
     romanization: 's',
+    ipa: 's',
     name: '시옷 Siot',
     descriptions: {
       en: "Like 's' in 'so'",
-      nl: "Als de 's' in 'see'",
+      nl: "Als de 's' in 'zon' of 'zee'",
     },
     examples: [
       { korean: '사랑', romanized: 'sarang', meaning: 'love' },
@@ -122,6 +130,7 @@ export const consonants: HangulCharacter[] = [
     id: 'ieung',
     char: 'ㅇ',
     romanization: '— / ng',
+    ipa: 'ŋ',
     name: '이응 Ieung',
     descriptions: {
       en: "Silent placeholder at syllable start; 'ng' at end",
@@ -137,6 +146,7 @@ export const consonants: HangulCharacter[] = [
     id: 'jieut',
     char: 'ㅈ',
     romanization: 'j',
+    ipa: 'dʑ',
     name: '지읒 Jieut',
     descriptions: {
       en: "Like 'j' in 'just'",
@@ -152,6 +162,7 @@ export const consonants: HangulCharacter[] = [
     id: 'chieut',
     char: 'ㅊ',
     romanization: 'ch',
+    ipa: 'tɕʰ',
     name: '치읓 Chieut',
     descriptions: {
       en: "Like 'ch' in 'chair', aspirated",
@@ -167,6 +178,7 @@ export const consonants: HangulCharacter[] = [
     id: 'kieuk',
     char: 'ㅋ',
     romanization: 'k',
+    ipa: 'kʰ',
     name: '키읔 Kieuk',
     descriptions: {
       en: "Like 'k' in 'key', strongly aspirated",
@@ -182,6 +194,7 @@ export const consonants: HangulCharacter[] = [
     id: 'tieut',
     char: 'ㅌ',
     romanization: 't',
+    ipa: 'tʰ',
     name: '티읕 Tieut',
     descriptions: {
       en: "Like 't' in 'top', strongly aspirated",
@@ -197,6 +210,7 @@ export const consonants: HangulCharacter[] = [
     id: 'pieup-aspirated',
     char: 'ㅍ',
     romanization: 'p',
+    ipa: 'pʰ',
     name: '피읖 Pieup',
     descriptions: {
       en: "Like 'p' in 'pen', strongly aspirated",
@@ -212,6 +226,7 @@ export const consonants: HangulCharacter[] = [
     id: 'hieut',
     char: 'ㅎ',
     romanization: 'h',
+    ipa: 'h',
     name: '히읗 Hieut',
     descriptions: {
       en: "Like 'h' in 'hat'",
@@ -228,6 +243,7 @@ export const consonants: HangulCharacter[] = [
     id: 'ssanggiyeok',
     char: 'ㄲ',
     romanization: 'kk',
+    ipa: 'k͈',
     name: '쌍기역 Ssanggiyeok',
     descriptions: {
       en: "Tense 'k' — like holding breath before 'k'",
@@ -243,6 +259,7 @@ export const consonants: HangulCharacter[] = [
     id: 'ssangdigeut',
     char: 'ㄸ',
     romanization: 'tt',
+    ipa: 't͈',
     name: '쌍디귿 Ssangdigeut',
     descriptions: {
       en: "Tense 't' — unaspirated and tense",
@@ -258,6 +275,7 @@ export const consonants: HangulCharacter[] = [
     id: 'ssangbieup',
     char: 'ㅃ',
     romanization: 'pp',
+    ipa: 'p͈',
     name: '쌍비읍 Ssangbieup',
     descriptions: {
       en: "Tense 'p' — unaspirated and tense",
@@ -273,6 +291,7 @@ export const consonants: HangulCharacter[] = [
     id: 'ssangsiot',
     char: 'ㅆ',
     romanization: 'ss',
+    ipa: 's͈',
     name: '쌍시옷 Ssangsiot',
     descriptions: {
       en: "Tense 's' — sharper than single ㅅ",
@@ -288,6 +307,7 @@ export const consonants: HangulCharacter[] = [
     id: 'ssangjieut',
     char: 'ㅉ',
     romanization: 'jj',
+    ipa: 't͈ɕ',
     name: '쌍지읒 Ssangjieut',
     descriptions: {
       en: "Tense 'j' — unaspirated and tense",
@@ -307,6 +327,7 @@ export const vowels: HangulCharacter[] = [
     id: 'a',
     char: 'ㅏ',
     romanization: 'a',
+    ipa: 'a',
     name: '아 A',
     descriptions: {
       en: "Like 'a' in 'father'",
@@ -322,6 +343,7 @@ export const vowels: HangulCharacter[] = [
     id: 'ya',
     char: 'ㅑ',
     romanization: 'ya',
+    ipa: 'ja',
     name: '야 Ya',
     descriptions: {
       en: "Like 'ya' in 'yard'",
@@ -337,6 +359,7 @@ export const vowels: HangulCharacter[] = [
     id: 'eo',
     char: 'ㅓ',
     romanization: 'eo',
+    ipa: 'ʌ',
     name: '어 Eo',
     descriptions: {
       en: "Like 'uh' or the 'o' in British 'on'",
@@ -352,6 +375,7 @@ export const vowels: HangulCharacter[] = [
     id: 'yeo',
     char: 'ㅕ',
     romanization: 'yeo',
+    ipa: 'jʌ',
     name: '여 Yeo',
     descriptions: {
       en: "Like 'yuh' — ㅑ but with eo sound",
@@ -367,6 +391,7 @@ export const vowels: HangulCharacter[] = [
     id: 'o',
     char: 'ㅗ',
     romanization: 'o',
+    ipa: 'o',
     name: '오 O',
     descriptions: {
       en: "Like 'o' in 'oh' — round lips",
@@ -382,6 +407,7 @@ export const vowels: HangulCharacter[] = [
     id: 'yo',
     char: 'ㅛ',
     romanization: 'yo',
+    ipa: 'jo',
     name: '요 Yo',
     descriptions: {
       en: "Like 'yo' in 'yoga'",
@@ -397,6 +423,7 @@ export const vowels: HangulCharacter[] = [
     id: 'u',
     char: 'ㅜ',
     romanization: 'u',
+    ipa: 'u',
     name: '우 U',
     descriptions: {
       en: "Like 'oo' in 'moon'",
@@ -412,6 +439,7 @@ export const vowels: HangulCharacter[] = [
     id: 'yu',
     char: 'ㅠ',
     romanization: 'yu',
+    ipa: 'ju',
     name: '유 Yu',
     descriptions: {
       en: "Like 'you'",
@@ -427,6 +455,7 @@ export const vowels: HangulCharacter[] = [
     id: 'eu',
     char: 'ㅡ',
     romanization: 'eu',
+    ipa: 'ɯ',
     name: '으 Eu',
     descriptions: {
       en: "No English equivalent — like 'u' in 'but' with spread lips",
@@ -442,6 +471,7 @@ export const vowels: HangulCharacter[] = [
     id: 'i',
     char: 'ㅣ',
     romanization: 'i',
+    ipa: 'i',
     name: '이 I',
     descriptions: {
       en: "Like 'ee' in 'see'",
@@ -458,6 +488,7 @@ export const vowels: HangulCharacter[] = [
     id: 'ae',
     char: 'ㅐ',
     romanization: 'ae',
+    ipa: 'ɛ',
     name: '애 Ae',
     descriptions: {
       en: "Like 'a' in 'cat'",
@@ -473,6 +504,7 @@ export const vowels: HangulCharacter[] = [
     id: 'yae',
     char: 'ㅒ',
     romanization: 'yae',
+    ipa: 'jɛ',
     name: '얘 Yae',
     descriptions: {
       en: "Like 'yae' — ㅑ + ㅐ",
@@ -487,6 +519,7 @@ export const vowels: HangulCharacter[] = [
     id: 'e',
     char: 'ㅔ',
     romanization: 'e',
+    ipa: 'e',
     name: '에 E',
     descriptions: {
       en: "Like 'e' in 'bed'",
@@ -502,6 +535,7 @@ export const vowels: HangulCharacter[] = [
     id: 'ye',
     char: 'ㅖ',
     romanization: 'ye',
+    ipa: 'je',
     name: '예 Ye',
     descriptions: {
       en: "Like 'ye' in 'yes'",
@@ -517,6 +551,7 @@ export const vowels: HangulCharacter[] = [
     id: 'wa',
     char: 'ㅘ',
     romanization: 'wa',
+    ipa: 'wa',
     name: '와 Wa',
     descriptions: {
       en: "Like 'wa' in 'want'",
@@ -532,6 +567,7 @@ export const vowels: HangulCharacter[] = [
     id: 'wae',
     char: 'ㅙ',
     romanization: 'wae',
+    ipa: 'wɛ',
     name: '왜 Wae',
     descriptions: {
       en: "ㅗ + ㅐ — similar to 'wae'",
@@ -547,6 +583,7 @@ export const vowels: HangulCharacter[] = [
     id: 'oe',
     char: 'ㅚ',
     romanization: 'oe',
+    ipa: 'ø',
     name: '외 Oe',
     descriptions: {
       en: "Historically distinct; now often sounds like ㅔ",
@@ -562,6 +599,7 @@ export const vowels: HangulCharacter[] = [
     id: 'wo',
     char: 'ㅝ',
     romanization: 'wo',
+    ipa: 'wʌ',
     name: '워 Wo',
     descriptions: {
       en: "ㅜ + ㅓ — like 'wo' in 'wonder'",
@@ -577,10 +615,11 @@ export const vowels: HangulCharacter[] = [
     id: 'we',
     char: 'ㅞ',
     romanization: 'we',
+    ipa: 'we',
     name: '웨 We',
     descriptions: {
       en: "ㅜ + ㅔ — like 'we'",
-      nl: "Als Engelse 'we' of 'we' in 'web' (NL)",
+      nl: "Als 'we' in 'web' of 'wet'",
     },
     examples: [
       { korean: '웨이터', romanized: 'weiteo', meaning: 'waiter' },
@@ -591,6 +630,7 @@ export const vowels: HangulCharacter[] = [
     id: 'wi',
     char: 'ㅟ',
     romanization: 'wi',
+    ipa: 'wi',
     name: '위 Wi',
     descriptions: {
       en: "ㅜ + ㅣ — like 'wi' in 'week'",
@@ -606,6 +646,7 @@ export const vowels: HangulCharacter[] = [
     id: 'ui',
     char: 'ㅢ',
     romanization: 'ui',
+    ipa: 'ɯi',
     name: '의 Ui',
     descriptions: {
       en: "ㅡ + ㅣ — starts with eu, slides into i",
