@@ -4,3 +4,4 @@ dist
 .github
 .tanstack
 *.md
+pnpm-workspace.yaml
