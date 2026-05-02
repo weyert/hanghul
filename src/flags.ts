@@ -15,6 +15,11 @@ export const FLAGS = {
   MIXED_QUIZ: 'mixed-quiz',
   STROKE_PRACTICE: 'stroke-practice',
   SYLLABLE_BLOCKS: 'syllable-blocks',
+  GUIDED_LEARN: 'guided-learn',
+  QUIZ_RETRY_WRONG: 'quiz-retry-wrong',
+  QUIZ_AUTO_AUDIO: 'quiz-auto-audio',
+  QUIZ_CORRECT_TIP: 'quiz-correct-tip',
+  TYPING_BEGINNER: 'typing-beginner',
 } as const
 
 // SSR / initial render: serve flags immediately from the shared definitions

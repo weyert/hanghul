@@ -70,6 +70,31 @@ export const FLAG_DEFINITIONS = {
     variants: { on: true, off: false },
     defaultVariant: 'on',
   },
+  'guided-learn': {
+    disabled: false,
+    variants: { on: true, off: false },
+    defaultVariant: 'on',
+  },
+  'quiz-retry-wrong': {
+    disabled: false,
+    variants: { on: true, off: false },
+    defaultVariant: 'on',
+  },
+  'quiz-auto-audio': {
+    disabled: false,
+    variants: { on: true, off: false },
+    defaultVariant: 'on',
+  },
+  'quiz-correct-tip': {
+    disabled: false,
+    variants: { on: true, off: false },
+    defaultVariant: 'on',
+  },
+  'typing-beginner': {
+    disabled: false,
+    variants: { on: true, off: false },
+    defaultVariant: 'on',
+  },
 } as const satisfies InMemoryFlagConfiguration
 
 export type FlagDefinition = (typeof FLAG_DEFINITIONS)[keyof typeof FLAG_DEFINITIONS]

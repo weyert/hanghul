@@ -23,7 +23,7 @@ const QUIZ_LENGTH = 10
 type QuizMode = 'consonants' | 'vowels' | 'all' | 'listen' | 'words' | 'mixed'
 
 interface Question    { correct: HangulCharacter; options: HangulCharacter[] }
-interface WordQuestion { correct: VocabEntry;        options: VocabEntry[] }
+interface WordQuestion { correct: VocabEntry;       options: VocabEntry[] }
 
 function shuffle<T>(arr: T[]): T[] {
   return [...arr].sort(() => Math.random() - 0.5)
@@ -45,6 +45,46 @@ function getCharPool(mode: 'consonants' | 'vowels' | 'all' | 'listen'): HangulCh
   if (mode === 'consonants') return consonants
   if (mode === 'vowels') return vowels
   return allCharacters
+}
+
+// ── Tip toggle (feature 5) ─────────────────────────────────────────
+
+function TipToggle({ char, language }: { char: HangulCharacter; language: string }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <div className="mt-2 text-center">
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="inline-flex items-center gap-1 text-xs cursor-pointer transition-colors"
+        style={{ color: 'var(--c-4)' }}
+        onMouseEnter={e => (e.currentTarget.style.color = 'var(--c-accent-text)')}
+        onMouseLeave={e => (e.currentTarget.style.color = 'var(--c-4)')}
+      >
+        <svg
+          width="12" height="12" viewBox="0 0 12 12" fill="none"
+          stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+          style={{ transition: 'transform 0.15s ease', transform: open ? 'rotate(180deg)' : 'rotate(0)' }}
+        >
+          <polyline points="2,4 6,8 10,4" />
+        </svg>
+        {open ? 'Hide tip' : 'Memory tip'}
+      </button>
+      {open && (
+        <div className="mt-2 space-y-1 text-xs" style={{ color: 'var(--c-3)' }}>
+          <p>{char.descriptions[language as 'en' | 'nl'] ?? char.descriptions.en}</p>
+          {char.examples[0] && (
+            <div className="flex items-center justify-center gap-1.5 mt-1">
+              <span className="korean-text font-semibold" style={{ color: 'var(--c-2)' }}>
+                {char.examples[0].korean}
+              </span>
+              <span style={{ color: 'var(--c-4)' }}>·</span>
+              <span>{char.examples[0].meaning}</span>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  )
 }
 
 // ── Mode card ──────────────────────────────────────────────────────
@@ -74,21 +114,30 @@ function ModeCard({ mode, label, subLabel, count, char, onStart }: ModeCardProps
 // ── QuizPage ───────────────────────────────────────────────────────
 
 function QuizPage() {
-  const srEnabled      = useBooleanFlagValue(FLAGS.SPACED_REPETITION, false)
-  const listenEnabled  = useBooleanFlagValue(FLAGS.LISTEN_QUIZ, false)
-  const wordEnabled    = useBooleanFlagValue(FLAGS.WORD_QUIZ, false)
-  const mixedEnabled   = useBooleanFlagValue(FLAGS.MIXED_QUIZ, false)
+  const srEnabled         = useBooleanFlagValue(FLAGS.SPACED_REPETITION, false)
+  const listenEnabled     = useBooleanFlagValue(FLAGS.LISTEN_QUIZ, false)
+  const wordEnabled       = useBooleanFlagValue(FLAGS.WORD_QUIZ, false)
+  const mixedEnabled      = useBooleanFlagValue(FLAGS.MIXED_QUIZ, false)
+  const retryWrongEnabled = useBooleanFlagValue(FLAGS.QUIZ_RETRY_WRONG, false)
+  const autoAudioEnabled  = useBooleanFlagValue(FLAGS.QUIZ_AUTO_AUDIO, false)
+  const correctTipEnabled = useBooleanFlagValue(FLAGS.QUIZ_CORRECT_TIP, false)
+
   const { pick, record, getStats, reset: resetSRS } = useSpacedRepetition()
   const { speak } = useSpeech()
 
-  const [mode, setMode]               = useState<QuizMode | null>(null)
-  const [question, setQuestion]       = useState<Question | null>(null)
-  const [wordQuestion, setWordQuestion] = useState<WordQuestion | null>(null)
+  const [mode, setMode]                   = useState<QuizMode | null>(null)
+  const [question, setQuestion]           = useState<Question | null>(null)
+  const [wordQuestion, setWordQuestion]   = useState<WordQuestion | null>(null)
   const [questionNumber, setQuestionNumber] = useState(0)
-  const [score, setScore]             = useState(0)
-  const [selected, setSelected]       = useState<string | null>(null)
-  const [finished, setFinished]       = useState(false)
-  const [mixedIsWord, setMixedIsWord] = useState(false)
+  const [score, setScore]                 = useState(0)
+  const [selected, setSelected]           = useState<string | null>(null)
+  const [finished, setFinished]           = useState(false)
+  const [mixedIsWord, setMixedIsWord]     = useState(false)
+  // Feature 2: track characters answered wrong during a round
+  const [wrongChars, setWrongChars]       = useState<HangulCharacter[]>([])
+  // Optional custom pool (used when retrying wrong answers)
+  const [activePool, setActivePool]       = useState<HangulCharacter[] | null>(null)
+
   const { language } = useLanguage()
 
   const pickFn = useCallback(
@@ -96,7 +145,6 @@ function QuizPage() {
     [srEnabled, pick],
   )
 
-  // Auto-play in listen mode when a new question loads
   useEffect(() => {
     if (mode === 'listen' && question && !selected) {
       speak(question.correct.char)
@@ -108,17 +156,20 @@ function QuizPage() {
     [pick],
   )
 
-  const startQuiz = useCallback((m: QuizMode) => {
+  const startQuiz = useCallback((m: QuizMode, customPool?: HangulCharacter[]) => {
     setMode(m); setScore(0); setQuestionNumber(1)
     setSelected(null); setFinished(false); setMixedIsWord(false)
+    setWrongChars([])
+    setActivePool(customPool ?? null)
+    const pool = customPool ?? (m === 'mixed' ? allCharacters : m !== 'words' ? getCharPool(m) : null)
     if (m === 'words') {
       setWordQuestion(buildWordQuestion(srEnabled ? wordPickFn : undefined))
       setQuestion(null)
     } else if (m === 'mixed') {
-      setQuestion(buildQuestion(allCharacters, pickFn))
+      setQuestion(buildQuestion(pool!, pickFn))
       setWordQuestion(null)
     } else {
-      setQuestion(buildQuestion(getCharPool(m), pickFn))
+      setQuestion(buildQuestion(pool!, pickFn))
       setWordQuestion(null)
     }
   }, [pickFn, srEnabled, wordPickFn])
@@ -127,7 +178,20 @@ function QuizPage() {
     if (selected !== null) return
     setSelected(id)
     const correct = wordQuestion ? id === wordQuestion.correct.id : id === question!.correct.id
-    if (correct) setScore((s) => s + 1)
+    if (correct) {
+      setScore((s) => s + 1)
+      // Feature 4: auto-play audio after correct character answer
+      if (autoAudioEnabled && question) {
+        setTimeout(() => speak(question.correct.char), 350)
+      }
+    } else {
+      // Feature 2: track wrong characters for retry
+      if (retryWrongEnabled && question) {
+        setWrongChars(prev =>
+          prev.some(c => c.id === question.correct.id) ? prev : [...prev, question.correct],
+        )
+      }
+    }
     if (srEnabled) {
       if (question) record(question.correct.id, correct)
       else if (wordQuestion) record(wordQuestion.correct.id, correct)
@@ -149,13 +213,13 @@ function QuizPage() {
         setWordQuestion(buildWordQuestion(srEnabled ? wordPickFn : undefined))
         setQuestion(null)
       } else {
-        setQuestion(buildQuestion(allCharacters, pickFn))
+        setQuestion(buildQuestion(activePool ?? allCharacters, pickFn))
         setWordQuestion(null)
       }
     } else {
-      setQuestion(buildQuestion(getCharPool(mode), pickFn))
+      setQuestion(buildQuestion(activePool ?? getCharPool(mode), pickFn))
     }
-  }, [mode, questionNumber, pickFn, srEnabled, wordPickFn])
+  }, [mode, questionNumber, pickFn, srEnabled, wordPickFn, activePool])
 
   /* ── Mode selection ──────────────────────────────────── */
   if (!mode) {
@@ -174,7 +238,8 @@ function QuizPage() {
         </div>
 
         {srEnabled && (
-          <div className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm"
+          <div
+            className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm"
             style={{ background: 'var(--c-accent-muted)', border: '1px solid var(--c-accent-border)', color: 'var(--c-accent-text)' }}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
@@ -249,10 +314,14 @@ function QuizPage() {
   /* ── Results ─────────────────────────────────────────── */
   if (finished) {
     const pct = Math.round((score / QUIZ_LENGTH) * 100)
-    const grade = pct >= 90 ? { korean: '완벽해요!', msg: 'Outstanding', color: '#6ee7b7' } :
-                  pct >= 70 ? { korean: '잘했어요!', msg: 'Great job',   color: '#a78bfa' } :
-                  pct >= 50 ? { korean: '계속해요!', msg: 'Keep going',  color: '#fcd34d' } :
-                              { korean: '다시 해요', msg: 'Try again',   color: '#f87171' }
+    const grade =
+      pct >= 90 ? { korean: '완벽해요!', msg: 'Outstanding', color: '#6ee7b7' } :
+      pct >= 70 ? { korean: '잘했어요!', msg: 'Great job',   color: '#a78bfa' } :
+      pct >= 50 ? { korean: '계속해요!', msg: 'Keep going',  color: '#fcd34d' } :
+                  { korean: '다시 해요', msg: 'Try again',   color: '#f87171' }
+
+    const hasWrong = retryWrongEnabled && wrongChars.length > 0
+
     return (
       <div className="max-w-sm mx-auto text-center space-y-6 py-10">
         <div>
@@ -268,11 +337,28 @@ function QuizPage() {
             <div className="h-1.5 rounded-full transition-all duration-700"
               style={{ width: `${pct}%`, background: grade.color }} />
           </div>
+          {hasWrong && (
+            <p className="text-xs" style={{ color: 'var(--c-3)' }}>
+              {wrongChars.length} character{wrongChars.length > 1 ? 's' : ''} missed:{' '}
+              <span className="korean-text font-bold" style={{ color: 'var(--c-1)' }}>
+                {wrongChars.map(c => c.char).join(' ')}
+              </span>
+            </p>
+          )}
         </div>
-        <div className="flex gap-3 justify-center">
+        <div className="flex gap-3 justify-center flex-wrap">
           <button onClick={() => startQuiz(mode)} className="btn-primary text-white px-6 py-3 rounded-xl font-bold cursor-pointer text-sm">
             Try Again
           </button>
+          {hasWrong && (
+            <button
+              onClick={() => startQuiz(mode, wrongChars)}
+              className="px-6 py-3 rounded-xl font-bold cursor-pointer text-sm"
+              style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#fca5a5' }}
+            >
+              Retry {wrongChars.length} wrong →
+            </button>
+          )}
           <button onClick={() => setMode(null)} className="btn-ghost px-6 py-3 rounded-xl font-bold cursor-pointer text-sm" style={{ color: 'var(--c-1)' }}>
             Change Mode
           </button>
@@ -281,7 +367,7 @@ function QuizPage() {
     )
   }
 
-  /* ── Word quiz (also used for mixed-mode word turns) ─── */
+  /* ── Word quiz ───────────────────────────────────────── */
   if ((mode === 'words' || (mode === 'mixed' && mixedIsWord)) && wordQuestion) {
     const isAnswered = selected !== null
     const isCorrect  = selected === wordQuestion.correct.id
@@ -330,8 +416,7 @@ function QuizPage() {
 
             return (
               <button key={option.id} className={cls} style={style}
-                onClick={() => handleSelect(option.id)} disabled={isAnswered}
-              >
+                onClick={() => handleSelect(option.id)} disabled={isAnswered}>
                 {option.meaning}
               </button>
             )
@@ -387,15 +472,10 @@ function QuizPage() {
         </div>
         <div className="rounded-full h-1" style={{ background: 'var(--c-border-card)' }}>
           <div className="h-1 rounded-full transition-all duration-300"
-            style={{
-              width: `${((questionNumber - 1) / QUIZ_LENGTH) * 100}%`,
-              background: 'var(--c-accent)',
-            }}
-          />
+            style={{ width: `${((questionNumber - 1) / QUIZ_LENGTH) * 100}%`, background: 'var(--c-accent)' }} />
         </div>
       </div>
 
-      {/* Question card */}
       <div className="glass-card rounded-2xl py-12 px-6 text-center relative">
         {isListen ? (
           <>
@@ -431,7 +511,6 @@ function QuizPage() {
         )}
       </div>
 
-      {/* Options */}
       <div className="grid grid-cols-2 gap-2.5">
         {question.options.map((option) => {
           const isThisSelected = selected === option.id
@@ -452,8 +531,7 @@ function QuizPage() {
 
           return (
             <button key={option.id} className={cls} style={style}
-              onClick={() => handleSelect(option.id)} disabled={isAnswered}
-            >
+              onClick={() => handleSelect(option.id)} disabled={isAnswered}>
               {isListen ? (
                 <span className="text-2xl korean-text">{option.char}</span>
               ) : (
@@ -464,18 +542,23 @@ function QuizPage() {
         })}
       </div>
 
-      {/* Feedback */}
       {isAnswered && (
         <div className="space-y-3">
-          <div className="rounded-xl p-4 text-center" style={
+          <div className="rounded-xl p-4" style={
             isCorrect
               ? { background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.25)' }
               : { background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)' }
           }>
             {isCorrect ? (
-              <p className="font-bold text-[var(--c-vowel-text)]">Correct! 정답이에요!</p>
+              <div className="text-center">
+                <p className="font-bold text-[var(--c-vowel-text)]">Correct! 정답이에요!</p>
+                {/* Feature 5: memory tip on correct answers */}
+                {correctTipEnabled && !isListen && (
+                  <TipToggle char={question.correct} language={language} />
+                )}
+              </div>
             ) : (
-              <div className="space-y-1">
+              <div className="space-y-1 text-center">
                 <div className="flex items-center justify-center gap-2 flex-wrap">
                   <p className="font-bold text-red-400">
                     {isListen

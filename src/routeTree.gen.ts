@@ -17,6 +17,7 @@ import { Route as StrokeOrderRouteImport } from './routes/stroke-order'
 import { Route as QuizRouteImport } from './routes/quiz'
 import { Route as PronounceRouteImport } from './routes/pronounce'
 import { Route as ProgressRouteImport } from './routes/progress'
+import { Route as LearnRouteImport } from './routes/learn'
 import { Route as ConsonantsRouteImport } from './routes/consonants'
 import { Route as BuilderRouteImport } from './routes/builder'
 import { Route as BlocksRouteImport } from './routes/blocks'
@@ -62,6 +63,11 @@ const ProgressRoute = ProgressRouteImport.update({
   path: '/progress',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LearnRoute = LearnRouteImport.update({
+  id: '/learn',
+  path: '/learn',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ConsonantsRoute = ConsonantsRouteImport.update({
   id: '/consonants',
   path: '/consonants',
@@ -88,6 +94,7 @@ export interface FileRoutesByFullPath {
   '/blocks': typeof BlocksRoute
   '/builder': typeof BuilderRoute
   '/consonants': typeof ConsonantsRoute
+  '/learn': typeof LearnRoute
   '/progress': typeof ProgressRoute
   '/pronounce': typeof PronounceRoute
   '/quiz': typeof QuizRoute
@@ -102,6 +109,7 @@ export interface FileRoutesByTo {
   '/blocks': typeof BlocksRoute
   '/builder': typeof BuilderRoute
   '/consonants': typeof ConsonantsRoute
+  '/learn': typeof LearnRoute
   '/progress': typeof ProgressRoute
   '/pronounce': typeof PronounceRoute
   '/quiz': typeof QuizRoute
@@ -117,6 +125,7 @@ export interface FileRoutesById {
   '/blocks': typeof BlocksRoute
   '/builder': typeof BuilderRoute
   '/consonants': typeof ConsonantsRoute
+  '/learn': typeof LearnRoute
   '/progress': typeof ProgressRoute
   '/pronounce': typeof PronounceRoute
   '/quiz': typeof QuizRoute
@@ -133,6 +142,7 @@ export interface FileRouteTypes {
     | '/blocks'
     | '/builder'
     | '/consonants'
+    | '/learn'
     | '/progress'
     | '/pronounce'
     | '/quiz'
@@ -147,6 +157,7 @@ export interface FileRouteTypes {
     | '/blocks'
     | '/builder'
     | '/consonants'
+    | '/learn'
     | '/progress'
     | '/pronounce'
     | '/quiz'
@@ -161,6 +172,7 @@ export interface FileRouteTypes {
     | '/blocks'
     | '/builder'
     | '/consonants'
+    | '/learn'
     | '/progress'
     | '/pronounce'
     | '/quiz'
@@ -176,6 +188,7 @@ export interface RootRouteChildren {
   BlocksRoute: typeof BlocksRoute
   BuilderRoute: typeof BuilderRoute
   ConsonantsRoute: typeof ConsonantsRoute
+  LearnRoute: typeof LearnRoute
   ProgressRoute: typeof ProgressRoute
   PronounceRoute: typeof PronounceRoute
   QuizRoute: typeof QuizRoute
@@ -244,6 +257,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProgressRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/learn': {
+      id: '/learn'
+      path: '/learn'
+      fullPath: '/learn'
+      preLoaderRoute: typeof LearnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/consonants': {
       id: '/consonants'
       path: '/consonants'
@@ -280,6 +300,7 @@ const rootRouteChildren: RootRouteChildren = {
   BlocksRoute: BlocksRoute,
   BuilderRoute: BuilderRoute,
   ConsonantsRoute: ConsonantsRoute,
+  LearnRoute: LearnRoute,
   ProgressRoute: ProgressRoute,
   PronounceRoute: PronounceRoute,
   QuizRoute: QuizRoute,

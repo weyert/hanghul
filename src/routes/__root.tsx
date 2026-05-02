@@ -80,6 +80,7 @@ function MobileNavLink({ to, children, onClick }: { to: string; children: ReactN
 // ─── More dropdown (desktop flagged links) ────────────────────────────
 
 const FLAGGED_ROUTES = [
+  { flag: FLAGS.GUIDED_LEARN,      to: '/learn',          label: 'Lessons'        },
   { flag: FLAGS.SYLLABLE_BLOCKS,   to: '/blocks',         label: 'Blocks'         },
   { flag: FLAGS.SYLLABLE_CHART,    to: '/syllable-chart', label: 'Syllable Chart' },
   { flag: FLAGS.VOCABULARY,        to: '/vocabulary',     label: 'Vocabulary'     },
@@ -93,6 +94,7 @@ function MoreDropdown() {
   const ref = useRef<HTMLDivElement>(null)
   const { location } = useRouterState()
 
+  const guidedLearn    = useBooleanFlagValue(FLAGS.GUIDED_LEARN, false)
   const syllableBlocks = useBooleanFlagValue(FLAGS.SYLLABLE_BLOCKS, false)
   const syllableChart  = useBooleanFlagValue(FLAGS.SYLLABLE_CHART, false)
   const vocabulary     = useBooleanFlagValue(FLAGS.VOCABULARY, false)
@@ -101,6 +103,7 @@ function MoreDropdown() {
   const strokeOrder    = useBooleanFlagValue(FLAGS.STROKE_ORDER, false)
 
   const flagMap: Record<string, boolean> = {
+    [FLAGS.GUIDED_LEARN]:       guidedLearn,
     [FLAGS.SYLLABLE_BLOCKS]:    syllableBlocks,
     [FLAGS.SYLLABLE_CHART]:     syllableChart,
     [FLAGS.VOCABULARY]:         vocabulary,
@@ -188,6 +191,7 @@ function MoreDropdown() {
 // ─── Flagged mobile nav links ─────────────────────────────────────────
 
 function FlaggedMobileNavLinks({ onLinkClick }: { onLinkClick?: () => void }) {
+  const guidedLearn    = useBooleanFlagValue(FLAGS.GUIDED_LEARN, false)
   const syllableBlocks = useBooleanFlagValue(FLAGS.SYLLABLE_BLOCKS, false)
   const syllableChart  = useBooleanFlagValue(FLAGS.SYLLABLE_CHART, false)
   const vocabulary     = useBooleanFlagValue(FLAGS.VOCABULARY, false)
@@ -196,6 +200,7 @@ function FlaggedMobileNavLinks({ onLinkClick }: { onLinkClick?: () => void }) {
   const strokeOrder    = useBooleanFlagValue(FLAGS.STROKE_ORDER, false)
 
   const flagMap: Record<string, boolean> = {
+    [FLAGS.GUIDED_LEARN]:       guidedLearn,
     [FLAGS.SYLLABLE_BLOCKS]:    syllableBlocks,
     [FLAGS.SYLLABLE_CHART]:     syllableChart,
     [FLAGS.VOCABULARY]:         vocabulary,
