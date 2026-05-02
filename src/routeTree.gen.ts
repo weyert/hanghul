@@ -18,6 +18,7 @@ import { Route as QuizRouteImport } from './routes/quiz'
 import { Route as PronounceRouteImport } from './routes/pronounce'
 import { Route as ProgressRouteImport } from './routes/progress'
 import { Route as LearnRouteImport } from './routes/learn'
+import { Route as KoreaFactsRouteImport } from './routes/korea-facts'
 import { Route as ConsonantsRouteImport } from './routes/consonants'
 import { Route as BuilderRouteImport } from './routes/builder'
 import { Route as BlocksRouteImport } from './routes/blocks'
@@ -68,6 +69,11 @@ const LearnRoute = LearnRouteImport.update({
   path: '/learn',
   getParentRoute: () => rootRouteImport,
 } as any)
+const KoreaFactsRoute = KoreaFactsRouteImport.update({
+  id: '/korea-facts',
+  path: '/korea-facts',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ConsonantsRoute = ConsonantsRouteImport.update({
   id: '/consonants',
   path: '/consonants',
@@ -94,6 +100,7 @@ export interface FileRoutesByFullPath {
   '/blocks': typeof BlocksRoute
   '/builder': typeof BuilderRoute
   '/consonants': typeof ConsonantsRoute
+  '/korea-facts': typeof KoreaFactsRoute
   '/learn': typeof LearnRoute
   '/progress': typeof ProgressRoute
   '/pronounce': typeof PronounceRoute
@@ -109,6 +116,7 @@ export interface FileRoutesByTo {
   '/blocks': typeof BlocksRoute
   '/builder': typeof BuilderRoute
   '/consonants': typeof ConsonantsRoute
+  '/korea-facts': typeof KoreaFactsRoute
   '/learn': typeof LearnRoute
   '/progress': typeof ProgressRoute
   '/pronounce': typeof PronounceRoute
@@ -125,6 +133,7 @@ export interface FileRoutesById {
   '/blocks': typeof BlocksRoute
   '/builder': typeof BuilderRoute
   '/consonants': typeof ConsonantsRoute
+  '/korea-facts': typeof KoreaFactsRoute
   '/learn': typeof LearnRoute
   '/progress': typeof ProgressRoute
   '/pronounce': typeof PronounceRoute
@@ -142,6 +151,7 @@ export interface FileRouteTypes {
     | '/blocks'
     | '/builder'
     | '/consonants'
+    | '/korea-facts'
     | '/learn'
     | '/progress'
     | '/pronounce'
@@ -157,6 +167,7 @@ export interface FileRouteTypes {
     | '/blocks'
     | '/builder'
     | '/consonants'
+    | '/korea-facts'
     | '/learn'
     | '/progress'
     | '/pronounce'
@@ -172,6 +183,7 @@ export interface FileRouteTypes {
     | '/blocks'
     | '/builder'
     | '/consonants'
+    | '/korea-facts'
     | '/learn'
     | '/progress'
     | '/pronounce'
@@ -188,6 +200,7 @@ export interface RootRouteChildren {
   BlocksRoute: typeof BlocksRoute
   BuilderRoute: typeof BuilderRoute
   ConsonantsRoute: typeof ConsonantsRoute
+  KoreaFactsRoute: typeof KoreaFactsRoute
   LearnRoute: typeof LearnRoute
   ProgressRoute: typeof ProgressRoute
   PronounceRoute: typeof PronounceRoute
@@ -264,6 +277,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/korea-facts': {
+      id: '/korea-facts'
+      path: '/korea-facts'
+      fullPath: '/korea-facts'
+      preLoaderRoute: typeof KoreaFactsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/consonants': {
       id: '/consonants'
       path: '/consonants'
@@ -300,6 +320,7 @@ const rootRouteChildren: RootRouteChildren = {
   BlocksRoute: BlocksRoute,
   BuilderRoute: BuilderRoute,
   ConsonantsRoute: ConsonantsRoute,
+  KoreaFactsRoute: KoreaFactsRoute,
   LearnRoute: LearnRoute,
   ProgressRoute: ProgressRoute,
   PronounceRoute: PronounceRoute,

@@ -87,6 +87,7 @@ const FLAGGED_ROUTES = [
   { flag: FLAGS.STROKE_ORDER,      to: '/stroke-order',   label: 'Stroke Order'   },
   { flag: FLAGS.TYPING_PRACTICE,   to: '/typing',         label: 'Typing'         },
   { flag: FLAGS.PROGRESS_DASHBOARD,to: '/progress',       label: 'Progress'       },
+  { flag: FLAGS.KOREA_FACTS,        to: '/korea-facts',   label: 'Korea Facts'    },
 ] as const
 
 function MoreDropdown() {
@@ -101,6 +102,7 @@ function MoreDropdown() {
   const typingPractice = useBooleanFlagValue(FLAGS.TYPING_PRACTICE, false)
   const progressDash   = useBooleanFlagValue(FLAGS.PROGRESS_DASHBOARD, false)
   const strokeOrder    = useBooleanFlagValue(FLAGS.STROKE_ORDER, false)
+  const koreaFacts     = useBooleanFlagValue(FLAGS.KOREA_FACTS, false)
 
   const flagMap: Record<string, boolean> = {
     [FLAGS.GUIDED_LEARN]:       guidedLearn,
@@ -110,6 +112,7 @@ function MoreDropdown() {
     [FLAGS.STROKE_ORDER]:       strokeOrder,
     [FLAGS.TYPING_PRACTICE]:    typingPractice,
     [FLAGS.PROGRESS_DASHBOARD]: progressDash,
+    [FLAGS.KOREA_FACTS]:        koreaFacts,
   }
 
   const routes = FLAGGED_ROUTES.filter(r => flagMap[r.flag])
@@ -198,6 +201,7 @@ function FlaggedMobileNavLinks({ onLinkClick }: { onLinkClick?: () => void }) {
   const typingPractice = useBooleanFlagValue(FLAGS.TYPING_PRACTICE, false)
   const progressDash   = useBooleanFlagValue(FLAGS.PROGRESS_DASHBOARD, false)
   const strokeOrder    = useBooleanFlagValue(FLAGS.STROKE_ORDER, false)
+  const koreaFacts     = useBooleanFlagValue(FLAGS.KOREA_FACTS, false)
 
   const flagMap: Record<string, boolean> = {
     [FLAGS.GUIDED_LEARN]:       guidedLearn,
@@ -207,6 +211,7 @@ function FlaggedMobileNavLinks({ onLinkClick }: { onLinkClick?: () => void }) {
     [FLAGS.STROKE_ORDER]:       strokeOrder,
     [FLAGS.TYPING_PRACTICE]:    typingPractice,
     [FLAGS.PROGRESS_DASHBOARD]: progressDash,
+    [FLAGS.KOREA_FACTS]:        koreaFacts,
   }
 
   return (

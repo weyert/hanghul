@@ -20,6 +20,7 @@ export const FLAGS = {
   QUIZ_AUTO_AUDIO: 'quiz-auto-audio',
   QUIZ_CORRECT_TIP: 'quiz-correct-tip',
   TYPING_BEGINNER: 'typing-beginner',
+  KOREA_FACTS: 'korea-facts',
 } as const
 
 // SSR / initial render: serve flags immediately from the shared definitions
