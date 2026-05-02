@@ -248,6 +248,15 @@
   animation: slideDown 0.15s ease-out;
 }
 
+@keyframes slideUp {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-6px); }
+}
+
+.menu-slide-up {
+  animation: slideUp 0.15s ease-in forwards;
+}
+
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50%       { transform: translateY(-12px); }

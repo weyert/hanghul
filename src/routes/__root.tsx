@@ -1,5 +1,5 @@
 /// <reference types="vite/client" />
-import { type ReactNode, useState, useEffect } from 'react'
+import { type ReactNode, useState, useEffect, useRef, useCallback } from 'react'
 import {
   Outlet,
   createRootRoute,
@@ -37,17 +37,17 @@ export const Route = createRootRoute({
   component: RootComponent,
 })
 
-// ─── Nav link ───────────────────────────────────────────────────────
+// ─── Nav link ────────────────────────────────────────────────────────
 
 function NavLink({ to, children, onClick }: { to: string; children: ReactNode; onClick?: () => void }) {
   const { location } = useRouterState()
-  const isActive = location.pathname === to || (to !== '/' && location.pathname.startsWith(to))
+  const isActive = location.pathname === to || (to !== '/' && location.pathname.startsWith(to + '/'))
   return (
     <Link
       to={to}
       onClick={onClick}
       className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-150 cursor-pointer ${
-        isActive ? 'bg-[var(--c-accent-muted)]' : 'hover:bg-white/5'
+        isActive ? 'bg-[var(--c-accent-muted)]' : 'hover:bg-[var(--c-ghost-bg)]'
       }`}
       style={{ color: isActive ? 'var(--c-accent-text)' : 'var(--c-2)' }}
       onMouseEnter={(e) => { if (!isActive) (e.currentTarget as HTMLElement).style.color = 'var(--c-1)' }}
@@ -60,18 +60,151 @@ function NavLink({ to, children, onClick }: { to: string; children: ReactNode; o
 
 function MobileNavLink({ to, children, onClick }: { to: string; children: ReactNode; onClick?: () => void }) {
   const { location } = useRouterState()
-  const isActive = location.pathname === to || (to !== '/' && location.pathname.startsWith(to))
+  const isActive = location.pathname === to || (to !== '/' && location.pathname.startsWith(to + '/'))
   return (
     <Link
       to={to}
       onClick={onClick}
       className={`block px-4 py-3 rounded-xl text-base font-medium transition-colors duration-150 cursor-pointer ${
-        isActive ? 'bg-[var(--c-accent-muted)]' : 'hover:bg-white/5'
+        isActive ? 'bg-[var(--c-accent-muted)]' : 'hover:bg-[var(--c-ghost-bg)]'
       }`}
       style={{ color: isActive ? 'var(--c-accent-text)' : 'var(--c-2)' }}
+      onMouseEnter={(e) => { if (!isActive) (e.currentTarget as HTMLElement).style.color = 'var(--c-1)' }}
+      onMouseLeave={(e) => { if (!isActive) (e.currentTarget as HTMLElement).style.color = 'var(--c-2)' }}
     >
       {children}
     </Link>
+  )
+}
+
+// ─── More dropdown (desktop flagged links) ────────────────────────────
+
+const FLAGGED_ROUTES = [
+  { flag: FLAGS.SYLLABLE_CHART,    to: '/syllable-chart', label: 'Syllable Chart' },
+  { flag: FLAGS.VOCABULARY,        to: '/vocabulary',     label: 'Vocabulary'     },
+  { flag: FLAGS.STROKE_ORDER,      to: '/stroke-order',   label: 'Stroke Order'   },
+  { flag: FLAGS.TYPING_PRACTICE,   to: '/typing',         label: 'Typing'         },
+  { flag: FLAGS.PROGRESS_DASHBOARD,to: '/progress',       label: 'Progress'       },
+] as const
+
+function MoreDropdown() {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+  const { location } = useRouterState()
+
+  const syllableChart  = useBooleanFlagValue(FLAGS.SYLLABLE_CHART, false)
+  const vocabulary     = useBooleanFlagValue(FLAGS.VOCABULARY, false)
+  const typingPractice = useBooleanFlagValue(FLAGS.TYPING_PRACTICE, false)
+  const progressDash   = useBooleanFlagValue(FLAGS.PROGRESS_DASHBOARD, false)
+  const strokeOrder    = useBooleanFlagValue(FLAGS.STROKE_ORDER, false)
+
+  const flagMap: Record<string, boolean> = {
+    [FLAGS.SYLLABLE_CHART]:     syllableChart,
+    [FLAGS.VOCABULARY]:         vocabulary,
+    [FLAGS.STROKE_ORDER]:       strokeOrder,
+    [FLAGS.TYPING_PRACTICE]:    typingPractice,
+    [FLAGS.PROGRESS_DASHBOARD]: progressDash,
+  }
+
+  const routes = FLAGGED_ROUTES.filter(r => flagMap[r.flag])
+
+  useEffect(() => { setOpen(false) }, [location.pathname])
+
+  useEffect(() => {
+    if (!open) return
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [open])
+
+  if (routes.length === 0) return null
+
+  const anyActive = routes.some(
+    r => location.pathname === r.to || location.pathname.startsWith(r.to + '/')
+  )
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen(o => !o)}
+        className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-150 cursor-pointer ${
+          anyActive || open ? 'bg-[var(--c-accent-muted)]' : 'hover:bg-[var(--c-ghost-bg)]'
+        }`}
+        style={{ color: anyActive || open ? 'var(--c-accent-text)' : 'var(--c-2)' }}
+        onMouseEnter={(e) => { if (!anyActive && !open) (e.currentTarget as HTMLElement).style.color = 'var(--c-1)' }}
+        onMouseLeave={(e) => { if (!anyActive && !open) (e.currentTarget as HTMLElement).style.color = 'var(--c-2)' }}
+      >
+        More
+        <svg
+          width="12" height="12" viewBox="0 0 12 12" fill="none"
+          stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+          style={{ transition: 'transform 0.15s ease', transform: open ? 'rotate(180deg)' : 'rotate(0deg)' }}
+        >
+          <polyline points="2,4 6,8 10,4" />
+        </svg>
+      </button>
+
+      {open && (
+        <div
+          className="absolute right-0 top-full mt-1.5 min-w-44 rounded-xl py-1.5 z-50"
+          style={{ background: 'var(--c-overlay)', border: '1px solid var(--c-border)', boxShadow: 'var(--c-shadow)' }}
+        >
+          {routes.map(({ to, label }) => {
+            const isActive = location.pathname === to || location.pathname.startsWith(to + '/')
+            return (
+              <Link
+                key={to}
+                to={to}
+                className="block px-4 py-2 text-sm font-medium transition-colors duration-100 cursor-pointer"
+                style={{ background: isActive ? 'var(--c-accent-muted)' : undefined, color: isActive ? 'var(--c-accent-text)' : 'var(--c-2)' }}
+                onMouseEnter={(e) => {
+                  if (!isActive) {
+                    ;(e.currentTarget as HTMLElement).style.color = 'var(--c-1)'
+                    ;(e.currentTarget as HTMLElement).style.background = 'var(--c-ghost-bg)'
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive) {
+                    ;(e.currentTarget as HTMLElement).style.color = 'var(--c-2)'
+                    ;(e.currentTarget as HTMLElement).style.background = ''
+                  }
+                }}
+              >
+                {label}
+              </Link>
+            )
+          })}
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ─── Flagged mobile nav links ─────────────────────────────────────────
+
+function FlaggedMobileNavLinks({ onLinkClick }: { onLinkClick?: () => void }) {
+  const syllableChart  = useBooleanFlagValue(FLAGS.SYLLABLE_CHART, false)
+  const vocabulary     = useBooleanFlagValue(FLAGS.VOCABULARY, false)
+  const typingPractice = useBooleanFlagValue(FLAGS.TYPING_PRACTICE, false)
+  const progressDash   = useBooleanFlagValue(FLAGS.PROGRESS_DASHBOARD, false)
+  const strokeOrder    = useBooleanFlagValue(FLAGS.STROKE_ORDER, false)
+
+  const flagMap: Record<string, boolean> = {
+    [FLAGS.SYLLABLE_CHART]:     syllableChart,
+    [FLAGS.VOCABULARY]:         vocabulary,
+    [FLAGS.STROKE_ORDER]:       strokeOrder,
+    [FLAGS.TYPING_PRACTICE]:    typingPractice,
+    [FLAGS.PROGRESS_DASHBOARD]: progressDash,
+  }
+
+  return (
+    <>
+      {FLAGGED_ROUTES.filter(r => flagMap[r.flag]).map(({ to, label }) => (
+        <MobileNavLink key={to} to={to} onClick={onLinkClick}>{label}</MobileNavLink>
+      ))}
+    </>
   )
 }
 
@@ -123,14 +256,13 @@ function ThemeToggle() {
     <button
       onClick={toggle}
       title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-      className="flex items-center justify-center w-8 h-8 rounded-lg transition-colors duration-150 cursor-pointer hover:bg-white/8"
+      className="flex items-center justify-center w-8 h-8 rounded-lg transition-colors duration-150 cursor-pointer hover:bg-[var(--c-ghost-bg)]"
       style={{ color: 'var(--c-3)' }}
       onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--c-1)')}
       onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--c-3)')}
       aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
     >
       {theme === 'dark' ? (
-        // Sun icon
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="12" cy="12" r="4" />
           <line x1="12" y1="2" x2="12" y2="4" />
@@ -143,7 +275,6 @@ function ThemeToggle() {
           <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
         </svg>
       ) : (
-        // Moon icon
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
         </svg>
@@ -152,43 +283,7 @@ function ThemeToggle() {
   )
 }
 
-// ─── Flagged nav links ────────────────────────────────────────────────
-
-function FlaggedNavLinks({ onLinkClick }: { onLinkClick?: () => void }) {
-  const syllableChart    = useBooleanFlagValue(FLAGS.SYLLABLE_CHART, false)
-  const vocabulary       = useBooleanFlagValue(FLAGS.VOCABULARY, false)
-  const typingPractice   = useBooleanFlagValue(FLAGS.TYPING_PRACTICE, false)
-  const progressDash     = useBooleanFlagValue(FLAGS.PROGRESS_DASHBOARD, false)
-  const strokeOrder      = useBooleanFlagValue(FLAGS.STROKE_ORDER, false)
-  return (
-    <>
-      {syllableChart  && <NavLink to="/syllable-chart" onClick={onLinkClick}>Chart</NavLink>}
-      {vocabulary     && <NavLink to="/vocabulary"     onClick={onLinkClick}>Vocabulary</NavLink>}
-      {strokeOrder    && <NavLink to="/stroke-order"   onClick={onLinkClick}>Strokes</NavLink>}
-      {typingPractice && <NavLink to="/typing"         onClick={onLinkClick}>Typing</NavLink>}
-      {progressDash   && <NavLink to="/progress"       onClick={onLinkClick}>Progress</NavLink>}
-    </>
-  )
-}
-
-function FlaggedMobileNavLinks({ onLinkClick }: { onLinkClick?: () => void }) {
-  const syllableChart    = useBooleanFlagValue(FLAGS.SYLLABLE_CHART, false)
-  const vocabulary       = useBooleanFlagValue(FLAGS.VOCABULARY, false)
-  const typingPractice   = useBooleanFlagValue(FLAGS.TYPING_PRACTICE, false)
-  const progressDash     = useBooleanFlagValue(FLAGS.PROGRESS_DASHBOARD, false)
-  const strokeOrder      = useBooleanFlagValue(FLAGS.STROKE_ORDER, false)
-  return (
-    <>
-      {syllableChart  && <MobileNavLink to="/syllable-chart" onClick={onLinkClick}>Chart</MobileNavLink>}
-      {vocabulary     && <MobileNavLink to="/vocabulary"     onClick={onLinkClick}>Vocabulary</MobileNavLink>}
-      {strokeOrder    && <MobileNavLink to="/stroke-order"   onClick={onLinkClick}>Strokes</MobileNavLink>}
-      {typingPractice && <MobileNavLink to="/typing"         onClick={onLinkClick}>Typing</MobileNavLink>}
-      {progressDash   && <MobileNavLink to="/progress"       onClick={onLinkClick}>Progress</MobileNavLink>}
-    </>
-  )
-}
-
-// ─── Root ──────────────────────────────────────────────────────────────
+// ─── Root ─────────────────────────────────────────────────────────────
 
 function RootComponent() {
   return (
@@ -222,9 +317,23 @@ function MenuIcon({ open }: { open: boolean }) {
 }
 
 function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
-  const [menuOpen, setMenuOpen] = useState(false)
+  const [menuOpen, setMenuOpen]       = useState(false)
+  const [menuMounted, setMenuMounted] = useState(false)
   const { language } = useLanguage()
-  const closeMenu = () => setMenuOpen(false)
+  const { location } = useRouterState()
+
+  const closeMenu = useCallback(() => {
+    setMenuOpen(false)
+    setTimeout(() => setMenuMounted(false), 150)
+  }, [])
+
+  const openMenu = () => {
+    setMenuMounted(true)
+    setMenuOpen(true)
+  }
+
+  // Close on any route change (handles back/forward navigation)
+  useEffect(() => { closeMenu() }, [location.pathname, closeMenu])
 
   useEffect(() => {
     if (typeof document !== 'undefined') {
@@ -254,7 +363,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
             {/* Logo */}
             <Link to="/" onClick={closeMenu} className="flex items-center gap-2.5 cursor-pointer">
               <span className="text-2xl font-black korean-serif" style={{ color: 'var(--c-accent-text)' }}>한글</span>
-              <span className="text-xs font-semibold tracking-widest uppercase" style={{ color: 'var(--c-5)' }}>배우기</span>
+              <span className="text-xs font-semibold tracking-widest uppercase" style={{ color: 'var(--c-3)' }}>배우기</span>
             </Link>
 
             {/* Desktop nav */}
@@ -264,19 +373,18 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
               <NavLink to="/quiz">Quiz</NavLink>
               <NavLink to="/pronounce">Pronounce</NavLink>
               <NavLink to="/builder">Builder</NavLink>
-              <FlaggedNavLinks />
+              <MoreDropdown />
               <div className="w-px h-4 mx-2" style={{ background: 'var(--c-divider)' }} />
               <ThemeToggle />
               <div className="w-px h-4 mx-2" style={{ background: 'var(--c-divider)' }} />
               <LanguageSwitcher />
             </nav>
 
-            {/* Mobile controls */}
+            {/* Mobile controls — only ThemeToggle + hamburger to keep header slim */}
             <div className="flex items-center gap-2 md:hidden">
               <ThemeToggle />
-              <LanguageSwitcher />
               <button
-                onClick={() => setMenuOpen((o) => !o)}
+                onClick={() => menuOpen ? closeMenu() : openMenu()}
                 className="p-1.5 cursor-pointer transition-colors"
                 style={{ color: 'var(--c-3)' }}
                 aria-label="Toggle menu"
@@ -290,9 +398,9 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
           </div>
 
           {/* Mobile menu */}
-          {menuOpen && (
+          {menuMounted && (
             <div
-              className="md:hidden menu-slide-down px-4 py-3 space-y-1"
+              className={`md:hidden px-4 py-3 space-y-1 ${menuOpen ? 'menu-slide-down' : 'menu-slide-up'}`}
               style={{ background: 'var(--c-overlay)', borderTop: '1px solid var(--c-border-sub)' }}
             >
               <MobileNavLink to="/consonants" onClick={closeMenu}>Consonants</MobileNavLink>
@@ -301,6 +409,9 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
               <MobileNavLink to="/pronounce" onClick={closeMenu}>Pronounce</MobileNavLink>
               <MobileNavLink to="/builder" onClick={closeMenu}>Builder</MobileNavLink>
               <FlaggedMobileNavLinks onLinkClick={closeMenu} />
+              <div className="pt-2 mt-1" style={{ borderTop: '1px solid var(--c-border-sub)' }}>
+                <LanguageSwitcher />
+              </div>
             </div>
           )}
         </header>
