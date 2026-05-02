@@ -123,7 +123,7 @@ function HomePage() {
           {([
             { step: 1, label: 'Consonants', sub: '자음', to: '/consonants', desc: '14 basic + 5 tense consonants' },
             { step: 2, label: 'Vowels',     sub: '모음', to: '/vowels',     desc: '10 basic + 11 compound vowels' },
-            { step: 3, label: 'Syllables',  sub: '조합', to: '/builder',   desc: 'Combine letters into blocks' },
+            { step: 3, label: 'How Blocks Work', sub: '음절', to: '/blocks', desc: 'Understand how letters stack into syllable blocks' },
             { step: 4, label: 'Quiz',       sub: '연습', to: '/quiz',      desc: 'Test recognition and recall' },
           ] as const).map(({ step, label, sub, to, desc }) => (
             <Link

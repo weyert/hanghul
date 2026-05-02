@@ -80,6 +80,7 @@ function MobileNavLink({ to, children, onClick }: { to: string; children: ReactN
 // ─── More dropdown (desktop flagged links) ────────────────────────────
 
 const FLAGGED_ROUTES = [
+  { flag: FLAGS.SYLLABLE_BLOCKS,   to: '/blocks',         label: 'Blocks'         },
   { flag: FLAGS.SYLLABLE_CHART,    to: '/syllable-chart', label: 'Syllable Chart' },
   { flag: FLAGS.VOCABULARY,        to: '/vocabulary',     label: 'Vocabulary'     },
   { flag: FLAGS.STROKE_ORDER,      to: '/stroke-order',   label: 'Stroke Order'   },
@@ -92,6 +93,7 @@ function MoreDropdown() {
   const ref = useRef<HTMLDivElement>(null)
   const { location } = useRouterState()
 
+  const syllableBlocks = useBooleanFlagValue(FLAGS.SYLLABLE_BLOCKS, false)
   const syllableChart  = useBooleanFlagValue(FLAGS.SYLLABLE_CHART, false)
   const vocabulary     = useBooleanFlagValue(FLAGS.VOCABULARY, false)
   const typingPractice = useBooleanFlagValue(FLAGS.TYPING_PRACTICE, false)
@@ -99,6 +101,7 @@ function MoreDropdown() {
   const strokeOrder    = useBooleanFlagValue(FLAGS.STROKE_ORDER, false)
 
   const flagMap: Record<string, boolean> = {
+    [FLAGS.SYLLABLE_BLOCKS]:    syllableBlocks,
     [FLAGS.SYLLABLE_CHART]:     syllableChart,
     [FLAGS.VOCABULARY]:         vocabulary,
     [FLAGS.STROKE_ORDER]:       strokeOrder,
@@ -185,6 +188,7 @@ function MoreDropdown() {
 // ─── Flagged mobile nav links ─────────────────────────────────────────
 
 function FlaggedMobileNavLinks({ onLinkClick }: { onLinkClick?: () => void }) {
+  const syllableBlocks = useBooleanFlagValue(FLAGS.SYLLABLE_BLOCKS, false)
   const syllableChart  = useBooleanFlagValue(FLAGS.SYLLABLE_CHART, false)
   const vocabulary     = useBooleanFlagValue(FLAGS.VOCABULARY, false)
   const typingPractice = useBooleanFlagValue(FLAGS.TYPING_PRACTICE, false)
@@ -192,6 +196,7 @@ function FlaggedMobileNavLinks({ onLinkClick }: { onLinkClick?: () => void }) {
   const strokeOrder    = useBooleanFlagValue(FLAGS.STROKE_ORDER, false)
 
   const flagMap: Record<string, boolean> = {
+    [FLAGS.SYLLABLE_BLOCKS]:    syllableBlocks,
     [FLAGS.SYLLABLE_CHART]:     syllableChart,
     [FLAGS.VOCABULARY]:         vocabulary,
     [FLAGS.STROKE_ORDER]:       strokeOrder,

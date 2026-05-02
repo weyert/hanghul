@@ -99,11 +99,23 @@ function CharacterCard({ char, ipaEnabled }: { char: HangulCharacter; ipaEnabled
   )
 }
 
-function SectionLabel({ count, label }: { count: number; label: string; color?: string }) {
+const DIFFICULTY_STYLES = {
+  beginner: { bg: 'rgba(16,185,129,0.12)', border: 'rgba(16,185,129,0.3)', text: '#6ee7b7', label: 'Beginner' },
+  advanced: { bg: 'rgba(245,158,11,0.12)', border: 'rgba(245,158,11,0.3)', text: '#fcd34d', label: 'Advanced' },
+}
+
+function SectionLabel({ count, label, difficulty }: { count: number; label: string; color?: string; difficulty?: keyof typeof DIFFICULTY_STYLES }) {
+  const d = difficulty ? DIFFICULTY_STYLES[difficulty] : null
   return (
     <h2 className="text-sm font-bold mb-4 flex items-center gap-2.5" style={{ color: 'var(--c-2)' }}>
       <span className="px-2 py-0.5 rounded-full text-xs font-black tag-badge">{count}</span>
       {label}
+      {d && (
+        <span className="px-2 py-0.5 rounded-full text-xs font-bold"
+          style={{ background: d.bg, border: `1px solid ${d.border}`, color: d.text }}>
+          {d.label}
+        </span>
+      )}
     </h2>
   )
 }
@@ -138,14 +150,14 @@ function ConsonantsPage() {
       </div>
 
       <section>
-        <SectionLabel count={14} label="Basic Consonants" color="violet" />
+        <SectionLabel count={14} label="Basic Consonants" difficulty="beginner" />
         <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-7 gap-2.5">
           {basic.map((char) => <CharacterCard key={char.id} char={char} ipaEnabled={ipaEnabled} />)}
         </div>
       </section>
 
       <section>
-        <SectionLabel count={5} label="Tense Consonants — 쌍자음" color="amber" />
+        <SectionLabel count={5} label="Tense Consonants — 쌍자음" difficulty="advanced" />
         <p className="text-sm mb-4" style={{ color: 'var(--c-3)' }}>
           Doubled consonants with a tense, unaspirated quality — like holding tension just before the sound.
         </p>

@@ -26,6 +26,11 @@ const ACCENT_COLORS: Record<string, { text: string; border: string; bg: string; 
   red:     { text: '#fca5a5', border: 'rgba(239,68,68,0.3)',   bg: 'rgba(185,28,28,0.1)',    badge: 'rgba(185,28,28,0.15)',  num: '#dc2626' },
   sky:     { text: '#7dd3fc', border: 'rgba(14,165,233,0.3)',  bg: 'rgba(2,132,199,0.1)',    badge: 'rgba(2,132,199,0.15)',  num: '#0284c7' },
   purple:  { text: '#d8b4fe', border: 'rgba(168,85,247,0.3)',  bg: 'rgba(126,34,206,0.1)',   badge: 'rgba(126,34,206,0.15)', num: '#7e22ce' },
+  // extended palette for advanced / K-drama categories
+  lime:    { text: '#a3e635', border: 'rgba(163,230,53,0.30)', bg: 'rgba(77,124,15,0.12)',   badge: 'rgba(77,124,15,0.22)',   num: '#4d7c0f' },
+  cyan:    { text: '#22d3ee', border: 'rgba(34,211,238,0.30)', bg: 'rgba(8,145,178,0.10)',   badge: 'rgba(8,145,178,0.18)',   num: '#0891b2' },
+  coral:   { text: '#ff7966', border: 'rgba(255,100,80,0.35)', bg: 'rgba(220,60,40,0.10)',   badge: 'rgba(220,60,40,0.20)',   num: '#b83220' },
+  fuchsia: { text: '#e879f9', border: 'rgba(232,121,249,0.30)',bg: 'rgba(134,25,143,0.10)',  badge: 'rgba(134,25,143,0.18)',  num: '#86197f' },
 }
 
 function PhraseRow({ entry, accent }: { entry: VocabEntry; accent: string }) {
@@ -68,7 +73,7 @@ function VocabularyPage() {
     <div className="space-y-8 max-w-3xl mx-auto">
       <div>
         <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Vocabulary</h1>
-        <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>어휘 Eo-hwi — Survival Korean for tourists, with audio pronunciation</p>
+        <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>어휘 Eo-hwi — Tourist phrases, K-drama expressions, emotions, and more — with audio</p>
       </div>
 
       {/* Category filter */}
@@ -77,7 +82,7 @@ function VocabularyPage() {
           onClick={() => setActiveCategory(null)}
           className="px-3 py-1.5 rounded-lg text-sm font-semibold transition-all cursor-pointer"
           style={activeCategory === null
-            ? { background: '#7c3aed', color: '#fff' }
+            ? { background: 'var(--c-accent)', color: '#fff' }
             : { background: 'var(--c-surface)', color: 'var(--c-3)', border: '1px solid var(--c-border-card)' }
           }
         >

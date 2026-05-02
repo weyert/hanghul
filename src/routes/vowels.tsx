@@ -134,6 +134,10 @@ function VowelsPage() {
             style={{ background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)', color: '#6ee7b7' }}
           >10</span>
           Basic Vowels
+          <span className="px-2 py-0.5 rounded-full text-xs font-bold"
+            style={{ background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)', color: '#6ee7b7' }}>
+            Beginner
+          </span>
         </h2>
         <div className="grid grid-cols-3 sm:grid-cols-5 gap-2.5">
           {basic.map((char) => <CharacterCard key={char.id} char={char} ipaEnabled={ipaEnabled} />)}
@@ -146,6 +150,10 @@ function VowelsPage() {
             style={{ background: 'rgba(20,184,166,0.12)', border: '1px solid rgba(20,184,166,0.3)', color: '#5eead4' }}
           >11</span>
           Compound Vowels — 이중모음
+          <span className="px-2 py-0.5 rounded-full text-xs font-bold"
+            style={{ background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.3)', color: '#fcd34d' }}>
+            Advanced
+          </span>
         </h2>
         <p className="text-sm mb-4" style={{ color: 'var(--c-3)' }}>Formed by combining two basic vowels — the sound glides from one to the other.</p>
         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2.5">

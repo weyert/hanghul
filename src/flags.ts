@@ -14,6 +14,7 @@ export const FLAGS = {
   CULTURAL_CONTEXT: 'cultural-context',
   MIXED_QUIZ: 'mixed-quiz',
   STROKE_PRACTICE: 'stroke-practice',
+  SYLLABLE_BLOCKS: 'syllable-blocks',
 } as const
 
 // SSR / initial render: serve flags immediately from the shared definitions
