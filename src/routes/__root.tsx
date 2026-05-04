@@ -81,14 +81,17 @@ function MobileNavLink({ to, children, onClick }: { to: string; children: ReactN
 // ─── More dropdown (desktop flagged links) ────────────────────────────
 
 const FLAGGED_ROUTES = [
-  { flag: FLAGS.GUIDED_LEARN,      to: '/learn',          label: 'Lessons'        },
-  { flag: FLAGS.SYLLABLE_BLOCKS,   to: '/blocks',         label: 'Blocks'         },
-  { flag: FLAGS.SYLLABLE_CHART,    to: '/syllable-chart', label: 'Syllable Chart' },
-  { flag: FLAGS.VOCABULARY,        to: '/vocabulary',     label: 'Vocabulary'     },
-  { flag: FLAGS.STROKE_ORDER,      to: '/stroke-order',   label: 'Stroke Order'   },
-  { flag: FLAGS.TYPING_PRACTICE,   to: '/typing',         label: 'Typing'         },
-  { flag: FLAGS.PROGRESS_DASHBOARD,to: '/progress',       label: 'Progress'       },
-  { flag: FLAGS.KOREA_FACTS,        to: '/korea-facts',   label: 'Korea Facts'    },
+  { flag: FLAGS.GUIDED_LEARN,       to: '/learn',              label: 'Lessons'         },
+  { flag: FLAGS.SYLLABLE_BLOCKS,    to: '/blocks',             label: 'Blocks'          },
+  { flag: FLAGS.SYLLABLE_CHART,     to: '/syllable-chart',     label: 'Syllable Chart'  },
+  { flag: FLAGS.VOCABULARY,         to: '/vocabulary',         label: 'Vocabulary'      },
+  { flag: FLAGS.STROKE_ORDER,       to: '/stroke-order',       label: 'Stroke Order'    },
+  { flag: FLAGS.TYPING_PRACTICE,    to: '/typing',             label: 'Typing'          },
+  { flag: FLAGS.PROGRESS_DASHBOARD, to: '/progress',           label: 'Progress'        },
+  { flag: FLAGS.KOREA_FACTS,        to: '/korea-facts',        label: 'Korea Facts'     },
+  { flag: FLAGS.ENGLISH_GUIDE,      to: '/english-guide',      label: 'English Guide'   },
+  { flag: FLAGS.DUTCH_GUIDE,        to: '/dutch-guide',        label: 'Dutch Guide'     },
+  { flag: FLAGS.ROMANIZATION_GUIDE, to: '/romanization-guide', label: 'Romanization'    },
 ] as const
 
 function MoreDropdown() {
@@ -96,24 +99,30 @@ function MoreDropdown() {
   const ref = useRef<HTMLDivElement>(null)
   const { location } = useRouterState()
 
-  const guidedLearn    = useBooleanFlagValue(FLAGS.GUIDED_LEARN, false)
-  const syllableBlocks = useBooleanFlagValue(FLAGS.SYLLABLE_BLOCKS, false)
-  const syllableChart  = useBooleanFlagValue(FLAGS.SYLLABLE_CHART, false)
-  const vocabulary     = useBooleanFlagValue(FLAGS.VOCABULARY, false)
-  const typingPractice = useBooleanFlagValue(FLAGS.TYPING_PRACTICE, false)
-  const progressDash   = useBooleanFlagValue(FLAGS.PROGRESS_DASHBOARD, false)
-  const strokeOrder    = useBooleanFlagValue(FLAGS.STROKE_ORDER, false)
-  const koreaFacts     = useBooleanFlagValue(FLAGS.KOREA_FACTS, false)
+  const guidedLearn       = useBooleanFlagValue(FLAGS.GUIDED_LEARN, false)
+  const syllableBlocks    = useBooleanFlagValue(FLAGS.SYLLABLE_BLOCKS, false)
+  const syllableChart     = useBooleanFlagValue(FLAGS.SYLLABLE_CHART, false)
+  const vocabulary        = useBooleanFlagValue(FLAGS.VOCABULARY, false)
+  const typingPractice    = useBooleanFlagValue(FLAGS.TYPING_PRACTICE, false)
+  const progressDash      = useBooleanFlagValue(FLAGS.PROGRESS_DASHBOARD, false)
+  const strokeOrder       = useBooleanFlagValue(FLAGS.STROKE_ORDER, false)
+  const koreaFacts        = useBooleanFlagValue(FLAGS.KOREA_FACTS, false)
+  const englishGuide      = useBooleanFlagValue(FLAGS.ENGLISH_GUIDE, false)
+  const dutchGuide        = useBooleanFlagValue(FLAGS.DUTCH_GUIDE, false)
+  const romanizationGuide = useBooleanFlagValue(FLAGS.ROMANIZATION_GUIDE, false)
 
   const flagMap: Record<string, boolean> = {
-    [FLAGS.GUIDED_LEARN]:       guidedLearn,
-    [FLAGS.SYLLABLE_BLOCKS]:    syllableBlocks,
-    [FLAGS.SYLLABLE_CHART]:     syllableChart,
-    [FLAGS.VOCABULARY]:         vocabulary,
-    [FLAGS.STROKE_ORDER]:       strokeOrder,
-    [FLAGS.TYPING_PRACTICE]:    typingPractice,
-    [FLAGS.PROGRESS_DASHBOARD]: progressDash,
-    [FLAGS.KOREA_FACTS]:        koreaFacts,
+    [FLAGS.GUIDED_LEARN]:        guidedLearn,
+    [FLAGS.SYLLABLE_BLOCKS]:     syllableBlocks,
+    [FLAGS.SYLLABLE_CHART]:      syllableChart,
+    [FLAGS.VOCABULARY]:          vocabulary,
+    [FLAGS.STROKE_ORDER]:        strokeOrder,
+    [FLAGS.TYPING_PRACTICE]:     typingPractice,
+    [FLAGS.PROGRESS_DASHBOARD]:  progressDash,
+    [FLAGS.KOREA_FACTS]:         koreaFacts,
+    [FLAGS.ENGLISH_GUIDE]:       englishGuide,
+    [FLAGS.DUTCH_GUIDE]:         dutchGuide,
+    [FLAGS.ROMANIZATION_GUIDE]:  romanizationGuide,
   }
 
   const routes = FLAGGED_ROUTES.filter(r => flagMap[r.flag])
@@ -195,24 +204,30 @@ function MoreDropdown() {
 // ─── Flagged mobile nav links ─────────────────────────────────────────
 
 function FlaggedMobileNavLinks({ onLinkClick }: { onLinkClick?: () => void }) {
-  const guidedLearn    = useBooleanFlagValue(FLAGS.GUIDED_LEARN, false)
-  const syllableBlocks = useBooleanFlagValue(FLAGS.SYLLABLE_BLOCKS, false)
-  const syllableChart  = useBooleanFlagValue(FLAGS.SYLLABLE_CHART, false)
-  const vocabulary     = useBooleanFlagValue(FLAGS.VOCABULARY, false)
-  const typingPractice = useBooleanFlagValue(FLAGS.TYPING_PRACTICE, false)
-  const progressDash   = useBooleanFlagValue(FLAGS.PROGRESS_DASHBOARD, false)
-  const strokeOrder    = useBooleanFlagValue(FLAGS.STROKE_ORDER, false)
-  const koreaFacts     = useBooleanFlagValue(FLAGS.KOREA_FACTS, false)
+  const guidedLearn       = useBooleanFlagValue(FLAGS.GUIDED_LEARN, false)
+  const syllableBlocks    = useBooleanFlagValue(FLAGS.SYLLABLE_BLOCKS, false)
+  const syllableChart     = useBooleanFlagValue(FLAGS.SYLLABLE_CHART, false)
+  const vocabulary        = useBooleanFlagValue(FLAGS.VOCABULARY, false)
+  const typingPractice    = useBooleanFlagValue(FLAGS.TYPING_PRACTICE, false)
+  const progressDash      = useBooleanFlagValue(FLAGS.PROGRESS_DASHBOARD, false)
+  const strokeOrder       = useBooleanFlagValue(FLAGS.STROKE_ORDER, false)
+  const koreaFacts        = useBooleanFlagValue(FLAGS.KOREA_FACTS, false)
+  const englishGuide      = useBooleanFlagValue(FLAGS.ENGLISH_GUIDE, false)
+  const dutchGuide        = useBooleanFlagValue(FLAGS.DUTCH_GUIDE, false)
+  const romanizationGuide = useBooleanFlagValue(FLAGS.ROMANIZATION_GUIDE, false)
 
   const flagMap: Record<string, boolean> = {
-    [FLAGS.GUIDED_LEARN]:       guidedLearn,
-    [FLAGS.SYLLABLE_BLOCKS]:    syllableBlocks,
-    [FLAGS.SYLLABLE_CHART]:     syllableChart,
-    [FLAGS.VOCABULARY]:         vocabulary,
-    [FLAGS.STROKE_ORDER]:       strokeOrder,
-    [FLAGS.TYPING_PRACTICE]:    typingPractice,
-    [FLAGS.PROGRESS_DASHBOARD]: progressDash,
-    [FLAGS.KOREA_FACTS]:        koreaFacts,
+    [FLAGS.GUIDED_LEARN]:        guidedLearn,
+    [FLAGS.SYLLABLE_BLOCKS]:     syllableBlocks,
+    [FLAGS.SYLLABLE_CHART]:      syllableChart,
+    [FLAGS.VOCABULARY]:          vocabulary,
+    [FLAGS.STROKE_ORDER]:        strokeOrder,
+    [FLAGS.TYPING_PRACTICE]:     typingPractice,
+    [FLAGS.PROGRESS_DASHBOARD]:  progressDash,
+    [FLAGS.KOREA_FACTS]:         koreaFacts,
+    [FLAGS.ENGLISH_GUIDE]:       englishGuide,
+    [FLAGS.DUTCH_GUIDE]:         dutchGuide,
+    [FLAGS.ROMANIZATION_GUIDE]:  romanizationGuide,
   }
 
   return (

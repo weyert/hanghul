@@ -14,11 +14,14 @@ import { Route as VocabularyRouteImport } from './routes/vocabulary'
 import { Route as TypingRouteImport } from './routes/typing'
 import { Route as SyllableChartRouteImport } from './routes/syllable-chart'
 import { Route as StrokeOrderRouteImport } from './routes/stroke-order'
+import { Route as RomanizationGuideRouteImport } from './routes/romanization-guide'
 import { Route as QuizRouteImport } from './routes/quiz'
 import { Route as PronounceRouteImport } from './routes/pronounce'
 import { Route as ProgressRouteImport } from './routes/progress'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as KoreaFactsRouteImport } from './routes/korea-facts'
+import { Route as EnglishGuideRouteImport } from './routes/english-guide'
+import { Route as DutchGuideRouteImport } from './routes/dutch-guide'
 import { Route as ConsonantsRouteImport } from './routes/consonants'
 import { Route as BuilderRouteImport } from './routes/builder'
 import { Route as BlocksRouteImport } from './routes/blocks'
@@ -49,6 +52,11 @@ const StrokeOrderRoute = StrokeOrderRouteImport.update({
   path: '/stroke-order',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RomanizationGuideRoute = RomanizationGuideRouteImport.update({
+  id: '/romanization-guide',
+  path: '/romanization-guide',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const QuizRoute = QuizRouteImport.update({
   id: '/quiz',
   path: '/quiz',
@@ -72,6 +80,16 @@ const LearnRoute = LearnRouteImport.update({
 const KoreaFactsRoute = KoreaFactsRouteImport.update({
   id: '/korea-facts',
   path: '/korea-facts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnglishGuideRoute = EnglishGuideRouteImport.update({
+  id: '/english-guide',
+  path: '/english-guide',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DutchGuideRoute = DutchGuideRouteImport.update({
+  id: '/dutch-guide',
+  path: '/dutch-guide',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ConsonantsRoute = ConsonantsRouteImport.update({
@@ -100,11 +118,14 @@ export interface FileRoutesByFullPath {
   '/blocks': typeof BlocksRoute
   '/builder': typeof BuilderRoute
   '/consonants': typeof ConsonantsRoute
+  '/dutch-guide': typeof DutchGuideRoute
+  '/english-guide': typeof EnglishGuideRoute
   '/korea-facts': typeof KoreaFactsRoute
   '/learn': typeof LearnRoute
   '/progress': typeof ProgressRoute
   '/pronounce': typeof PronounceRoute
   '/quiz': typeof QuizRoute
+  '/romanization-guide': typeof RomanizationGuideRoute
   '/stroke-order': typeof StrokeOrderRoute
   '/syllable-chart': typeof SyllableChartRoute
   '/typing': typeof TypingRoute
@@ -116,11 +137,14 @@ export interface FileRoutesByTo {
   '/blocks': typeof BlocksRoute
   '/builder': typeof BuilderRoute
   '/consonants': typeof ConsonantsRoute
+  '/dutch-guide': typeof DutchGuideRoute
+  '/english-guide': typeof EnglishGuideRoute
   '/korea-facts': typeof KoreaFactsRoute
   '/learn': typeof LearnRoute
   '/progress': typeof ProgressRoute
   '/pronounce': typeof PronounceRoute
   '/quiz': typeof QuizRoute
+  '/romanization-guide': typeof RomanizationGuideRoute
   '/stroke-order': typeof StrokeOrderRoute
   '/syllable-chart': typeof SyllableChartRoute
   '/typing': typeof TypingRoute
@@ -133,11 +157,14 @@ export interface FileRoutesById {
   '/blocks': typeof BlocksRoute
   '/builder': typeof BuilderRoute
   '/consonants': typeof ConsonantsRoute
+  '/dutch-guide': typeof DutchGuideRoute
+  '/english-guide': typeof EnglishGuideRoute
   '/korea-facts': typeof KoreaFactsRoute
   '/learn': typeof LearnRoute
   '/progress': typeof ProgressRoute
   '/pronounce': typeof PronounceRoute
   '/quiz': typeof QuizRoute
+  '/romanization-guide': typeof RomanizationGuideRoute
   '/stroke-order': typeof StrokeOrderRoute
   '/syllable-chart': typeof SyllableChartRoute
   '/typing': typeof TypingRoute
@@ -151,11 +178,14 @@ export interface FileRouteTypes {
     | '/blocks'
     | '/builder'
     | '/consonants'
+    | '/dutch-guide'
+    | '/english-guide'
     | '/korea-facts'
     | '/learn'
     | '/progress'
     | '/pronounce'
     | '/quiz'
+    | '/romanization-guide'
     | '/stroke-order'
     | '/syllable-chart'
     | '/typing'
@@ -167,11 +197,14 @@ export interface FileRouteTypes {
     | '/blocks'
     | '/builder'
     | '/consonants'
+    | '/dutch-guide'
+    | '/english-guide'
     | '/korea-facts'
     | '/learn'
     | '/progress'
     | '/pronounce'
     | '/quiz'
+    | '/romanization-guide'
     | '/stroke-order'
     | '/syllable-chart'
     | '/typing'
@@ -183,11 +216,14 @@ export interface FileRouteTypes {
     | '/blocks'
     | '/builder'
     | '/consonants'
+    | '/dutch-guide'
+    | '/english-guide'
     | '/korea-facts'
     | '/learn'
     | '/progress'
     | '/pronounce'
     | '/quiz'
+    | '/romanization-guide'
     | '/stroke-order'
     | '/syllable-chart'
     | '/typing'
@@ -200,11 +236,14 @@ export interface RootRouteChildren {
   BlocksRoute: typeof BlocksRoute
   BuilderRoute: typeof BuilderRoute
   ConsonantsRoute: typeof ConsonantsRoute
+  DutchGuideRoute: typeof DutchGuideRoute
+  EnglishGuideRoute: typeof EnglishGuideRoute
   KoreaFactsRoute: typeof KoreaFactsRoute
   LearnRoute: typeof LearnRoute
   ProgressRoute: typeof ProgressRoute
   PronounceRoute: typeof PronounceRoute
   QuizRoute: typeof QuizRoute
+  RomanizationGuideRoute: typeof RomanizationGuideRoute
   StrokeOrderRoute: typeof StrokeOrderRoute
   SyllableChartRoute: typeof SyllableChartRoute
   TypingRoute: typeof TypingRoute
@@ -249,6 +288,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StrokeOrderRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/romanization-guide': {
+      id: '/romanization-guide'
+      path: '/romanization-guide'
+      fullPath: '/romanization-guide'
+      preLoaderRoute: typeof RomanizationGuideRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/quiz': {
       id: '/quiz'
       path: '/quiz'
@@ -282,6 +328,20 @@ declare module '@tanstack/react-router' {
       path: '/korea-facts'
       fullPath: '/korea-facts'
       preLoaderRoute: typeof KoreaFactsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/english-guide': {
+      id: '/english-guide'
+      path: '/english-guide'
+      fullPath: '/english-guide'
+      preLoaderRoute: typeof EnglishGuideRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dutch-guide': {
+      id: '/dutch-guide'
+      path: '/dutch-guide'
+      fullPath: '/dutch-guide'
+      preLoaderRoute: typeof DutchGuideRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/consonants': {
@@ -320,11 +380,14 @@ const rootRouteChildren: RootRouteChildren = {
   BlocksRoute: BlocksRoute,
   BuilderRoute: BuilderRoute,
   ConsonantsRoute: ConsonantsRoute,
+  DutchGuideRoute: DutchGuideRoute,
+  EnglishGuideRoute: EnglishGuideRoute,
   KoreaFactsRoute: KoreaFactsRoute,
   LearnRoute: LearnRoute,
   ProgressRoute: ProgressRoute,
   PronounceRoute: PronounceRoute,
   QuizRoute: QuizRoute,
+  RomanizationGuideRoute: RomanizationGuideRoute,
   StrokeOrderRoute: StrokeOrderRoute,
   SyllableChartRoute: SyllableChartRoute,
   TypingRoute: TypingRoute,

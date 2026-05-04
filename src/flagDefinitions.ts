@@ -105,6 +105,21 @@ export const FLAG_DEFINITIONS = {
     variants: { on: true, off: false },
     defaultVariant: 'off',
   },
+  'english-guide': {
+    disabled: false,
+    variants: { on: true, off: false },
+    defaultVariant: 'on',
+  },
+  'dutch-guide': {
+    disabled: false,
+    variants: { on: true, off: false },
+    defaultVariant: 'on',
+  },
+  'romanization-guide': {
+    disabled: false,
+    variants: { on: true, off: false },
+    defaultVariant: 'on',
+  },
 } as const satisfies InMemoryFlagConfiguration
 
 export type FlagDefinition = (typeof FLAG_DEFINITIONS)[keyof typeof FLAG_DEFINITIONS]

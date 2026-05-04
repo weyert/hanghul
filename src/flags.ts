@@ -22,6 +22,9 @@ export const FLAGS = {
   TYPING_BEGINNER: 'typing-beginner',
   KOREA_FACTS: 'korea-facts',
   HANGUL_FIRST: 'hangul-first',
+  ENGLISH_GUIDE: 'english-guide',
+  DUTCH_GUIDE: 'dutch-guide',
+  ROMANIZATION_GUIDE: 'romanization-guide',
 } as const
 
 // SSR / initial render: serve flags immediately from the shared definitions
