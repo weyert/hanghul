@@ -118,10 +118,14 @@ function LandingScreen({ onStart }: { onStart: () => void }) {
   )
 }
 
+function koreanName(char: HangulCharacter) {
+  return char.name.split(' ')[0]
+}
+
 // ─── Intro screen ────────────────────────────────────────────────────
 
 function IntroScreen({
-  char, charIdx, total, score, language, onReady,
+  char, charIdx, total, score, language, onReady, hangulFirst,
 }: {
   char: HangulCharacter
   charIdx: number
@@ -129,6 +133,7 @@ function IntroScreen({
   score: number
   language: string
   onReady: () => void
+  hangulFirst: boolean
 }) {
   const { speak } = useSpeech()
   const isConsonant = char.category.includes('consonant')
@@ -168,10 +173,21 @@ function IntroScreen({
         >
           {char.char}
         </div>
-        <div className="flex items-center justify-center gap-3 mb-1">
-          <span className="text-2xl font-bold font-mono" style={{ color: accent.text }}>{char.romanization}</span>
-        </div>
-        <p className="text-sm font-medium" style={{ color: 'var(--c-3)' }}>{char.name}</p>
+        {hangulFirst ? (
+          <>
+            <div className="flex items-center justify-center gap-3 mb-1">
+              <span className="text-3xl font-black korean-text" style={{ color: accent.text }}>{koreanName(char)}</span>
+            </div>
+            <p className="text-sm font-mono" style={{ color: 'var(--c-3)' }}>/{char.ipa}/</p>
+          </>
+        ) : (
+          <>
+            <div className="flex items-center justify-center gap-3 mb-1">
+              <span className="text-2xl font-bold font-mono" style={{ color: accent.text }}>{char.romanization}</span>
+            </div>
+            <p className="text-sm font-medium" style={{ color: 'var(--c-3)' }}>{char.name}</p>
+          </>
+        )}
         <div className="absolute bottom-4 right-4">
           <SpeakButton text={char.char} size="md" />
         </div>
@@ -209,13 +225,14 @@ function IntroScreen({
 // ─── Quiz screen ─────────────────────────────────────────────────────
 
 function QuizScreen({
-  char, charIdx, total, score, onNext,
+  char, charIdx, total, score, onNext, hangulFirst,
 }: {
   char: HangulCharacter
   charIdx: number
   total: number
   score: number
   onNext: (correct: boolean) => void
+  hangulFirst: boolean
 }) {
   const [selected, setSelected] = useState<string | null>(null)
   const [options] = useState(() => buildOptions(char))
@@ -241,7 +258,9 @@ function QuizScreen({
       <ProgressBar charIdx={charIdx} total={total} score={score} badge={badge} />
 
       <div className="glass-card rounded-2xl py-12 px-6 text-center relative">
-        <p className="text-xs text-zinc-600 uppercase tracking-widest mb-5 font-bold">Romanization?</p>
+        <p className="text-xs text-zinc-600 uppercase tracking-widest mb-5 font-bold">
+          {hangulFirst ? '이름? Korean name' : 'Romanization?'}
+        </p>
         <div
           className="korean-serif font-black leading-none"
           style={{ fontSize: 'clamp(5rem, 18vw, 9rem)', color: 'var(--c-1)' }}
@@ -275,7 +294,10 @@ function QuizScreen({
           return (
             <button key={option.id} className={cls} style={style}
               onClick={() => handleSelect(option.id)} disabled={isAnswered}>
-              <span className="text-base">{option.romanization}</span>
+              {hangulFirst
+                ? <span className="text-xl korean-text font-black">{koreanName(option)}</span>
+                : <span className="text-base">{option.romanization}</span>
+              }
             </button>
           )
         })}
@@ -295,7 +317,10 @@ function QuizScreen({
             ) : (
               <div className="space-y-1">
                 <p className="font-bold text-red-400">
-                  It's <strong className="text-red-300">{char.romanization}</strong>
+                  {hangulFirst
+                    ? <>It's <strong className="text-red-300 korean-text text-xl">{koreanName(char)}</strong></>
+                    : <>It's <strong className="text-red-300">{char.romanization}</strong></>
+                  }
                 </p>
                 <p className="text-xs" style={{ color: 'var(--c-3)' }}>Tap the character above to hear it</p>
               </div>
@@ -371,7 +396,8 @@ function FinishedScreen({
 // ─── Page ─────────────────────────────────────────────────────────────
 
 function LearnPage() {
-  const enabled = useBooleanFlagValue(FLAGS.GUIDED_LEARN, false)
+  const enabled      = useBooleanFlagValue(FLAGS.GUIDED_LEARN, false)
+  const hangulFirst  = useBooleanFlagValue(FLAGS.HANGUL_FIRST, false)
   const { language } = useLanguage()
   const { track } = useAnalytics()
 
@@ -429,6 +455,7 @@ function LearnPage() {
         score={score}
         language={language}
         onReady={() => setStep('quiz')}
+        hangulFirst={hangulFirst}
       />
     )
   }
@@ -441,6 +468,7 @@ function LearnPage() {
       total={LEARN_CHARS.length}
       score={score}
       onNext={handleQuizNext}
+      hangulFirst={hangulFirst}
     />
   )
 }

@@ -122,6 +122,9 @@ function QuizPage() {
   const retryWrongEnabled = useBooleanFlagValue(FLAGS.QUIZ_RETRY_WRONG, false)
   const autoAudioEnabled  = useBooleanFlagValue(FLAGS.QUIZ_AUTO_AUDIO, false)
   const correctTipEnabled = useBooleanFlagValue(FLAGS.QUIZ_CORRECT_TIP, false)
+  const hangulFirst       = useBooleanFlagValue(FLAGS.HANGUL_FIRST, false)
+
+  const koreanName = (char: HangulCharacter) => char.name.split(' ')[0]
 
   const { pick, record, getStats, reset: resetSRS } = useSpacedRepetition()
   const { speak } = useSpeech()
@@ -320,7 +323,11 @@ function QuizPage() {
         )}
 
         <div className="rounded-xl px-4 py-3 text-sm" style={{ color: 'var(--c-2)', background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
-          Each quiz is <strong style={{ color: 'var(--c-1)' }}>{QUIZ_LENGTH} questions</strong>. Character modes: see a character, pick the romanization. Listen: hear it, pick the character. Vocabulary: see a word, pick the meaning.
+          Each quiz is <strong style={{ color: 'var(--c-1)' }}>{QUIZ_LENGTH} questions</strong>.{' '}
+          {hangulFirst
+            ? 'Character modes: see a character, pick its Korean name (기역, 니은…). Listen: hear it, pick the character. Vocabulary: see a word, pick the meaning.'
+            : 'Character modes: see a character, pick the romanization. Listen: hear it, pick the character. Vocabulary: see a word, pick the meaning.'
+          }
         </div>
       </div>
     )
@@ -514,7 +521,9 @@ function QuizPage() {
           </>
         ) : (
           <>
-            <p className="text-xs text-zinc-600 uppercase tracking-widest mb-5 font-bold">Romanization?</p>
+            <p className="text-xs text-zinc-600 uppercase tracking-widest mb-5 font-bold">
+            {hangulFirst ? '이름? Korean name' : 'Romanization?'}
+          </p>
             <div className="korean-serif font-black leading-none" style={{ fontSize: 'clamp(5rem, 18vw, 9rem)', color: 'var(--c-1)' }}>
               {question.correct.char}
             </div>
@@ -549,6 +558,8 @@ function QuizPage() {
               onClick={() => handleSelect(option.id)} disabled={isAnswered}>
               {isListen ? (
                 <span className="text-2xl korean-text">{option.char}</span>
+              ) : hangulFirst ? (
+                <span className="text-xl korean-text font-black">{koreanName(option)}</span>
               ) : (
                 <span className="text-base">{option.romanization}</span>
               )}
@@ -578,6 +589,8 @@ function QuizPage() {
                   <p className="font-bold text-red-400">
                     {isListen
                       ? <>That is <strong className="text-red-300 korean-text text-xl">{question.correct.char}</strong> ({question.correct.romanization})</>
+                      : hangulFirst
+                      ? <>It's called <strong className="text-red-300 korean-text text-xl">{koreanName(question.correct)}</strong></>
                       : <>The answer is <strong className="text-red-300">{question.correct.romanization}</strong></>
                     }
                   </p>

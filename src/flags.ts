@@ -21,6 +21,7 @@ export const FLAGS = {
   QUIZ_CORRECT_TIP: 'quiz-correct-tip',
   TYPING_BEGINNER: 'typing-beginner',
   KOREA_FACTS: 'korea-facts',
+  HANGUL_FIRST: 'hangul-first',
 } as const
 
 // SSR / initial render: serve flags immediately from the shared definitions
