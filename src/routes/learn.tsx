@@ -7,6 +7,7 @@ import type { HangulCharacter } from '../data/hangul'
 import { useSpeech } from '../hooks/useSpeech'
 import { SpeakButton } from '../components/SpeakButton'
 import { useLanguage } from '../contexts/LanguageContext'
+import { useAnalytics } from '../hooks/useAnalytics'
 
 export const Route = createFileRoute('/learn')({
   component: LearnPage,
@@ -372,11 +373,18 @@ function FinishedScreen({
 function LearnPage() {
   const enabled = useBooleanFlagValue(FLAGS.GUIDED_LEARN, false)
   const { language } = useLanguage()
+  const { track } = useAnalytics()
 
   const [phase, setPhase]     = useState<'landing' | 'lesson' | 'finished'>('landing')
   const [charIdx, setCharIdx] = useState(0)
   const [step, setStep]       = useState<'intro' | 'quiz'>('intro')
   const [score, setScore]     = useState(0)
+
+  useEffect(() => {
+    if (phase === 'finished') {
+      track('lesson_completed', { score, total: LEARN_CHARS.length, pct: Math.round((score / LEARN_CHARS.length) * 100) })
+    }
+  }, [phase, score, track])
 
   if (!enabled) {
     return (
@@ -389,6 +397,7 @@ function LearnPage() {
   const char = LEARN_CHARS[charIdx]
 
   const handleStart = () => {
+    track('lesson_started', {})
     setCharIdx(0); setStep('intro'); setScore(0); setPhase('lesson')
   }
 

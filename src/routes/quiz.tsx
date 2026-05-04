@@ -10,6 +10,7 @@ import { useLanguage } from '../contexts/LanguageContext'
 import { SpeakButton } from '../components/SpeakButton'
 import { useSpeech } from '../hooks/useSpeech'
 import { useSpacedRepetition } from '../hooks/useSpacedRepetition'
+import { useAnalytics } from '../hooks/useAnalytics'
 
 export const Route = createFileRoute('/quiz')({
   component: QuizPage,
@@ -124,6 +125,7 @@ function QuizPage() {
 
   const { pick, record, getStats, reset: resetSRS } = useSpacedRepetition()
   const { speak } = useSpeech()
+  const { track } = useAnalytics()
 
   const [mode, setMode]                   = useState<QuizMode | null>(null)
   const [question, setQuestion]           = useState<Question | null>(null)
@@ -139,6 +141,12 @@ function QuizPage() {
   const [activePool, setActivePool]       = useState<HangulCharacter[] | null>(null)
 
   const { language } = useLanguage()
+
+  useEffect(() => {
+    if (finished && mode) {
+      track('quiz_completed', { mode, score, total: QUIZ_LENGTH, pct: Math.round((score / QUIZ_LENGTH) * 100) })
+    }
+  }, [finished, mode, score, track])
 
   const pickFn = useCallback(
     (pool: HangulCharacter[]) => (srEnabled ? pick(pool) : pool[Math.floor(Math.random() * pool.length)]),
@@ -157,6 +165,7 @@ function QuizPage() {
   )
 
   const startQuiz = useCallback((m: QuizMode, customPool?: HangulCharacter[]) => {
+    track('quiz_started', { mode: m, retry: customPool !== undefined })
     setMode(m); setScore(0); setQuestionNumber(1)
     setSelected(null); setFinished(false); setMixedIsWord(false)
     setWrongChars([])
@@ -172,12 +181,18 @@ function QuizPage() {
       setQuestion(buildQuestion(pool!, pickFn))
       setWordQuestion(null)
     }
-  }, [pickFn, srEnabled, wordPickFn])
+  }, [pickFn, srEnabled, wordPickFn, track])
 
   const handleSelect = (id: string) => {
     if (selected !== null) return
     setSelected(id)
     const correct = wordQuestion ? id === wordQuestion.correct.id : id === question!.correct.id
+    track('quiz_answer', {
+      mode,
+      correct,
+      questionNumber,
+      character: wordQuestion ? wordQuestion.correct.id : question?.correct.id,
+    })
     if (correct) {
       setScore((s) => s + 1)
       // Feature 4: auto-play audio after correct character answer

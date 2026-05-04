@@ -5,6 +5,7 @@ import { FLAGS } from '../flags'
 import { allCharacters } from '../data/hangul'
 import type { HangulCharacter } from '../data/hangul'
 import { SpeakButton } from '../components/SpeakButton'
+import { useAnalytics } from '../hooks/useAnalytics'
 
 export const Route = createFileRoute('/typing')({
   component: TypingPracticePage,
@@ -38,6 +39,7 @@ function checkRomanization(input: string, romanization: string): boolean {
 function TypingPracticePage() {
   const enabled              = useBooleanFlagValue(FLAGS.TYPING_PRACTICE, false)
   const beginnerFlagEnabled  = useBooleanFlagValue(FLAGS.TYPING_BEGINNER, false)
+  const { track } = useAnalytics()
 
   const [queue, setQueue]               = useState<HangulCharacter[]>([])
   const [current, setCurrent]           = useState<HangulCharacter | null>(null)
@@ -66,6 +68,7 @@ function TypingPracticePage() {
   }, [])
 
   const start = useCallback((mode: 'beginner' | 'all' = 'all', newUnlockedCount?: number) => {
+    track('typing_started', { mode })
     const m     = mode
     const count = newUnlockedCount ?? unlockedCount
     setTypingMode(m)
@@ -77,7 +80,7 @@ function TypingPracticePage() {
       : allCharacters
     activePoolRef.current = pool
     nextQuestion(shuffle(pool), 1)
-  }, [nextQuestion, beginnerFlagEnabled, unlockedCount])
+  }, [nextQuestion, beginnerFlagEnabled, unlockedCount, track])
 
   const handleSubmit = () => {
     if (!current || feedback) return
@@ -95,6 +98,12 @@ function TypingPracticePage() {
     const t = setTimeout(handleNext, feedback === 'correct' ? 600 : 1400)
     return () => clearTimeout(t)
   }, [feedback, handleNext])
+
+  useEffect(() => {
+    if (finished) {
+      track('typing_completed', { mode: typingMode, score, total: ROUND_LENGTH, pct: Math.round((score / ROUND_LENGTH) * 100) })
+    }
+  }, [finished, typingMode, score, track])
 
   if (!enabled) {
     return (

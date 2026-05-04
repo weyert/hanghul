@@ -11,6 +11,7 @@ import {
 import { OpenFeatureProvider, useBooleanFlagValue } from '@openfeature/react-sdk'
 import { LanguageProvider, useLanguage, LANGUAGE_LABELS } from '../contexts/LanguageContext'
 import type { Language } from '../contexts/LanguageContext'
+import { useAnalytics } from '../hooks/useAnalytics'
 import { FLAGS } from '../flags'
 import '../styles.css'
 
@@ -227,13 +228,14 @@ function FlaggedMobileNavLinks({ onLinkClick }: { onLinkClick?: () => void }) {
 
 function LanguageSwitcher() {
   const { language, setLanguage } = useLanguage()
+  const { track } = useAnalytics()
   const languages = Object.entries(LANGUAGE_LABELS) as Array<[Language, string]>
   return (
     <div className="flex items-center gap-0.5 rounded-lg p-0.5" style={{ background: 'var(--c-surface-2)', border: '1px solid var(--c-border)' }}>
       {languages.map(([code, label]) => (
         <button
           key={code}
-          onClick={() => setLanguage(code)}
+          onClick={() => { track('language_changed', { from: language, to: code }); setLanguage(code) }}
           title={`Switch to ${label}`}
           className={`px-2.5 py-1 rounded-md text-xs font-bold transition-all duration-150 cursor-pointer ${
             language === code ? 'text-white shadow-sm' : ''
@@ -254,6 +256,7 @@ function LanguageSwitcher() {
 
 function ThemeToggle() {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark')
+  const { track } = useAnalytics()
 
   useEffect(() => {
     const current = document.documentElement.getAttribute('data-theme') as 'dark' | 'light' | null
@@ -265,6 +268,7 @@ function ThemeToggle() {
     setTheme(next)
     document.documentElement.setAttribute('data-theme', next)
     try { localStorage.setItem('theme', next) } catch (_) {}
+    track('theme_changed', { theme: next })
   }
 
   return (
@@ -336,6 +340,11 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
   const [menuMounted, setMenuMounted] = useState(false)
   const { language } = useLanguage()
   const { location } = useRouterState()
+  const { track } = useAnalytics()
+
+  useEffect(() => {
+    track('page_view', { path: location.pathname })
+  }, [location.pathname, track])
 
   const closeMenu = useCallback(() => {
     setMenuOpen(false)

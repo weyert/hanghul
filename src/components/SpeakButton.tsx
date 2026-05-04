@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useSpeech } from '../hooks/useSpeech'
+import { useAnalytics } from '../hooks/useAnalytics'
 
 interface SpeakButtonProps {
   text: string
@@ -12,6 +13,7 @@ interface SpeakButtonProps {
 export function SpeakButton({ text, size = 'sm', className = '' }: SpeakButtonProps) {
   const [available, setAvailable] = useState(false)
   const { speak, speaking } = useSpeech()
+  const { track } = useAnalytics()
 
   useEffect(() => {
     setAvailable('speechSynthesis' in window)
@@ -28,6 +30,7 @@ export function SpeakButton({ text, size = 'sm', className = '' }: SpeakButtonPr
       onClick={(e) => {
         e.stopPropagation()
         speak(text)
+        track('pronunciation_played', { text })
       }}
       aria-label="Play pronunciation"
       title="Play pronunciation"

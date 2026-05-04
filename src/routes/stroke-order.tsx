@@ -5,6 +5,7 @@ import { FLAGS } from '../flags'
 import { consonants, vowels } from '../data/hangul'
 import { STROKE_ORDER, type StrokeData } from '../data/strokeOrder'
 import { SpeakButton } from '../components/SpeakButton'
+import { useAnalytics } from '../hooks/useAnalytics'
 
 export const Route = createFileRoute('/stroke-order')({
   component: StrokeOrderPage,
@@ -258,6 +259,7 @@ function DrawingCanvas({ char, data }: { char: string; data: StrokeData }) {
 function StrokeOrderPage() {
   const enabled         = useBooleanFlagValue(FLAGS.STROKE_ORDER, false)
   const practiceEnabled = useBooleanFlagValue(FLAGS.STROKE_PRACTICE, false)
+  const { track } = useAnalytics()
   const [selected, setSelected] = useState<string | null>(null)
   const [step, setStep]         = useState(0)
   const [view, setView]         = useState<'steps' | 'practice'>('steps')
@@ -265,6 +267,7 @@ function StrokeOrderPage() {
   const data = selected ? STROKE_ORDER[selected] : null
 
   const select = (char: string) => {
+    track('stroke_order_character_selected', { character: char })
     setSelected(char)
     setStep(0)
     setView('steps')

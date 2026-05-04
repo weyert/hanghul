@@ -6,6 +6,7 @@ import { consonants } from '../data/hangul'
 import type { HangulCharacter } from '../data/hangul'
 import { useLanguage } from '../contexts/LanguageContext'
 import { SpeakButton } from '../components/SpeakButton'
+import { useAnalytics } from '../hooks/useAnalytics'
 
 function ArrowRight() {
   return (
@@ -26,7 +27,11 @@ export const Route = createFileRoute('/consonants')({
 function CharacterCard({ char, ipaEnabled }: { char: HangulCharacter; ipaEnabled: boolean }) {
   const [flipped, setFlipped] = useState(false)
   const { language } = useLanguage()
-  const toggle = () => setFlipped((f) => !f)
+  const { track } = useAnalytics()
+  const toggle = () => setFlipped((f) => {
+    if (!f) track('card_flipped', { character: char.char, id: char.id, type: 'consonant' })
+    return !f
+  })
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Enter' || event.key === ' ') {

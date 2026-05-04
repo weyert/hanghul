@@ -45,6 +45,16 @@ const ofrepMiddleware = createMiddleware().server(async ({ request, next }: any)
   })
 })
 
+const analyticsMiddleware = createMiddleware().server(async ({ request, next }: any) => {
+  const { pathname } = new URL(request.url)
+  if (pathname !== '/api/analytics' || request.method !== 'POST') return next()
+
+  const body = await request.json().catch(() => ({}))
+  console.log('[analytics]', JSON.stringify(body))
+
+  return new Response(null, { status: 200 })
+})
+
 export const startInstance = createStart(() => ({
-  requestMiddleware: [ofrepMiddleware],
+  requestMiddleware: [ofrepMiddleware, analyticsMiddleware],
 }))
