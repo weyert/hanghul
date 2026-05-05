@@ -177,7 +177,7 @@ function RomanizationGuidePage() {
           {[
             {
               title: '"g" is not g',
-              detail: 'ㄱ at the start of a word is romanized as "g" in RR, but it\'s unaspirated and unvoiced — closer to English "k" in "skill". When you read "gada" (가다) and pronounce it like "garden", Koreans will hear ㅋ or confusion.',
+              detail: 'ㄱ at the start of a word is romanized as "g" in RR, but it\'s unaspirated and unvoiced — closer to English "k" in "skill". Reading "gada" (가다) with a full voiced English "g" sounds wrong to Korean ears: initial ㄱ is voiceless, not voiced, so the voiced English "g" blurs the distinction with intervocalic ㄱ.',
             },
             {
               title: '"eo" is not "eo"',
@@ -189,7 +189,7 @@ function RomanizationGuidePage() {
             },
             {
               title: 'Aspirated vs. tense: the p/pp distinction disappears',
-              detail: 'RR uses "b" for ㅂ, "bb" for ㅃ, and "p" for ㅍ, but an English speaker reading "b" will voice it and add aspiration, producing a sound that matches none of the three.',
+              detail: 'RR uses "b" for ㅂ, "bb" for ㅃ, and "p" for ㅍ, but an English speaker reading "b" will voice it — and initial ㅂ is unvoiced. English "b" is also unaspirated, but so is ㅂ; the mismatch is voicing. The result is a sound that doesn\'t clearly match ㅂ, ㅃ, or ㅍ.',
             },
           ].map(({ title, detail }, i) => (
             <div key={i} className="glass-card rounded-2xl p-5"

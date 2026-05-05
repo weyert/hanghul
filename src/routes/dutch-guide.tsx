@@ -80,7 +80,7 @@ function DutchGuidePage() {
                 </div>
                 <h3 className="font-bold" style={{ color: 'var(--c-1)' }}>ㅡ ≈ Dutch "eu" (deur, neus, deuk)</h3>
                 <p className="text-sm" style={{ color: 'var(--c-3)' }}>
-                  The unrounded central vowel that English speakers struggle most with is already in your mouth. The Dutch vowel in <em>deur</em>, <em>neus</em>, or <em>leuk</em> is very close — ㅡ sits slightly higher and more central, but you're already 90% of the way there. English speakers have to build this sound from nothing.
+                  ㅡ /ɯ/ is a high back <strong style={{ color: 'var(--c-2)' }}>unrounded</strong> vowel — it doesn't exist in Dutch or English. Dutch 'eu' (deur, neus) is a useful starting point: from the 'eu' position, spread your lips completely flat and push your tongue slightly higher and further back. The critical step is <strong style={{ color: 'var(--c-2)' }}>unrounding</strong> — ㅡ has no lip rounding at all, unlike 'eu'. English speakers have to build this from nothing; you just have to unround and adjust.
                 </p>
                 <div className="flex gap-2 flex-wrap">
                   <WordChip korean="크다" gloss="크 ≈ 'kr' like kreu" />
@@ -283,7 +283,7 @@ function DutchGuidePage() {
               </thead>
               <tbody>
                 {([
-                  { dutch: 'eu', example: 'deur, neus',  korean: 'ㅡ', note: 'Very close — slightly higher in Korean' },
+                  { dutch: 'eu', example: 'deur, neus',  korean: 'ㅡ', note: 'Starting point only — unround your lips completely for ㅡ' },
                   { dutch: 'oe', example: 'boek, moe',   korean: 'ㅜ', note: 'Essentially identical' },
                   { dutch: 'ee', example: 'been, steen',  korean: 'ㅔ', note: 'Close — ㅔ is slightly more open' },
                   { dutch: 'aa', example: 'bad, laat',    korean: 'ㅏ', note: 'Similar; Dutch aa is a touch more back' },

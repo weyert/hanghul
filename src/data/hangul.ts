@@ -362,8 +362,8 @@ export const vowels: HangulCharacter[] = [
     ipa: 'ʌ',
     name: '어 Eo',
     descriptions: {
-      en: "Like 'uh' or the 'o' in British 'on'",
-      nl: "Als de 'o' in 'bos' of 'pot' — kort en open, niet de Nederlandse 'eu'",
+      en: "Like 'u' in 'cup' or 'uh' in 'but' — open and unrounded",
+      nl: "Open en ongerond — de Engelse 'u' in 'cup' komt het dichtst; NIET als de 'o' in 'bos' (gerond) of de 'eu'",
     },
     examples: [
       { korean: '어머니', romanized: 'eomeoni', meaning: 'mother' },
@@ -458,7 +458,7 @@ export const vowels: HangulCharacter[] = [
     ipa: 'ɯ',
     name: '으 Eu',
     descriptions: {
-      en: "No English equivalent — like 'u' in 'but' with spread lips",
+      en: "No English equivalent — say 'oo' without rounding your lips, or 'ee' with the tongue pulled back",
       nl: "Geen equivalent; zeg 'ie' maar schuif je tong naar achter en houd lippen plat",
     },
     examples: [
