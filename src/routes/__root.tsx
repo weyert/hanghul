@@ -92,6 +92,7 @@ const FLAGGED_ROUTES = [
   { flag: FLAGS.ENGLISH_GUIDE,      to: '/english-guide',      label: 'English Guide'   },
   { flag: FLAGS.DUTCH_GUIDE,        to: '/dutch-guide',        label: 'Dutch Guide'     },
   { flag: FLAGS.ROMANIZATION_GUIDE, to: '/romanization-guide', label: 'Romanization'    },
+  { flag: FLAGS.IPA_GUIDE,         to: '/ipa-guide',          label: 'IPA Guide'       },
 ] as const
 
 function MoreDropdown() {
@@ -110,6 +111,7 @@ function MoreDropdown() {
   const englishGuide      = useBooleanFlagValue(FLAGS.ENGLISH_GUIDE, false)
   const dutchGuide        = useBooleanFlagValue(FLAGS.DUTCH_GUIDE, false)
   const romanizationGuide = useBooleanFlagValue(FLAGS.ROMANIZATION_GUIDE, false)
+  const ipaGuide          = useBooleanFlagValue(FLAGS.IPA_GUIDE, false)
 
   const flagMap: Record<string, boolean> = {
     [FLAGS.GUIDED_LEARN]:        guidedLearn,
@@ -123,6 +125,7 @@ function MoreDropdown() {
     [FLAGS.ENGLISH_GUIDE]:       englishGuide,
     [FLAGS.DUTCH_GUIDE]:         dutchGuide,
     [FLAGS.ROMANIZATION_GUIDE]:  romanizationGuide,
+    [FLAGS.IPA_GUIDE]:           ipaGuide,
   }
 
   const routes = FLAGGED_ROUTES.filter(r => flagMap[r.flag])
@@ -215,6 +218,7 @@ function FlaggedMobileNavLinks({ onLinkClick }: { onLinkClick?: () => void }) {
   const englishGuide      = useBooleanFlagValue(FLAGS.ENGLISH_GUIDE, false)
   const dutchGuide        = useBooleanFlagValue(FLAGS.DUTCH_GUIDE, false)
   const romanizationGuide = useBooleanFlagValue(FLAGS.ROMANIZATION_GUIDE, false)
+  const ipaGuide          = useBooleanFlagValue(FLAGS.IPA_GUIDE, false)
 
   const flagMap: Record<string, boolean> = {
     [FLAGS.GUIDED_LEARN]:        guidedLearn,
@@ -228,6 +232,7 @@ function FlaggedMobileNavLinks({ onLinkClick }: { onLinkClick?: () => void }) {
     [FLAGS.ENGLISH_GUIDE]:       englishGuide,
     [FLAGS.DUTCH_GUIDE]:         dutchGuide,
     [FLAGS.ROMANIZATION_GUIDE]:  romanizationGuide,
+    [FLAGS.IPA_GUIDE]:           ipaGuide,
   }
 
   return (

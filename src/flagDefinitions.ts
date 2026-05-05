@@ -120,6 +120,11 @@ export const FLAG_DEFINITIONS = {
     variants: { on: true, off: false },
     defaultVariant: 'on',
   },
+  'ipa-guide': {
+    disabled: false,
+    variants: { on: true, off: false },
+    defaultVariant: 'on',
+  },
 } as const satisfies InMemoryFlagConfiguration
 
 export type FlagDefinition = (typeof FLAG_DEFINITIONS)[keyof typeof FLAG_DEFINITIONS]

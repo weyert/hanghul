@@ -25,6 +25,7 @@ export const FLAGS = {
   ENGLISH_GUIDE: 'english-guide',
   DUTCH_GUIDE: 'dutch-guide',
   ROMANIZATION_GUIDE: 'romanization-guide',
+  IPA_GUIDE: 'ipa-guide',
 } as const
 
 // SSR / initial render: serve flags immediately from the shared definitions
