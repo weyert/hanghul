@@ -27,13 +27,14 @@ Add MDX support to the Vite/TanStack Start build using an MDX plugin. MDX files 
 MDX pages may use a curated component set, for example:
 - `Callout`
 - `WordChip`
+- `SpeakButton` (integrated with `useSpeech`)
 - `ExampleGrid`
 - `ComparisonTable`
 - `CtaCard`
 - `SectionCard`
 - `FeatureFlag` (re-exported from `@openfeature/react-sdk` — see Section 3.6)
 
-These components should wrap the existing visual language so authors can write content without copying route-level JSX.
+These components should wrap the existing visual language so authors can write content without copying route-level JSX. **To avoid circular dependencies**, this component set must be defined in a leaf-level file (e.g., `src/components/mdx/index.tsx`) that does not import the content registry.
 
 ### 3.2 Introduce localized content files
 Store localized static content with one folder per page slug:
@@ -51,6 +52,7 @@ description: A tool for the first week, not a crutch for life
 flag: romanization-guide
 navLabel: Romanization
 audience: general
+exclusiveToLocale: en # Optional: restricts page to this locale only
 ```
 
 The initial locale set should be expressed by renaming the existing `Language` type in
@@ -74,11 +76,16 @@ Adopt locale-prefixed URLs for static content pages:
 /nl/<slug>
 ```
 
-This is preferable to language stored only in `localStorage` because it gives each localized page a shareable URL, improves SSR correctness, and makes future SEO work possible.
+This is preferable to language stored only in `localStorage` because it gives each localized page a shareable URL, improves SSR correctness, and makes future SEO work possible. **The registry must support generating `<link rel="alternate" hreflang="...">` tags for these routes.**
 
 The existing language switcher should update the URL locale when the current route supports localization. `localStorage` should remain as the user's preferred locale for choosing a locale from non-localized entry points, but an explicit locale in the URL wins once the user is already on `/en/...` or `/nl/...`. This prevents a stored preference from fighting shareable localized URLs.
 
-Legacy routes should redirect to the matching localized route. Because locale preference is
+**Fallback Behavior & UI:** English should be the fallback locale when a Dutch page is missing. When falling back, the UI must display a **Fallback Banner** (e.g., *"Deze pagina is nog niet vertaald naar het Nederlands. Je ziet nu de Engelse versie."*) to manage learner expectations.
+
+**Route Parameter Validation:** The `$locale` parameter must be validated against the `Locale` union in the route's `beforeLoad` or `parseParams` level. Unknown locales must trigger a 404.
+
+Legacy routes should redirect to the matching localized route...
+
 stored in `localStorage`, it is unavailable during SSR. Two redirect tiers are needed:
 
 **Server-side (SSR/static):** Legacy routes redirect deterministically without reading
@@ -114,13 +121,14 @@ type ContentPageMeta = {
   flag?: FlagKey
   navLabel: Record<Locale, string>
   audience?: string
+  exclusiveToLocale?: Locale
 }
-```
 
 The registry should provide:
 - `getContentPage(slug, locale)` to load the compiled MDX module.
 - `getContentPageMeta(slug, locale)` for route head tags and navigation.
-- `CONTENT_NAV_ITEMS` as the single source for content navigation entries.
+- `CONTENT_NAV_ITEMS` as the single source for content navigation entries. **This list must filter items based on `exclusiveToLocale`** (e.g., hiding the English speaker guide when the active locale is Dutch).
+
 
 Frontmatter validation should happen at the registry boundary. The registry imports the
 compiled MDX modules, parses their `frontmatter` through a typed validator, and asserts that
@@ -148,12 +156,10 @@ Navigation should combine always-on app routes with flagged route metadata. This
 The English speaker guide and Dutch speaker guide are not simple translations of the same page; they teach different pronunciation transfer issues. They should remain separate slugs.
 
 For example:
-- `/en/english-guide`
-- `/nl/english-guide`
-- `/en/dutch-guide`
-- `/nl/dutch-guide`
+- `/en/english-guide` (Target audience: English speakers)
+- `/nl/dutch-guide` (Target audience: Dutch speakers)
 
-If only one language version exists initially, the content registry should fall back to English and make that fallback explicit in code.
+**Audience Filtering:** To prevent confusing learners (e.g., showing an English speaker's guide to a Dutch user), these pages use the `exclusiveToLocale` property in their frontmatter. The content registry uses this to automatically hide irrelevant guides from the navigation for specific locales.
 
 ### 3.6 Feature flag gating — two tiers
 
@@ -303,17 +309,19 @@ export const CONTENT_NAV_ITEMS: ReadonlyArray<{
 }>
 ```
 
-## 6. Testing
+## 6. Testing & Validation
 - `pnpm build` passes with MDX imports and TanStack route generation.
 - `/en/<slug>` and `/nl/<slug>` render the expected localized content.
 - Legacy URLs redirect to locale-prefixed routes.
-- Unknown locales (e.g. `/ko/romanization-guide` where `ko` is not in the `Locale` union) result in a 404, not a silent fallback to English. The `/$locale` route parameter should be validated against the `Locale` union at the route loader level before any content lookup is attempted.
+- **Parameter Validation:** Unknown locales (e.g. `/ko/romanization-guide`) trigger a clean 404 in `beforeLoad`.
+- **Audience Filtering:** `/nl/english-guide` is hidden from the navigation when Dutch is active.
+- **SEO:** Each page correctly renders `hreflang` alternates and a canonical URL.
+- **Sitemap:** The registry successfully exports a flat list of all active routes for `sitemap.xml` generation.
 - Disabled content pages are hidden from desktop and mobile navigation.
 - Direct visits to disabled content pages show the existing disabled-state behavior (tier-1 gate).
 - A `<FeatureFlag>` block inside MDX renders its children when the flag is on and its `fallback` when the flag is off, without affecting the rest of the page (tier-2 gate).
-- A `<FeatureFlag>` block with no `fallback` renders nothing when the flag is off.
 - Switching language updates the URL locale, updates `<html lang>`, and preserves the current slug when the translated page exists.
-- MDX content can render Korean text, IPA symbols, emphasis, tables/cards, and internal React Router links without hydration errors.
+- **Audio Integration:** The `SpeakButton` in MDX successfully triggers text-to-speech without hydration errors.
 
 ## 7. Alternatives Considered
 
