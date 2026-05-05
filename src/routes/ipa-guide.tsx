@@ -404,15 +404,14 @@ function IpaGuidePage() {
             IPA display can be toggled — once enabled, every card and the Pronounce tool show the phonemic transcription.
           </p>
         </div>
-        <div className="flex gap-3 flex-wrap">
+        <div className="flex gap-2 flex-wrap">
           <Link to="/consonants"
-            className="rounded-xl px-4 py-2 text-sm font-semibold transition-opacity hover:opacity-80"
-            style={{ background: 'var(--c-1)', color: 'var(--c-bg)' }}>
-            Consonants
+            className="btn-primary whitespace-nowrap inline-flex items-center text-white font-bold px-4 py-2.5 rounded-xl text-sm cursor-pointer">
+            Consonants →
           </Link>
           <Link to="/pronounce"
-            className="rounded-xl px-4 py-2 text-sm font-semibold transition-opacity hover:opacity-80"
-            style={{ background: 'var(--c-surface-alt, var(--c-surface))', border: '1px solid var(--c-border)', color: 'var(--c-1)' }}>
+            className="btn-ghost whitespace-nowrap inline-flex items-center font-bold px-4 py-2.5 rounded-xl text-sm cursor-pointer"
+            style={{ color: 'var(--c-1)' }}>
             Pronounce tool
           </Link>
         </div>

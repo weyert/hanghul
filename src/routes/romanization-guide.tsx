@@ -259,15 +259,14 @@ function RomanizationGuidePage() {
             Start with the consonants — there are only 14 basic shapes, and several will already feel familiar.
           </p>
         </div>
-        <div className="flex gap-3 flex-wrap">
+        <div className="flex gap-2 flex-wrap">
           <Link to="/consonants"
-            className="rounded-xl px-4 py-2 text-sm font-semibold transition-opacity hover:opacity-80"
-            style={{ background: 'var(--c-1)', color: 'var(--c-bg)' }}>
-            Learn consonants
+            className="btn-primary whitespace-nowrap inline-flex items-center text-white font-bold px-4 py-2.5 rounded-xl text-sm cursor-pointer">
+            Learn consonants →
           </Link>
           <Link to="/quiz"
-            className="rounded-xl px-4 py-2 text-sm font-semibold transition-opacity hover:opacity-80"
-            style={{ background: 'var(--c-surface-alt, var(--c-surface))', border: '1px solid var(--c-border)', color: 'var(--c-1)' }}>
+            className="btn-ghost whitespace-nowrap inline-flex items-center font-bold px-4 py-2.5 rounded-xl text-sm cursor-pointer"
+            style={{ color: 'var(--c-1)' }}>
             Try a quiz
           </Link>
         </div>
