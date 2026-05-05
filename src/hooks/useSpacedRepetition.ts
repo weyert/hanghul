@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react'
 
-interface CardStats {
+export interface CardStats {
   correct: number
   incorrect: number
 }
@@ -20,17 +20,32 @@ function saveStats(stats: Record<string, CardStats>) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(stats))
 }
 
+export function nextCardStats(existing: CardStats | undefined, correct: boolean): CardStats {
+  return {
+    correct: (existing?.correct ?? 0) + (correct ? 1 : 0),
+    incorrect: (existing?.incorrect ?? 0) + (correct ? 0 : 1),
+  }
+}
+
+export function cardWeight(id: string, stats: Record<string, CardStats>): number {
+  const s = stats[id]
+  if (!s) return 2
+  const total = s.correct + s.incorrect
+  if (total === 0) return 2
+  return 1 + s.incorrect / total
+}
+
 // Weight toward cards with a high error rate. New cards (no history) get weight 2.
-function weightedPick<T extends { id: string }>(pool: T[], stats: Record<string, CardStats>): T {
+export function weightedPick<T extends { id: string }>(
+  pool: T[],
+  stats: Record<string, CardStats>,
+  random = Math.random,
+): T {
   const weights = pool.map((item) => {
-    const s = stats[item.id]
-    if (!s) return 2
-    const total = s.correct + s.incorrect
-    if (total === 0) return 2
-    return 1 + s.incorrect / total
+    return cardWeight(item.id, stats)
   })
   const total = weights.reduce((a, b) => a + b, 0)
-  let r = Math.random() * total
+  let r = random() * total
   for (let i = 0; i < pool.length; i++) {
     r -= weights[i]
     if (r <= 0) return pool[i]
@@ -43,13 +58,9 @@ export function useSpacedRepetition() {
 
   const record = useCallback((id: string, correct: boolean) => {
     setStats((prev) => {
-      const existing = prev[id] ?? { correct: 0, incorrect: 0 }
       const next = {
         ...prev,
-        [id]: {
-          correct: existing.correct + (correct ? 1 : 0),
-          incorrect: existing.incorrect + (correct ? 0 : 1),
-        },
+        [id]: nextCardStats(prev[id], correct),
       }
       saveStats(next)
       return next
