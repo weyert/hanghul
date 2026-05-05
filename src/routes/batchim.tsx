@@ -42,9 +42,37 @@ function BatchimPage() {
           The Korean word is <strong style={{ color: 'var(--c-2)' }}>받침</strong>, usually romanized here as <strong style={{ color: 'var(--c-2)' }}>batchim</strong> and pronounced roughly like <em>bat-chim</em>. It literally means a <em>support</em> or <em>prop</em>, because this consonant sits underneath the rest of the syllable block and “supports” it from below.
         </p>
         <p className="text-sm" style={{ color: 'var(--c-3)' }}>
+          Tiny pronunciation note: in real Korean speech, the final consonant in <strong style={{ color: 'var(--c-2)' }}>받</strong> does not sound like a strong English <em>d</em>. It ends as a short final stop, so learners often hear the whole word more like <em>bat-chim</em> than <em>bad-chim</em>.
+        </p>
+        <p className="text-sm" style={{ color: 'var(--c-3)' }}>
           Start with three rules: final stops are short, final ㅇ is <em>ng</em>, and final ㄹ sounds like <em>l</em>. You do not need every sound-change rule on day one.
         </p>
       </div>
+
+      <section className="space-y-4">
+        <h2 className="text-sm font-bold" style={{ color: 'var(--c-1)' }}>Beginner way to think about it</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {[
+            {
+              title: 'Top vs bottom',
+              body: 'The same consonant can behave one way at the start of a block and another way at the bottom. Batchim just means “bottom position”.',
+            },
+            {
+              title: 'Short ending sound',
+              body: 'Many batchim sounds end quickly. Do not force a big extra vowel after them.',
+            },
+            {
+              title: 'Learn a few patterns first',
+              body: 'You do not need every exception immediately. Start with final ng, final l, and short stop endings.',
+            },
+          ].map((item) => (
+            <div key={item.title} className="rounded-xl p-4" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+              <p className="text-sm font-bold" style={{ color: 'var(--c-1)' }}>{item.title}</p>
+              <p className="text-xs mt-1.5 leading-relaxed" style={{ color: 'var(--c-3)' }}>{item.body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
 
       <section className="space-y-4">
         <h2 className="text-sm font-bold" style={{ color: 'var(--c-1)' }}>First rules to remember</h2>
