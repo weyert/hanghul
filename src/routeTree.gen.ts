@@ -20,6 +20,7 @@ import { Route as PronounceRouteImport } from './routes/pronounce'
 import { Route as ProgressRouteImport } from './routes/progress'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as KoreaFactsRouteImport } from './routes/korea-facts'
+import { Route as IpaGuideRouteImport } from './routes/ipa-guide'
 import { Route as EnglishGuideRouteImport } from './routes/english-guide'
 import { Route as DutchGuideRouteImport } from './routes/dutch-guide'
 import { Route as ConsonantsRouteImport } from './routes/consonants'
@@ -82,6 +83,11 @@ const KoreaFactsRoute = KoreaFactsRouteImport.update({
   path: '/korea-facts',
   getParentRoute: () => rootRouteImport,
 } as any)
+const IpaGuideRoute = IpaGuideRouteImport.update({
+  id: '/ipa-guide',
+  path: '/ipa-guide',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EnglishGuideRoute = EnglishGuideRouteImport.update({
   id: '/english-guide',
   path: '/english-guide',
@@ -120,6 +126,7 @@ export interface FileRoutesByFullPath {
   '/consonants': typeof ConsonantsRoute
   '/dutch-guide': typeof DutchGuideRoute
   '/english-guide': typeof EnglishGuideRoute
+  '/ipa-guide': typeof IpaGuideRoute
   '/korea-facts': typeof KoreaFactsRoute
   '/learn': typeof LearnRoute
   '/progress': typeof ProgressRoute
@@ -139,6 +146,7 @@ export interface FileRoutesByTo {
   '/consonants': typeof ConsonantsRoute
   '/dutch-guide': typeof DutchGuideRoute
   '/english-guide': typeof EnglishGuideRoute
+  '/ipa-guide': typeof IpaGuideRoute
   '/korea-facts': typeof KoreaFactsRoute
   '/learn': typeof LearnRoute
   '/progress': typeof ProgressRoute
@@ -159,6 +167,7 @@ export interface FileRoutesById {
   '/consonants': typeof ConsonantsRoute
   '/dutch-guide': typeof DutchGuideRoute
   '/english-guide': typeof EnglishGuideRoute
+  '/ipa-guide': typeof IpaGuideRoute
   '/korea-facts': typeof KoreaFactsRoute
   '/learn': typeof LearnRoute
   '/progress': typeof ProgressRoute
@@ -180,6 +189,7 @@ export interface FileRouteTypes {
     | '/consonants'
     | '/dutch-guide'
     | '/english-guide'
+    | '/ipa-guide'
     | '/korea-facts'
     | '/learn'
     | '/progress'
@@ -199,6 +209,7 @@ export interface FileRouteTypes {
     | '/consonants'
     | '/dutch-guide'
     | '/english-guide'
+    | '/ipa-guide'
     | '/korea-facts'
     | '/learn'
     | '/progress'
@@ -218,6 +229,7 @@ export interface FileRouteTypes {
     | '/consonants'
     | '/dutch-guide'
     | '/english-guide'
+    | '/ipa-guide'
     | '/korea-facts'
     | '/learn'
     | '/progress'
@@ -238,6 +250,7 @@ export interface RootRouteChildren {
   ConsonantsRoute: typeof ConsonantsRoute
   DutchGuideRoute: typeof DutchGuideRoute
   EnglishGuideRoute: typeof EnglishGuideRoute
+  IpaGuideRoute: typeof IpaGuideRoute
   KoreaFactsRoute: typeof KoreaFactsRoute
   LearnRoute: typeof LearnRoute
   ProgressRoute: typeof ProgressRoute
@@ -330,6 +343,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KoreaFactsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ipa-guide': {
+      id: '/ipa-guide'
+      path: '/ipa-guide'
+      fullPath: '/ipa-guide'
+      preLoaderRoute: typeof IpaGuideRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/english-guide': {
       id: '/english-guide'
       path: '/english-guide'
@@ -382,6 +402,7 @@ const rootRouteChildren: RootRouteChildren = {
   ConsonantsRoute: ConsonantsRoute,
   DutchGuideRoute: DutchGuideRoute,
   EnglishGuideRoute: EnglishGuideRoute,
+  IpaGuideRoute: IpaGuideRoute,
   KoreaFactsRoute: KoreaFactsRoute,
   LearnRoute: LearnRoute,
   ProgressRoute: ProgressRoute,

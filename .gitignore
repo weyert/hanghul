@@ -94,3 +94,4 @@ yalc.lock
 !.turbo/runs/.gitkeep
 /*.cookie
 .turbo/runs
+.output/
