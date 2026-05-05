@@ -89,6 +89,8 @@ const FLAGGED_ROUTES = [
   { flag: FLAGS.TYPING_PRACTICE,    to: '/typing',             label: 'Typing'          },
   { flag: FLAGS.PROGRESS_DASHBOARD, to: '/progress',           label: 'Progress'        },
   { flag: FLAGS.KOREA_FACTS,        to: '/korea-facts',        label: 'Korea Facts'     },
+  { flag: FLAGS.BATCHIM_LESSON,     to: '/batchim',            label: 'Batchim Basics'  },
+  { flag: FLAGS.CONTRAST_DRILLS,    to: '/contrast-drills',    label: 'Contrast Drills' },
   { flag: FLAGS.ENGLISH_GUIDE,      to: '/english-guide',      label: 'English Guide'   },
   { flag: FLAGS.DUTCH_GUIDE,        to: '/dutch-guide',        label: 'Dutch Guide'     },
   { flag: FLAGS.ROMANIZATION_GUIDE, to: '/romanization-guide', label: 'Romanization'    },
@@ -108,6 +110,8 @@ function MoreDropdown() {
   const progressDash      = useBooleanFlagValue(FLAGS.PROGRESS_DASHBOARD, false)
   const strokeOrder       = useBooleanFlagValue(FLAGS.STROKE_ORDER, false)
   const koreaFacts        = useBooleanFlagValue(FLAGS.KOREA_FACTS, false)
+  const batchimLesson     = useBooleanFlagValue(FLAGS.BATCHIM_LESSON, false)
+  const contrastDrills    = useBooleanFlagValue(FLAGS.CONTRAST_DRILLS, false)
   const englishGuide      = useBooleanFlagValue(FLAGS.ENGLISH_GUIDE, false)
   const dutchGuide        = useBooleanFlagValue(FLAGS.DUTCH_GUIDE, false)
   const romanizationGuide = useBooleanFlagValue(FLAGS.ROMANIZATION_GUIDE, false)
@@ -122,6 +126,8 @@ function MoreDropdown() {
     [FLAGS.TYPING_PRACTICE]:     typingPractice,
     [FLAGS.PROGRESS_DASHBOARD]:  progressDash,
     [FLAGS.KOREA_FACTS]:         koreaFacts,
+    [FLAGS.BATCHIM_LESSON]:      batchimLesson,
+    [FLAGS.CONTRAST_DRILLS]:     contrastDrills,
     [FLAGS.ENGLISH_GUIDE]:       englishGuide,
     [FLAGS.DUTCH_GUIDE]:         dutchGuide,
     [FLAGS.ROMANIZATION_GUIDE]:  romanizationGuide,
@@ -215,6 +221,8 @@ function FlaggedMobileNavLinks({ onLinkClick }: { onLinkClick?: () => void }) {
   const progressDash      = useBooleanFlagValue(FLAGS.PROGRESS_DASHBOARD, false)
   const strokeOrder       = useBooleanFlagValue(FLAGS.STROKE_ORDER, false)
   const koreaFacts        = useBooleanFlagValue(FLAGS.KOREA_FACTS, false)
+  const batchimLesson     = useBooleanFlagValue(FLAGS.BATCHIM_LESSON, false)
+  const contrastDrills    = useBooleanFlagValue(FLAGS.CONTRAST_DRILLS, false)
   const englishGuide      = useBooleanFlagValue(FLAGS.ENGLISH_GUIDE, false)
   const dutchGuide        = useBooleanFlagValue(FLAGS.DUTCH_GUIDE, false)
   const romanizationGuide = useBooleanFlagValue(FLAGS.ROMANIZATION_GUIDE, false)
@@ -229,6 +237,8 @@ function FlaggedMobileNavLinks({ onLinkClick }: { onLinkClick?: () => void }) {
     [FLAGS.TYPING_PRACTICE]:     typingPractice,
     [FLAGS.PROGRESS_DASHBOARD]:  progressDash,
     [FLAGS.KOREA_FACTS]:         koreaFacts,
+    [FLAGS.BATCHIM_LESSON]:      batchimLesson,
+    [FLAGS.CONTRAST_DRILLS]:     contrastDrills,
     [FLAGS.ENGLISH_GUIDE]:       englishGuide,
     [FLAGS.DUTCH_GUIDE]:         dutchGuide,
     [FLAGS.ROMANIZATION_GUIDE]:  romanizationGuide,

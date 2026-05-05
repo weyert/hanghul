@@ -125,6 +125,36 @@ export const FLAG_DEFINITIONS = {
     variants: { on: true, off: false },
     defaultVariant: 'on',
   },
+  'pronunciation-model': {
+    disabled: false,
+    variants: { on: true, off: false },
+    defaultVariant: 'on',
+  },
+  'batchim-lesson': {
+    disabled: false,
+    variants: { on: true, off: false },
+    defaultVariant: 'on',
+  },
+  'contrast-drills': {
+    disabled: false,
+    variants: { on: true, off: false },
+    defaultVariant: 'on',
+  },
+  'sentence-patterns': {
+    disabled: false,
+    variants: { on: true, off: false },
+    defaultVariant: 'on',
+  },
+  'beginner-roadmap': {
+    disabled: false,
+    variants: { on: true, off: false },
+    defaultVariant: 'on',
+  },
+  'quiz-wrong-hints': {
+    disabled: false,
+    variants: { on: true, off: false },
+    defaultVariant: 'on',
+  },
 } as const satisfies InMemoryFlagConfiguration
 
 export type FlagDefinition = (typeof FLAG_DEFINITIONS)[keyof typeof FLAG_DEFINITIONS]

@@ -7,6 +7,7 @@ import type { HangulCharacter } from '../data/hangul'
 import { useLanguage } from '../contexts/LanguageContext'
 import { SpeakButton } from '../components/SpeakButton'
 import { useAnalytics } from '../hooks/useAnalytics'
+import { PronunciationModel } from '../components/PronunciationModel'
 
 function ArrowRight() {
   return (
@@ -108,6 +109,7 @@ function VowelsPage() {
   const { language } = useLanguage()
   const ipaEnabled      = useBooleanFlagValue(FLAGS.IPA_DISPLAY, false)
   const culturalEnabled = useBooleanFlagValue(FLAGS.CULTURAL_CONTEXT, false)
+  const pronunciationModel = useBooleanFlagValue(FLAGS.PRONUNCIATION_MODEL, false)
   const basic = vowels.filter((v) => v.category === 'basic-vowel')
   const compound = vowels.filter((v) => v.category === 'compound-vowel')
 
@@ -132,6 +134,8 @@ function VowelsPage() {
           </div>
         )}
       </div>
+
+      {pronunciationModel && <PronunciationModel compact />}
 
       <section>
         <h2 className="text-sm font-bold mb-4 flex items-center gap-2.5" style={{ color: 'var(--c-2)' }}>

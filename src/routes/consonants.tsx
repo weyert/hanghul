@@ -7,6 +7,7 @@ import type { HangulCharacter } from '../data/hangul'
 import { useLanguage } from '../contexts/LanguageContext'
 import { SpeakButton } from '../components/SpeakButton'
 import { useAnalytics } from '../hooks/useAnalytics'
+import { PronunciationModel } from '../components/PronunciationModel'
 
 function ArrowRight() {
   return (
@@ -129,6 +130,7 @@ function ConsonantsPage() {
   const { language } = useLanguage()
   const ipaEnabled     = useBooleanFlagValue(FLAGS.IPA_DISPLAY, false)
   const culturalEnabled = useBooleanFlagValue(FLAGS.CULTURAL_CONTEXT, false)
+  const pronunciationModel = useBooleanFlagValue(FLAGS.PRONUNCIATION_MODEL, false)
   const basic = consonants.filter((c) => c.category === 'basic-consonant')
   const tense = consonants.filter((c) => c.category === 'tense-consonant')
 
@@ -153,6 +155,8 @@ function ConsonantsPage() {
           </div>
         )}
       </div>
+
+      {pronunciationModel && <PronunciationModel compact />}
 
       <section>
         <SectionLabel count={14} label="Basic Consonants" difficulty="beginner" />

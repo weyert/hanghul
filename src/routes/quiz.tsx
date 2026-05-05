@@ -11,6 +11,8 @@ import { SpeakButton } from '../components/SpeakButton'
 import { useSpeech } from '../hooks/useSpeech'
 import { useSpacedRepetition } from '../hooks/useSpacedRepetition'
 import { useAnalytics } from '../hooks/useAnalytics'
+import { PronunciationModel } from '../components/PronunciationModel'
+import { getWrongAnswerHint } from '../data/beginnerContent'
 
 export const Route = createFileRoute('/quiz')({
   component: QuizPage,
@@ -123,6 +125,8 @@ function QuizPage() {
   const autoAudioEnabled  = useBooleanFlagValue(FLAGS.QUIZ_AUTO_AUDIO, false)
   const correctTipEnabled = useBooleanFlagValue(FLAGS.QUIZ_CORRECT_TIP, false)
   const hangulFirst       = useBooleanFlagValue(FLAGS.HANGUL_FIRST, false)
+  const wrongHintsEnabled = useBooleanFlagValue(FLAGS.QUIZ_WRONG_HINTS, false)
+  const pronunciationModel = useBooleanFlagValue(FLAGS.PRONUNCIATION_MODEL, false)
 
   const koreanName = (char: HangulCharacter) => char.name.split(' ')[0]
 
@@ -329,6 +333,8 @@ function QuizPage() {
             : 'Character modes: see a character, pick the romanization. Listen: hear it, pick the character. Vocabulary: see a word, pick the meaning.'
           }
         </div>
+
+        {pronunciationModel && <PronunciationModel compact />}
       </div>
     )
   }
@@ -478,6 +484,7 @@ function QuizPage() {
   const isCorrect  = selected === question.correct.id
   const stats      = srEnabled ? getStats(question.correct.id) : null
   const isListen   = mode === 'listen'
+  const wrongHint  = wrongHintsEnabled && isAnswered && !isCorrect ? getWrongAnswerHint(question.correct.id) : null
 
   /* ── Listen / character quiz ─────────────────────────── */
   return (
@@ -600,6 +607,11 @@ function QuizPage() {
               </div>
             )}
           </div>
+          {wrongHint && (
+            <div className="rounded-xl p-4 text-sm text-center" style={{ background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.24)', color: 'var(--c-2)' }}>
+              <strong style={{ color: '#fcd34d' }}>Why this is hard:</strong> {wrongHint}
+            </div>
+          )}
           <button onClick={handleNext} className="btn-primary w-full text-white py-3.5 rounded-xl font-bold cursor-pointer text-sm">
             {questionNumber >= QUIZ_LENGTH ? 'See Results' : 'Next Question →'}
           </button>

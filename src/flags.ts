@@ -26,6 +26,12 @@ export const FLAGS = {
   DUTCH_GUIDE: 'dutch-guide',
   ROMANIZATION_GUIDE: 'romanization-guide',
   IPA_GUIDE: 'ipa-guide',
+  PRONUNCIATION_MODEL: 'pronunciation-model',
+  BATCHIM_LESSON: 'batchim-lesson',
+  CONTRAST_DRILLS: 'contrast-drills',
+  SENTENCE_PATTERNS: 'sentence-patterns',
+  BEGINNER_ROADMAP: 'beginner-roadmap',
+  QUIZ_WRONG_HINTS: 'quiz-wrong-hints',
 } as const
 
 // SSR / initial render: serve flags immediately from the shared definitions

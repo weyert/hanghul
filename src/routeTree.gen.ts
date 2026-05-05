@@ -23,9 +23,11 @@ import { Route as KoreaFactsRouteImport } from './routes/korea-facts'
 import { Route as IpaGuideRouteImport } from './routes/ipa-guide'
 import { Route as EnglishGuideRouteImport } from './routes/english-guide'
 import { Route as DutchGuideRouteImport } from './routes/dutch-guide'
+import { Route as ContrastDrillsRouteImport } from './routes/contrast-drills'
 import { Route as ConsonantsRouteImport } from './routes/consonants'
 import { Route as BuilderRouteImport } from './routes/builder'
 import { Route as BlocksRouteImport } from './routes/blocks'
+import { Route as BatchimRouteImport } from './routes/batchim'
 import { Route as IndexRouteImport } from './routes/index'
 
 const VowelsRoute = VowelsRouteImport.update({
@@ -98,6 +100,11 @@ const DutchGuideRoute = DutchGuideRouteImport.update({
   path: '/dutch-guide',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContrastDrillsRoute = ContrastDrillsRouteImport.update({
+  id: '/contrast-drills',
+  path: '/contrast-drills',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ConsonantsRoute = ConsonantsRouteImport.update({
   id: '/consonants',
   path: '/consonants',
@@ -113,6 +120,11 @@ const BlocksRoute = BlocksRouteImport.update({
   path: '/blocks',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BatchimRoute = BatchimRouteImport.update({
+  id: '/batchim',
+  path: '/batchim',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -121,9 +133,11 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/batchim': typeof BatchimRoute
   '/blocks': typeof BlocksRoute
   '/builder': typeof BuilderRoute
   '/consonants': typeof ConsonantsRoute
+  '/contrast-drills': typeof ContrastDrillsRoute
   '/dutch-guide': typeof DutchGuideRoute
   '/english-guide': typeof EnglishGuideRoute
   '/ipa-guide': typeof IpaGuideRoute
@@ -141,9 +155,11 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/batchim': typeof BatchimRoute
   '/blocks': typeof BlocksRoute
   '/builder': typeof BuilderRoute
   '/consonants': typeof ConsonantsRoute
+  '/contrast-drills': typeof ContrastDrillsRoute
   '/dutch-guide': typeof DutchGuideRoute
   '/english-guide': typeof EnglishGuideRoute
   '/ipa-guide': typeof IpaGuideRoute
@@ -162,9 +178,11 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/batchim': typeof BatchimRoute
   '/blocks': typeof BlocksRoute
   '/builder': typeof BuilderRoute
   '/consonants': typeof ConsonantsRoute
+  '/contrast-drills': typeof ContrastDrillsRoute
   '/dutch-guide': typeof DutchGuideRoute
   '/english-guide': typeof EnglishGuideRoute
   '/ipa-guide': typeof IpaGuideRoute
@@ -184,9 +202,11 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/batchim'
     | '/blocks'
     | '/builder'
     | '/consonants'
+    | '/contrast-drills'
     | '/dutch-guide'
     | '/english-guide'
     | '/ipa-guide'
@@ -204,9 +224,11 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/batchim'
     | '/blocks'
     | '/builder'
     | '/consonants'
+    | '/contrast-drills'
     | '/dutch-guide'
     | '/english-guide'
     | '/ipa-guide'
@@ -224,9 +246,11 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/batchim'
     | '/blocks'
     | '/builder'
     | '/consonants'
+    | '/contrast-drills'
     | '/dutch-guide'
     | '/english-guide'
     | '/ipa-guide'
@@ -245,9 +269,11 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BatchimRoute: typeof BatchimRoute
   BlocksRoute: typeof BlocksRoute
   BuilderRoute: typeof BuilderRoute
   ConsonantsRoute: typeof ConsonantsRoute
+  ContrastDrillsRoute: typeof ContrastDrillsRoute
   DutchGuideRoute: typeof DutchGuideRoute
   EnglishGuideRoute: typeof EnglishGuideRoute
   IpaGuideRoute: typeof IpaGuideRoute
@@ -364,6 +390,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DutchGuideRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/contrast-drills': {
+      id: '/contrast-drills'
+      path: '/contrast-drills'
+      fullPath: '/contrast-drills'
+      preLoaderRoute: typeof ContrastDrillsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/consonants': {
       id: '/consonants'
       path: '/consonants'
@@ -385,6 +418,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlocksRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/batchim': {
+      id: '/batchim'
+      path: '/batchim'
+      fullPath: '/batchim'
+      preLoaderRoute: typeof BatchimRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -397,9 +437,11 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BatchimRoute: BatchimRoute,
   BlocksRoute: BlocksRoute,
   BuilderRoute: BuilderRoute,
   ConsonantsRoute: ConsonantsRoute,
+  ContrastDrillsRoute: ContrastDrillsRoute,
   DutchGuideRoute: DutchGuideRoute,
   EnglishGuideRoute: EnglishGuideRoute,
   IpaGuideRoute: IpaGuideRoute,

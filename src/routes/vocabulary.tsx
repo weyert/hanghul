@@ -5,6 +5,7 @@ import { FLAGS } from '../flags'
 import { VOCAB_CATEGORIES } from '../data/vocabulary'
 import type { VocabEntry } from '../data/vocabulary'
 import { SpeakButton } from '../components/SpeakButton'
+import { SENTENCE_PATTERNS } from '../data/beginnerContent'
 
 export const Route = createFileRoute('/vocabulary')({
   component: VocabularyPage,
@@ -55,6 +56,7 @@ function PhraseRow({ entry, accent }: { entry: VocabEntry; accent: string }) {
 
 function VocabularyPage() {
   const enabled = useBooleanFlagValue(FLAGS.VOCABULARY, false)
+  const sentencePatterns = useBooleanFlagValue(FLAGS.SENTENCE_PATTERNS, false)
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
 
   if (!enabled) {
@@ -75,6 +77,29 @@ function VocabularyPage() {
         <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Vocabulary</h1>
         <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>어휘 Eo-hwi — Tourist phrases, K-drama expressions, emotions, and more — with audio</p>
       </div>
+
+      {sentencePatterns && (
+        <section className="space-y-4">
+          <h2 className="text-sm font-bold" style={{ color: 'var(--c-1)' }}>Beginner sentence patterns</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {SENTENCE_PATTERNS.map((pattern) => (
+              <div key={pattern.id} className="glass-card rounded-2xl p-5 space-y-2.5">
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl korean-text font-black" style={{ color: 'var(--c-1)' }}>{pattern.pattern}</span>
+                  <SpeakButton text={pattern.pattern} size="sm" />
+                </div>
+                <p className="text-sm font-mono font-bold" style={{ color: 'var(--c-accent-text)' }}>{pattern.romanized}</p>
+                <p className="text-sm" style={{ color: 'var(--c-2)' }}>{pattern.meaning}</p>
+                <div className="pt-2" style={{ borderTop: '1px solid var(--c-border-sub)' }}>
+                  <p className="text-xs korean-text font-semibold" style={{ color: 'var(--c-1)' }}>{pattern.example}</p>
+                  <p className="text-xs font-mono mt-1" style={{ color: 'var(--c-3)' }}>{pattern.exampleRomanized}</p>
+                  <p className="text-xs mt-1" style={{ color: 'var(--c-4)' }}>{pattern.exampleMeaning}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Category filter */}
       <div className="flex flex-wrap gap-2">
