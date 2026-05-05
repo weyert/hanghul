@@ -37,13 +37,15 @@ export const FLAGS = {
   QUIZ_WRONG_HINTS: 'quiz-wrong-hints',
 } as const
 
+export type FlagKey = (typeof FLAGS)[keyof typeof FLAGS]
+
 // SSR / initial render: serve flags immediately from the shared definitions
 // so the server-rendered HTML matches what the client will show.
 OpenFeature.setProvider(new InMemoryProvider(FLAG_DEFINITIONS))
 
-// Client: replace with the OFREP remote provider once the browser is ready.
-// Dynamic import keeps the OFREP bundle out of the server build.
-if (typeof window !== 'undefined') {
+// Client: keep the static provider by default so SSR and hydration render the
+// same flag values. Opt into remote OFREP polling when explicitly configured.
+if (typeof window !== 'undefined' && import.meta.env.VITE_OFREP_FLAGS === 'true') {
   import('@openfeature/ofrep-web-provider').then(({ OFREPWebProvider }) => {
     OpenFeature.setProvider(
       new OFREPWebProvider({

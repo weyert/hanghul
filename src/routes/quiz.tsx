@@ -197,10 +197,13 @@ function QuizPage() {
       setQuestion(buildContrastQuestion())
       setWordQuestion(null)
     } else if (m === 'words') {
-      setQuestion(buildQuestion(pool!, pickFn))
+      setQuestion(null)
+      setWordQuestion(buildWordQuestion(srEnabled ? wordPickFn : undefined))
+    } else if (m === 'mixed') {
+      setQuestion(buildQuestion(customPool ?? allCharacters, pickFn))
       setWordQuestion(null)
     } else {
-      setQuestion(buildQuestion(pool!, pickFn))
+      setQuestion(buildQuestion(customPool ?? getCharPool(m), pickFn))
       setWordQuestion(null)
     }
   }, [pickFn, srEnabled, wordPickFn, track])
@@ -511,7 +514,7 @@ function QuizPage() {
   const isAnswered = selected !== null
   const isCorrect  = selected === question.correct.id
   const stats      = srEnabled ? getStats(question.correct.id) : null
-  const isListen   = mode === 'listen'
+  const isListen   = mode === 'listen' || mode === 'audio-contrast'
   const wrongHint  = wrongHintsEnabled && isAnswered && !isCorrect ? getWrongAnswerHint(question.correct.id) : null
 
   /* ── Listen / character quiz ─────────────────────────── */
