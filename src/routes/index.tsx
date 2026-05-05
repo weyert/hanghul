@@ -63,6 +63,7 @@ function HomePage() {
   const beginnerRoadmap = useBooleanFlagValue(FLAGS.BEGINNER_ROADMAP, false)
   const pronunciationModel = useBooleanFlagValue(FLAGS.PRONUNCIATION_MODEL, false)
   const batchimLesson = useBooleanFlagValue(FLAGS.BATCHIM_LESSON, false)
+  const grammarGuide = useBooleanFlagValue(FLAGS.GRAMMAR_GUIDE, false)
   const contrastDrills = useBooleanFlagValue(FLAGS.CONTRAST_DRILLS, false)
 
   return (
@@ -160,7 +161,7 @@ function HomePage() {
             { step: 1, label: 'Consonants', sub: '자음', to: '/consonants', desc: '14 basic + 5 tense consonants' },
             { step: 2, label: 'Vowels',     sub: '모음', to: '/vowels',     desc: '10 basic + 11 compound vowels' },
             { step: 3, label: 'How Blocks Work', sub: '음절', to: '/blocks', desc: 'Understand how letters stack into syllable blocks' },
-            { step: 4, label: batchimLesson ? 'Batchim Basics' : 'Quiz', sub: batchimLesson ? '받침' : '연습', to: batchimLesson ? '/batchim' : '/quiz', desc: batchimLesson ? 'Learn final consonants before broader drills' : 'Test recognition and recall' },
+            { step: 4, label: grammarGuide ? 'Grammar 101' : (batchimLesson ? 'Batchim Basics' : 'Quiz'), sub: grammarGuide ? '문법' : (batchimLesson ? '받침' : '연습'), to: grammarGuide ? '/grammar' : (batchimLesson ? '/batchim' : '/quiz'), desc: grammarGuide ? 'Learn SOV structure and particles' : (batchimLesson ? 'Learn final consonants before broader drills' : 'Test recognition and recall') },
           ] as const).map(({ step, label, sub, to, desc }) => (
             <Link
               key={step}
@@ -228,6 +229,15 @@ function HomePage() {
             subLabel="발음 Bal-eum"
             desc="Type any Korean word and see each syllable decomposed into initial consonant, vowel, and final components with romanization."
           />
+          {grammarGuide && (
+            <ToolCard
+              to="/grammar"
+              korean="문"
+              label="Grammar 101"
+              subLabel="문법 Mun-beop"
+              desc="Understand Subject-Object-Verb order and how particles glue sentences together."
+            />
+          )}
           <ToolCard
             to="/builder"
             korean="조"

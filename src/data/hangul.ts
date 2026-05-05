@@ -70,7 +70,7 @@ export const consonants: HangulCharacter[] = [
     name: '리을 Rieul',
     descriptions: {
       en: "Flapped 'r' (like the 't' in butter) at start; 'l' at end",
-      nl: "Tussen 'r' en 'l' — als een getapte 'r', niet gerold zoals in Noord-NL",
+      nl: "Tussen 'r' en 'l' — als een getapte 'r'. Let op: gebruik NIET de rollende of keel-r (zoals in 'rood'); tik met je tongpunt net achter je tanden.",
     },
     examples: [
       { korean: '라디오', romanized: 'radio', meaning: 'radio' },
@@ -363,7 +363,7 @@ export const vowels: HangulCharacter[] = [
     name: '어 Eo',
     descriptions: {
       en: "Like 'u' in 'cup' or 'uh' in 'but' — open and unrounded",
-      nl: "Open en ongerond — de Engelse 'u' in 'cup' komt het dichtst; NIET als de 'o' in 'bos' (gerond) of de 'eu'",
+      nl: "Open en ongerond — de Engelse 'u' in 'cup' komt het dichtst; NIET als de 'o' in 'bos' (gerond) of de Nederlandse 'eu'.",
     },
     examples: [
       { korean: '어머니', romanized: 'eomeoni', meaning: 'mother' },
@@ -395,7 +395,7 @@ export const vowels: HangulCharacter[] = [
     name: '오 O',
     descriptions: {
       en: "Like 'o' in 'oh' — round lips",
-      nl: "Als de 'o' in 'zo' of 'boot' — gerond",
+      nl: "Als de 'o' in 'zo' of 'boot' — tuit je lippen duidelijk. Veel ronder dan de 'o' in 'bos'.",
     },
     examples: [
       { korean: '오늘', romanized: 'oneul', meaning: 'today' },
@@ -459,7 +459,7 @@ export const vowels: HangulCharacter[] = [
     name: '으 Eu',
     descriptions: {
       en: "No English equivalent — say 'oo' without rounding your lips, or 'ee' with the tongue pulled back",
-      nl: "Geen direct Nederlands equivalent; neem 'eu' als startpunt, trek je lippen plat en houd de tong hoger en verder naar achter",
+      nl: "Geen direct equivalent; neem de Nederlandse 'eu' (deur), maar trek je lippen helemaal plat en breed. Het lippen-ronden is precies wat je NIET moet doen.",
     },
     examples: [
       { korean: '음악', romanized: 'eumak', meaning: 'music' },
@@ -650,7 +650,7 @@ export const vowels: HangulCharacter[] = [
     name: '의 Ui',
     descriptions: {
       en: "ㅡ + ㅣ — starts with eu, slides into i",
-      nl: "NIET als de Nederlandse 'ui' (huis)! Begin met vlakke ㅡ-klank, glijd naar 'ie'",
+      nl: "Gevaarlijk: NIET als de Nederlandse 'ui' (huis)! Begin bij de vlakke ㅡ-klank en glijd dan pas naar de 'ie'.",
     },
     examples: [
       { korean: '의사', romanized: 'uisa', meaning: 'doctor' },

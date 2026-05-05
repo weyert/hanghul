@@ -135,6 +135,21 @@ export const FLAG_DEFINITIONS = {
     variants: { on: true, off: false },
     defaultVariant: 'on',
   },
+  'grammar-guide': {
+    disabled: false,
+    variants: { on: true, off: false },
+    defaultVariant: 'on',
+  },
+  'audio-contrast-quiz': {
+    disabled: false,
+    variants: { on: true, off: false },
+    defaultVariant: 'on',
+  },
+  'verb-conjugation': {
+    disabled: false,
+    variants: { on: true, off: false },
+    defaultVariant: 'on',
+  },
   'contrast-drills': {
     disabled: false,
     variants: { on: true, off: false },

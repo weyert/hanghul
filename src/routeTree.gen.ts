@@ -21,6 +21,7 @@ import { Route as ProgressRouteImport } from './routes/progress'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as KoreaFactsRouteImport } from './routes/korea-facts'
 import { Route as IpaGuideRouteImport } from './routes/ipa-guide'
+import { Route as GrammarRouteImport } from './routes/grammar'
 import { Route as EnglishGuideRouteImport } from './routes/english-guide'
 import { Route as DutchGuideRouteImport } from './routes/dutch-guide'
 import { Route as ContrastDrillsRouteImport } from './routes/contrast-drills'
@@ -90,6 +91,11 @@ const IpaGuideRoute = IpaGuideRouteImport.update({
   path: '/ipa-guide',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GrammarRoute = GrammarRouteImport.update({
+  id: '/grammar',
+  path: '/grammar',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EnglishGuideRoute = EnglishGuideRouteImport.update({
   id: '/english-guide',
   path: '/english-guide',
@@ -140,6 +146,7 @@ export interface FileRoutesByFullPath {
   '/contrast-drills': typeof ContrastDrillsRoute
   '/dutch-guide': typeof DutchGuideRoute
   '/english-guide': typeof EnglishGuideRoute
+  '/grammar': typeof GrammarRoute
   '/ipa-guide': typeof IpaGuideRoute
   '/korea-facts': typeof KoreaFactsRoute
   '/learn': typeof LearnRoute
@@ -162,6 +169,7 @@ export interface FileRoutesByTo {
   '/contrast-drills': typeof ContrastDrillsRoute
   '/dutch-guide': typeof DutchGuideRoute
   '/english-guide': typeof EnglishGuideRoute
+  '/grammar': typeof GrammarRoute
   '/ipa-guide': typeof IpaGuideRoute
   '/korea-facts': typeof KoreaFactsRoute
   '/learn': typeof LearnRoute
@@ -185,6 +193,7 @@ export interface FileRoutesById {
   '/contrast-drills': typeof ContrastDrillsRoute
   '/dutch-guide': typeof DutchGuideRoute
   '/english-guide': typeof EnglishGuideRoute
+  '/grammar': typeof GrammarRoute
   '/ipa-guide': typeof IpaGuideRoute
   '/korea-facts': typeof KoreaFactsRoute
   '/learn': typeof LearnRoute
@@ -209,6 +218,7 @@ export interface FileRouteTypes {
     | '/contrast-drills'
     | '/dutch-guide'
     | '/english-guide'
+    | '/grammar'
     | '/ipa-guide'
     | '/korea-facts'
     | '/learn'
@@ -231,6 +241,7 @@ export interface FileRouteTypes {
     | '/contrast-drills'
     | '/dutch-guide'
     | '/english-guide'
+    | '/grammar'
     | '/ipa-guide'
     | '/korea-facts'
     | '/learn'
@@ -253,6 +264,7 @@ export interface FileRouteTypes {
     | '/contrast-drills'
     | '/dutch-guide'
     | '/english-guide'
+    | '/grammar'
     | '/ipa-guide'
     | '/korea-facts'
     | '/learn'
@@ -276,6 +288,7 @@ export interface RootRouteChildren {
   ContrastDrillsRoute: typeof ContrastDrillsRoute
   DutchGuideRoute: typeof DutchGuideRoute
   EnglishGuideRoute: typeof EnglishGuideRoute
+  GrammarRoute: typeof GrammarRoute
   IpaGuideRoute: typeof IpaGuideRoute
   KoreaFactsRoute: typeof KoreaFactsRoute
   LearnRoute: typeof LearnRoute
@@ -376,6 +389,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IpaGuideRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/grammar': {
+      id: '/grammar'
+      path: '/grammar'
+      fullPath: '/grammar'
+      preLoaderRoute: typeof GrammarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/english-guide': {
       id: '/english-guide'
       path: '/english-guide'
@@ -444,6 +464,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContrastDrillsRoute: ContrastDrillsRoute,
   DutchGuideRoute: DutchGuideRoute,
   EnglishGuideRoute: EnglishGuideRoute,
+  GrammarRoute: GrammarRoute,
   IpaGuideRoute: IpaGuideRoute,
   KoreaFactsRoute: KoreaFactsRoute,
   LearnRoute: LearnRoute,

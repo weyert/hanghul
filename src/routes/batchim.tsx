@@ -90,6 +90,68 @@ function BatchimPage() {
         </div>
       </section>
 
+      {/* New: 7 Final Sounds Section */}
+      <section className="space-y-4">
+        <h2 className="text-lg font-bold" style={{ color: 'var(--c-1)' }}>The "7 Final Sounds" Rule</h2>
+        <p className="text-sm" style={{ color: 'var(--c-2)' }}>
+          Even though many different consonants can sit at the bottom, they all simplify into just <strong>7 basic sounds</strong> when they are at the very end of a word.
+        </p>
+        <div className="glass-card rounded-2xl overflow-hidden">
+          <table className="w-full text-sm">
+            <thead>
+              <tr style={{ background: 'var(--c-surface)', borderBottom: '1px solid var(--c-border)' }}>
+                <th className="text-left px-4 py-3 font-bold" style={{ color: 'var(--c-3)' }}>Ending Letter</th>
+                <th className="text-left px-4 py-3 font-bold" style={{ color: 'var(--c-3)' }}>Actual Sound</th>
+                <th className="text-left px-4 py-3 font-bold" style={{ color: 'var(--c-3)' }}>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                { letters: 'ㄱ, ㅋ, ㄲ', sound: 'k (stop)', ex: '책 (Book)' },
+                { letters: 'ㄴ', sound: 'n', ex: '눈 (Eye)' },
+                { letters: 'ㄷ, ㅅ, ㅆ, ㅈ, ㅊ, ㅌ, ㅎ', sound: 't (stop)', ex: '옷 (Clothes)' },
+                { letters: 'ㄹ', sound: 'l', ex: '달 (Moon)' },
+                { letters: 'ㅁ', sound: 'm', ex: '몸 (Body)' },
+                { letters: 'ㅂ, ㅍ', sound: 'p (stop)', ex: '입 (Mouth)' },
+                { letters: 'ㅇ', sound: 'ng', ex: '강 (River)' },
+              ].map((row, i) => (
+                <tr key={i} style={{ borderBottom: '1px solid var(--c-border-sub)' }}>
+                  <td className="px-4 py-3 font-black korean-text text-base" style={{ color: 'var(--c-1)' }}>{row.letters}</td>
+                  <td className="px-4 py-3 font-mono font-bold" style={{ color: 'var(--c-accent-text)' }}>[{row.sound}]</td>
+                  <td className="px-4 py-3" style={{ color: 'var(--c-2)' }}>{row.ex}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      {/* New: Liaison (Yeon-eum) Section */}
+      <section className="space-y-4">
+        <h2 className="text-lg font-bold" style={{ color: 'var(--c-1)' }}>Liaison: The Jumping Sound (연음)</h2>
+        <div className="glass-card rounded-2xl p-6 space-y-4" style={{ borderLeft: '4px solid var(--c-accent)' }}>
+          <p className="text-sm" style={{ color: 'var(--c-2)' }}>
+            This is the most important rule for speaking fluid Korean. When a block has a <strong>final consonant</strong> and the <em>next</em> block starts with the "hollow circle" <strong>ㅇ</strong>, the consonant jumps up to fill that empty spot.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-8 py-4">
+            <div className="text-center">
+              <p className="text-xs uppercase tracking-widest mb-2" style={{ color: 'var(--c-3)' }}>Written</p>
+              <div className="text-4xl font-black korean-serif" style={{ color: 'var(--c-1)' }}>밥이</div>
+              <p className="text-sm mt-1 font-mono" style={{ color: 'var(--c-3)' }}>bap-i</p>
+            </div>
+            <div className="text-2xl" style={{ color: 'var(--c-accent)' }}>→</div>
+            <div className="text-center">
+              <p className="text-xs uppercase tracking-widest mb-2" style={{ color: 'var(--c-3)' }}>Spoken</p>
+              <div className="text-4xl font-black korean-serif" style={{ color: 'var(--c-accent-text)' }}>바비</div>
+              <p className="text-sm mt-1 font-mono" style={{ color: 'var(--c-accent-text)' }}>ba-bi</p>
+            </div>
+          </div>
+          <p className="text-xs leading-relaxed italic" style={{ color: 'var(--c-3)' }}>
+            Why? Because ㅇ is a silent placeholder. Korean prefers the sound to flow smoothly into the next vowel rather than stopping and starting again.
+          </p>
+        </div>
+      </section>
+
       <section className="space-y-4">
         <h2 className="text-sm font-bold" style={{ color: 'var(--c-1)' }}>Worked examples</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

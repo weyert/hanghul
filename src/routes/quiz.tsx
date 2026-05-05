@@ -23,13 +23,28 @@ export const Route = createFileRoute('/quiz')({
 
 const QUIZ_LENGTH = 10
 
-type QuizMode = 'consonants' | 'vowels' | 'all' | 'listen' | 'words' | 'mixed'
+type QuizMode = 'consonants' | 'vowels' | 'all' | 'listen' | 'words' | 'mixed' | 'audio-contrast'
 
 interface Question    { correct: HangulCharacter; options: HangulCharacter[] }
 interface WordQuestion { correct: VocabEntry;       options: VocabEntry[] }
 
 function shuffle<T>(arr: T[]): T[] {
   return [...arr].sort(() => Math.random() - 0.5)
+}
+
+const CONTRAST_SETS = [
+  ['giyeok', 'kieuk', 'ssanggiyeok'], // ㄱ ㅋ ㄲ
+  ['digeut', 'tieut', 'ssangdigeut'],  // ㄷ ㅌ ㄸ
+  ['bieup', 'pieup-aspirated', 'ssangbieup'], // ㅂ ㅍ ㅃ
+  ['siot', 'ssangsiot'], // ㅅ ㅆ
+  ['jieut', 'chieut', 'ssangjieut'], // ㅈ ㅊ ㅉ
+]
+
+function buildContrastQuestion(): Question {
+  const setIds = CONTRAST_SETS[Math.floor(Math.random() * CONTRAST_SETS.length)]
+  const set = setIds.map(id => allCharacters.find(c => c.id === id)!).filter(Boolean)
+  const correct = set[Math.floor(Math.random() * set.length)]
+  return { correct, options: shuffle(set) }
 }
 
 function buildQuestion(pool: HangulCharacter[], pick: (pool: HangulCharacter[]) => HangulCharacter): Question {
@@ -121,6 +136,7 @@ function QuizPage() {
   const listenEnabled     = useBooleanFlagValue(FLAGS.LISTEN_QUIZ, false)
   const wordEnabled       = useBooleanFlagValue(FLAGS.WORD_QUIZ, false)
   const mixedEnabled      = useBooleanFlagValue(FLAGS.MIXED_QUIZ, false)
+  const contrastEnabled   = useBooleanFlagValue(FLAGS.AUDIO_CONTRAST_QUIZ, false)
   const retryWrongEnabled = useBooleanFlagValue(FLAGS.QUIZ_RETRY_WRONG, false)
   const autoAudioEnabled  = useBooleanFlagValue(FLAGS.QUIZ_AUTO_AUDIO, false)
   const correctTipEnabled = useBooleanFlagValue(FLAGS.QUIZ_CORRECT_TIP, false)
@@ -161,7 +177,7 @@ function QuizPage() {
   )
 
   useEffect(() => {
-    if (mode === 'listen' && question && !selected) {
+    if ((mode === 'listen' || mode === 'audio-contrast') && question && !selected) {
       speak(question.correct.char)
     }
   }, [question, mode, selected, speak])
@@ -177,11 +193,10 @@ function QuizPage() {
     setSelected(null); setFinished(false); setMixedIsWord(false)
     setWrongChars([])
     setActivePool(customPool ?? null)
-    const pool = customPool ?? (m === 'mixed' ? allCharacters : m !== 'words' ? getCharPool(m) : null)
-    if (m === 'words') {
-      setWordQuestion(buildWordQuestion(srEnabled ? wordPickFn : undefined))
-      setQuestion(null)
-    } else if (m === 'mixed') {
+    if (m === 'audio-contrast') {
+      setQuestion(buildContrastQuestion())
+      setWordQuestion(null)
+    } else if (m === 'words') {
       setQuestion(buildQuestion(pool!, pickFn))
       setWordQuestion(null)
     } else {
@@ -228,6 +243,8 @@ function QuizPage() {
     setSelected(null)
     if (mode === 'words') {
       setWordQuestion(buildWordQuestion(srEnabled ? wordPickFn : undefined))
+    } else if (mode === 'audio-contrast') {
+      setQuestion(buildContrastQuestion())
     } else if (mode === 'mixed') {
       const nextIsWord = nextNum % 3 === 0
       setMixedIsWord(nextIsWord)
@@ -281,10 +298,21 @@ function QuizPage() {
           </div>
         </div>
 
-        {(listenEnabled || wordEnabled || mixedEnabled) && (
+        {(listenEnabled || wordEnabled || mixedEnabled || contrastEnabled) && (
           <div>
             <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--c-3)' }}>More Modes</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {contrastEnabled && (
+                <ModeCard
+                  mode="audio-contrast"
+                  label="Audio Contrast"
+                  subLabel="변별 Byeon-byeol"
+                  count="ㄱ/ㅋ/ㄲ etc — pick the sound you hear"
+                  accent="amber"
+                  char="ㄱ vs ㅋ"
+                  onStart={startQuiz}
+                />
+              )}
               {listenEnabled && (
                 <ModeCard
                   mode="listen"

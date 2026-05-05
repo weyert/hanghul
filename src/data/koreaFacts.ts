@@ -401,7 +401,7 @@ export const KOREA_FACTS: KoreaFact[] = [
   {
     id: 'f013',
     category: 'food',
-    text: 'Korea\'s delivery culture is unmatched globally. Nearly any food can be delivered in 30 minutes or less, 24 hours a day. Riders even deliver single cups of coffee and entire multi-course meals, and delivery drones are already being tested.',
+    text: 'Korea\'s delivery culture is unmatched globally. Nearly any food can be delivered in 30 minutes or less, 24 hours a day. Riders even deliver single cups of tea and entire multi-course meals, and delivery drones are already being tested.',
   },
   {
     id: 'f014',
