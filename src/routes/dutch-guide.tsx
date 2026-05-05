@@ -231,7 +231,7 @@ function DutchGuidePage() {
                   <h3 className="font-bold" style={{ color: 'var(--c-1)' }}>ㄹ — not the Dutch "r"</h3>
                 </div>
                 <p className="text-sm" style={{ color: 'var(--c-3)' }}>
-                  At syllable start, ㄹ is an alveolar flap (tongue tip taps the ridge just once, quickly) — like the American English "d" in "butter" or the "r" in some Spanish words like <em>pero</em>. It is <em>not</em> the Dutch uvular or velar "r" (as in <em>rood</em>, <em>groot</em>). At syllable end it settles into a clear "l" like <em>bal</em>.
+                  At syllable start, ㄹ is an alveolar flap — the tongue tip taps the ridge behind the teeth once and bounces off. The "tt" in American English <em>butter</em> or <em>water</em> is flapped the same way (it sounds like a quick "d" even though the letter is "t"), as is the single "r" in Spanish <em>pero</em>. It is <em>not</em> the Dutch uvular or velar "r" (as in <em>rood</em>, <em>groot</em>). At syllable end it settles into a clear "l" like <em>bal</em>.
                 </p>
                 <div className="flex gap-2 flex-wrap">
                   <WordChip korean="라디오" gloss="radio — flap at start" />
@@ -254,7 +254,7 @@ function DutchGuidePage() {
                   <h3 className="font-bold" style={{ color: 'var(--c-1)' }}>ㅓ — between Dutch "eu" and "a"</h3>
                 </div>
                 <p className="text-sm" style={{ color: 'var(--c-3)' }}>
-                  ㅡ is close to Dutch "eu" (deur). ㅓ is different — it's more open, with the jaw dropping lower than for "eu". Think of it as halfway between Dutch "eu" and "a" (bad). The lips are slightly rounded and the tongue sits in a lower, more central position.
+                  ㅡ is close to Dutch "eu" (deur). ㅓ is different — it's more open, with the jaw dropping lower than for "eu". Unlike "eu", the lips are <strong style={{ color: 'var(--c-2)' }}>not rounded</strong>; keep them neutral and flat. Think of the tongue dropping from the "eu" position toward "a" (bad) while your lips stay spread — closer to the "u" in English "cup" than to any Dutch vowel.
                 </p>
                 <div className="flex gap-2 flex-wrap">
                   <WordChip korean="어머니" gloss="mother" />

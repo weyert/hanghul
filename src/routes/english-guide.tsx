@@ -155,7 +155,7 @@ function EnglishGuidePage() {
                   <h3 className="font-bold" style={{ color: 'var(--c-1)' }}>ㄹ — the Korean flap</h3>
                 </div>
                 <p className="text-sm" style={{ color: 'var(--c-3)' }}>
-                  At syllable <strong style={{ color: 'var(--c-2)' }}>start</strong>, ㄹ is neither "r" nor "l". It's an alveolar flap — the same sound as the "d" in American English <em>"butter"</em> or "water", or the "t" in "city". Don't roll it; don't drawl it.
+                  At syllable <strong style={{ color: 'var(--c-2)' }}>start</strong>, ㄹ is neither "r" nor "l". It's an alveolar flap — the tongue tip taps the ridge behind your teeth once and bounces off immediately. In American English the "tt" in <em>"butter"</em> or <em>"water"</em> is flapped the same way (it ends up sounding like a quick "d", but the letter in those words is "t"). Don't roll it; don't drawl it.
                   At syllable <strong style={{ color: 'var(--c-2)' }}>end</strong>, it's a clear lateral "l" like "tall".
                 </p>
                 <div className="flex gap-2 flex-wrap">
@@ -207,7 +207,7 @@ function EnglishGuidePage() {
                   <h3 className="font-bold" style={{ color: 'var(--c-1)' }}>ㅓ vs ㅏ — two open vowels</h3>
                 </div>
                 <p className="text-sm" style={{ color: 'var(--c-3)' }}>
-                  ㅏ is the "a" in "father" — jaw drops, tongue flat and low. ㅓ is harder to place: the closest English approximation is the "o" in British "hot" or "uh" in "but" with your mouth more open. It is <em>not</em> "eo" as in "leopard" — that romanization misleads.
+                  ㅏ is the "a" in "father" — jaw drops, tongue flat and low. ㅓ is harder to place: the closest English approximation is the "u" in "cup" or "uh" in "but" — an open, unrounded vowel with the jaw dropping a touch lower than for those English words. It is <em>not</em> "eo" as in "leopard" — that romanization misleads.
                 </p>
                 <div className="grid grid-cols-2 gap-2">
                   <div className="rounded-xl p-3 text-center"
@@ -219,7 +219,7 @@ function EnglishGuidePage() {
                   <div className="rounded-xl p-3 text-center"
                     style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
                     <div className="text-2xl korean-serif font-black" style={{ color: 'var(--c-1)' }}>어</div>
-                    <div className="text-xs mt-1" style={{ color: 'var(--c-3)' }}>Open, central — British "hot"</div>
+                    <div className="text-xs mt-1" style={{ color: 'var(--c-3)' }}>Open, unrounded — "u" in "cup"</div>
                     <div className="text-xs" style={{ color: 'var(--c-4)' }}>어머니 · mother</div>
                   </div>
                 </div>
