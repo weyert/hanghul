@@ -164,7 +164,7 @@ function TypingPracticePage() {
           <p className="text-xs text-center" style={{ color: 'var(--c-4)' }}>
             Type the romanization and press{' '}
             <kbd className="px-1.5 py-0.5 rounded text-xs font-mono" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>Enter</kbd>
-            {' '}— partial matches count (g or k both work for ㄱ)
+            {' '}— accepted answers follow the site romanization; some consonants allow both common values (for example, g or k for ㄱ)
           </p>
         </div>
       )
@@ -181,7 +181,7 @@ function TypingPracticePage() {
           <p className="text-sm" style={{ color: 'var(--c-2)' }}>
             A character appears — type its romanization and press{' '}
             <kbd className="px-1.5 py-0.5 rounded text-xs font-mono" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>Enter</kbd>.
-            Partial matches count (e.g., <em>g</em> or <em>k</em> both work for ㄱ).
+            Accepted answers follow the site romanization, and some consonants allow both common values (for example, <em>g</em> or <em>k</em> for ㄱ).
           </p>
           <p className="text-sm font-semibold" style={{ color: 'var(--c-3)' }}>{ROUND_LENGTH} questions per round · all 40 characters</p>
         </div>

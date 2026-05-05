@@ -59,7 +59,7 @@ function EnglishGuidePage() {
         style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.25)' }}>
         <p className="font-bold" style={{ color: '#6ee7b7' }}>The good news</p>
         <ul className="text-sm space-y-2" style={{ color: 'var(--c-2)' }}>
-          <li>• Hangul is perfectly phonemic — unlike English spelling, one character maps to one sound (or a small, predictable set based on position)</li>
+          <li>• Hangul is highly regular — far more consistent than English spelling, even though pronunciation still changes predictably by position</li>
           <li>• You can learn to <em>read</em> all syllables within a few days; fluency comes from practising sounds, not memorising spelling rules</li>
           <li>• Around half the consonants are direct matches to sounds you already make in English</li>
           <li>• Every syllable is a neat block: (consonant) + vowel + (optional final consonant) — no hidden complexity</li>
@@ -291,7 +291,7 @@ function EnglishGuidePage() {
           <div className="space-y-2 text-sm" style={{ color: 'var(--c-2)' }}>
             <p>• <strong style={{ color: 'var(--c-1)' }}>"eu" for ㅡ</strong> doesn't sound like any English "eu". Your brain will hear the wrong sound.</p>
             <p>• <strong style={{ color: 'var(--c-1)' }}>"eo" for ㅓ</strong> is not the "eo" in "leopard" or "people".</p>
-            <p>• <strong style={{ color: 'var(--c-1)' }}>ㄱ</strong> appears as "g", "k", or even "ng" depending on position — the romanization changes, the character doesn't.</p>
+            <p>• <strong style={{ color: 'var(--c-1)' }}>ㄱ</strong> can appear as "g" or "k" in romanization depending on position — the spelling shifts, but the letter itself does not.</p>
           </div>
           <p className="text-sm" style={{ color: 'var(--c-3)' }}>
             Use audio as your phonetic reference. Hangul was designed in 1443 to precisely represent sounds — trust the script itself.

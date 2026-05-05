@@ -21,8 +21,8 @@ export const consonants: HangulCharacter[] = [
     ipa: 'ɡ',
     name: '기역 Giyeok',
     descriptions: {
-      en: "Like 'g' in 'go' at start; 'k' at syllable end",
-      nl: "Als de 'k' in 'ski' — ongeaspireerd; aan het eind als 'k' in 'tak'",
+      en: "Unaspirated Korean stop — between English 'g' and 'k'; closer to 'k' in 'skill' at start, 'k' at syllable end",
+      nl: "Ongeaspireerde Koreaanse stop — tussen 'g' en 'k' in; aan het begin dichter bij de 'k' in 'ski', aan het eind als 'k'",
     },
     examples: [
       { korean: '가방', romanized: 'gabang', meaning: 'bag' },
@@ -53,8 +53,8 @@ export const consonants: HangulCharacter[] = [
     ipa: 'd',
     name: '디귿 Digeut',
     descriptions: {
-      en: "Like 'd' in 'do' at start; 't' at syllable end",
-      nl: "Als de 't' in 'step' — ongeaspireerd; aan het eind als 't' in 'rat'",
+      en: "Unaspirated Korean stop — between English 'd' and 't'; closer to 't' in 'stop' at start, 't' at syllable end",
+      nl: "Ongeaspireerde Koreaanse stop — tussen 'd' en 't' in; aan het begin dichter bij de 't' in 'stop', aan het eind als 't'",
     },
     examples: [
       { korean: '다리', romanized: 'dari', meaning: 'leg / bridge' },
@@ -101,8 +101,8 @@ export const consonants: HangulCharacter[] = [
     ipa: 'b',
     name: '비읍 Bieup',
     descriptions: {
-      en: "Like 'b' in 'be' at start; 'p' at syllable end",
-      nl: "Als de 'p' in 'spot' — ongeaspireerd; aan het eind als 'p' in 'stap'",
+      en: "Unaspirated Korean stop — between English 'b' and 'p'; closer to 'p' in 'spin' at start, 'p' at syllable end",
+      nl: "Ongeaspireerde Koreaanse stop — tussen 'b' en 'p' in; aan het begin dichter bij de 'p' in 'spot', aan het eind als 'p'",
     },
     examples: [
       { korean: '바다', romanized: 'bada', meaning: 'sea' },
@@ -379,7 +379,7 @@ export const vowels: HangulCharacter[] = [
     name: '여 Yeo',
     descriptions: {
       en: "Like 'yuh' — ㅑ but with eo sound",
-      nl: "Als 'jo' in 'jongen' — 'j' + 'o' uit 'bos'",
+      nl: "Als 'j' + ㅓ — begin met een 'j' en glijd direct naar de open, ongeronde ㅓ-klank",
     },
     examples: [
       { korean: '여기', romanized: 'yeogi', meaning: 'here' },
@@ -459,7 +459,7 @@ export const vowels: HangulCharacter[] = [
     name: '으 Eu',
     descriptions: {
       en: "No English equivalent — say 'oo' without rounding your lips, or 'ee' with the tongue pulled back",
-      nl: "Geen equivalent; zeg 'ie' maar schuif je tong naar achter en houd lippen plat",
+      nl: "Geen direct Nederlands equivalent; neem 'eu' als startpunt, trek je lippen plat en houd de tong hoger en verder naar achter",
     },
     examples: [
       { korean: '음악', romanized: 'eumak', meaning: 'music' },
@@ -522,8 +522,8 @@ export const vowels: HangulCharacter[] = [
     ipa: 'e',
     name: '에 E',
     descriptions: {
-      en: "Like 'e' in 'bed'",
-      nl: "Als de 'ee' in 'meer' maar korter, of de 'e' in 'bed'",
+      en: "Close to 'e' in 'bed', often slightly higher; in modern Korean very close to ㅐ for many speakers",
+      nl: "Dicht bij de 'e' in 'bed', soms iets hoger; in modern Koreaans voor veel sprekers bijna gelijk aan ㅐ",
     },
     examples: [
       { korean: '에너지', romanized: 'eneoji', meaning: 'energy' },

@@ -57,7 +57,7 @@ function DutchGuidePage() {
         style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.25)' }}>
         <p className="font-bold" style={{ color: '#6ee7b7' }}>Jouw voorsprong op Engelstaligen</p>
         <p className="text-sm" style={{ color: 'var(--c-2)' }}>
-          Dutch phonology gives you several sounds that English speakers have to build from scratch. The hardest vowel for English speakers — ㅡ — is something you already produce every day.
+          Dutch phonology gives you a few useful starting points, especially for vowels like ㅜ and for understanding unrounded vowels such as ㅡ. Korean still has its own contrasts, so treat Dutch as a guide, not a direct copy.
         </p>
       </div>
 
@@ -78,9 +78,9 @@ function DutchGuidePage() {
                   <span className="text-xs font-black px-2 py-0.5 rounded-full"
                     style={{ background: 'rgba(16,185,129,0.15)', color: '#6ee7b7' }}>Your biggest advantage</span>
                 </div>
-                <h3 className="font-bold" style={{ color: 'var(--c-1)' }}>ㅡ ≈ Dutch "eu" (deur, neus, deuk)</h3>
+                <h3 className="font-bold" style={{ color: 'var(--c-1)' }}>ㅡ ← start from Dutch "eu" (deur, neus, deuk)</h3>
                 <p className="text-sm" style={{ color: 'var(--c-3)' }}>
-                  ㅡ /ɯ/ is a high back <strong style={{ color: 'var(--c-2)' }}>unrounded</strong> vowel — it doesn't exist in Dutch or English. Dutch 'eu' (deur, neus) is a useful starting point: from the 'eu' position, spread your lips completely flat and push your tongue slightly higher and further back. The critical step is <strong style={{ color: 'var(--c-2)' }}>unrounding</strong> — ㅡ has no lip rounding at all, unlike 'eu'. English speakers have to build this from nothing; you just have to unround and adjust.
+                  ㅡ /ɯ/ is a high back <strong style={{ color: 'var(--c-2)' }}>unrounded</strong> vowel — it is not a normal Dutch vowel. Dutch <em>eu</em> (deur, neus) is a useful starting position: keep the tongue high, then flatten the lips completely and let the tongue sit a little further back. The key step is <strong style={{ color: 'var(--c-2)' }}>unrounding</strong>. So this is not the same sound as Dutch <em>eu</em>, but Dutch gives you a much better starting point than English does.
                 </p>
                 <div className="flex gap-2 flex-wrap">
                   <WordChip korean="크다" gloss="크 ≈ 'kr' like kreu" />
@@ -98,9 +98,9 @@ function DutchGuidePage() {
               <span className="text-5xl korean-serif font-black flex-shrink-0 leading-none"
                 style={{ color: 'var(--c-vowel-text)' }}>ㅜ</span>
               <div className="space-y-1.5">
-                <h3 className="font-bold" style={{ color: 'var(--c-1)' }}>ㅜ = Dutch "oe" (boek, moe, rood)</h3>
+                <h3 className="font-bold" style={{ color: 'var(--c-1)' }}>ㅜ ≈ Dutch "oe" (boek, moe, rood)</h3>
                 <p className="text-sm" style={{ color: 'var(--c-3)' }}>
-                  An exact match. Dutch "oe" and Korean ㅜ are the same rounded back vowel. The "oe" in <em>boek</em> or <em>moe</em> is precisely ㅜ.
+                  This is a very close match. Dutch <em>oe</em> and Korean ㅜ are both rounded back vowels, so <em>boek</em> and <em>moe</em> give you a reliable anchor even if the exact quality can vary a little by speaker.
                 </p>
                 <div className="flex gap-2 flex-wrap">
                   <WordChip korean="우유" gloss="milk — 우 = oe" />
@@ -140,9 +140,9 @@ function DutchGuidePage() {
                 ))}
               </div>
               <div className="space-y-1.5">
-                <h3 className="font-bold" style={{ color: 'var(--c-1)' }}>Lax stops ≈ Dutch initial b, d (bal, dag)</h3>
+                <h3 className="font-bold" style={{ color: 'var(--c-1)' }}>Lax stops — use Dutch b, d only as rough anchors</h3>
                 <p className="text-sm" style={{ color: 'var(--c-3)' }}>
-                  Korean lax consonants ㅂ, ㄷ, ㄱ are unaspirated — no burst of air. Dutch initial "b" (bal) and "d" (dag) are similarly lenis and unaspirated, making these feel familiar. English speakers, by contrast, have to actively suppress the puff of air they produce for "b" and "d".
+                  Korean lax consonants ㅂ, ㄷ, ㄱ are best treated as <em>plain Korean stops</em>: little or no aspiration at the start, but not strong Dutch-style voiced consonants either. Dutch <em>b</em> and <em>d</em> can help as a first anchor, but do not copy Dutch voicing exactly. The real Korean contrast is <strong style={{ color: 'var(--c-2)' }}>lax vs aspirated vs tense</strong>.
                 </p>
                 <div className="flex gap-2 flex-wrap">
                   <WordChip korean="바다" gloss="ㅂ ≈ Dutch b in 'bal'" />
@@ -214,7 +214,7 @@ function DutchGuidePage() {
               <h3 className="font-bold" style={{ color: 'var(--c-1)' }}>Aspirated consonants — ㅋ ㅌ ㅍ ㅊ are stronger than Dutch k, t, p</h3>
             </div>
             <p className="text-sm" style={{ color: 'var(--c-3)' }}>
-              Dutch "k" (kat), "t" (tak), "p" (pot) are aspirated — but Korean ㅋ, ㅌ, ㅍ, ㅊ push much more air. Hold a piece of paper in front of your mouth: Dutch "k" makes it flutter slightly; Korean ㅋ should make it blow. Practise exaggerating the air burst.
+              Do not assume Dutch <em>k</em>, <em>t</em>, and <em>p</em> automatically equal Korean ㅋ, ㅌ, and ㅍ. Korean aspirated consonants have a much clearer burst of air. Hold a piece of paper in front of your mouth: the Korean aspirated series should move it decisively.
             </p>
           </div>
 
@@ -254,7 +254,7 @@ function DutchGuidePage() {
                   <h3 className="font-bold" style={{ color: 'var(--c-1)' }}>ㅓ — between Dutch "eu" and "a"</h3>
                 </div>
                 <p className="text-sm" style={{ color: 'var(--c-3)' }}>
-                  ㅡ is close to Dutch "eu" (deur). ㅓ is different — it's more open, with the jaw dropping lower than for "eu". Unlike "eu", the lips are <strong style={{ color: 'var(--c-2)' }}>not rounded</strong>; keep them neutral and flat. Think of the tongue dropping from the "eu" position toward "a" (bad) while your lips stay spread — closer to the "u" in English "cup" than to any Dutch vowel.
+                  ㅡ can start from Dutch <em>eu</em> (deur), but ㅓ is different again: more open, with the jaw dropping lower than for <em>eu</em>. Unlike <em>eu</em>, the lips are <strong style={{ color: 'var(--c-2)' }}>not rounded</strong>; keep them neutral. Think of the tongue dropping from that <em>eu</em>-like starting point toward an open central vowel — closer to the vowel in English <em>cup</em> than to any single Dutch vowel.
                 </p>
                 <div className="flex gap-2 flex-wrap">
                   <WordChip korean="어머니" gloss="mother" />
@@ -284,11 +284,11 @@ function DutchGuidePage() {
               <tbody>
                 {([
                   { dutch: 'eu', example: 'deur, neus',  korean: 'ㅡ', note: 'Starting point only — unround your lips completely for ㅡ' },
-                  { dutch: 'oe', example: 'boek, moe',   korean: 'ㅜ', note: 'Essentially identical' },
+                  { dutch: 'oe', example: 'boek, moe',   korean: 'ㅜ', note: 'Very close match for most learners' },
                   { dutch: 'ee', example: 'been, steen',  korean: 'ㅔ', note: 'Close — ㅔ is slightly more open' },
                   { dutch: 'aa', example: 'bad, laat',    korean: 'ㅏ', note: 'Similar; Dutch aa is a touch more back' },
-                  { dutch: 'b (bal)', example: 'bal, boek', korean: 'ㅂ', note: 'Both lenis, unaspirated' },
-                  { dutch: 'd (dag)', example: 'dag, dus', korean: 'ㄷ', note: 'Both lenis, unaspirated' },
+                  { dutch: 'b (bal)', example: 'bal, boek', korean: 'ㅂ', note: 'Rough starting point only — keep it light, not strongly voiced' },
+                  { dutch: 'd (dag)', example: 'dag, dus', korean: 'ㄷ', note: 'Rough starting point only — keep it plain and light' },
                   { dutch: 'ng (lang)', example: 'lang, ring', korean: 'ㅇ (end)', note: 'Identical — ŋ' },
                 ] as const).map(({ dutch, example, korean, note }) => (
                   <tr key={dutch} style={{ borderBottom: '1px solid var(--c-border-sub)' }}
@@ -312,7 +312,7 @@ function DutchGuidePage() {
         <div className="glass-card rounded-2xl p-5 space-y-3 text-sm" style={{ color: 'var(--c-2)' }}>
           <p>• <strong style={{ color: 'var(--c-1)' }}>Use IPA as a reference</strong> — Dutch speakers are generally comfortable with phonetic notation. When in doubt about a Korean sound, check the IPA symbol. It's more precise than romanization.</p>
           <p>• <strong style={{ color: 'var(--c-1)' }}>Don't bring your Dutch "r" to ㄹ</strong> — the uvular Dutch "r" (back of the throat) is very different from the Korean alveolar flap. Actively suppress your "r" reflex and tap the tongue tip instead.</p>
-          <p>• <strong style={{ color: 'var(--c-1)' }}>Exaggerate aspiration</strong> — Your Dutch aspirated stops (k, t, p) are good but Korean aspirated consonants (ㅋ ㅌ ㅍ) go further. Over-aspirate while learning.</p>
+          <p>• <strong style={{ color: 'var(--c-1)' }}>Exaggerate aspiration</strong> — Korean aspirated consonants (ㅋ ㅌ ㅍ ㅊ) need a clearer burst of air than most Dutch learners expect. Overdo the airflow at first.</p>
           <p>• <strong style={{ color: 'var(--c-1)' }}>Avoid romanization</strong> — "eu" in Korean romanization doesn't sound like Dutch "eu". Trust your ears and the audio, not the Latin spelling.</p>
         </div>
       </section>
@@ -322,7 +322,7 @@ function DutchGuidePage() {
         <div>
           <p className="font-bold" style={{ color: 'var(--c-1)' }}>Klaar om te oefenen?</p>
           <p className="text-sm mt-0.5" style={{ color: 'var(--c-3)' }}>
-            Begin met de klinkers — your Dutch phonology means you'll find ㅡ and ㅜ almost immediately familiar.
+            Begin met de klinkers — Dutch gives you a strong head start on ㅜ and a practical starting point for ㅡ.
           </p>
         </div>
         <div className="flex gap-2 flex-wrap">

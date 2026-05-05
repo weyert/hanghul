@@ -237,8 +237,8 @@ function IpaGuidePage() {
           <SymbolRow
             symbol="ø"
             hangul="ㅚ"
-            en='No English equivalent — this is the historical value of ㅚ. In modern spoken Korean it has merged with ㅔ /e/.'
-            nl='"eu" in "deur" of "neus" — dit is de historische waarde; modern Koreaans spreekt ㅚ als ㅔ uit.'
+            en='No English equivalent — this is the historical value of ㅚ. In modern speech many speakers pronounce it close to ㅞ or ㅔ, depending on word and speaker.'
+            nl='"eu" in "deur" of "neus" — dit is de historische waarde; in modern Koreaans ligt de uitspraak vaak dichter bij ㅞ of ㅔ, afhankelijk van woord en spreker.'
           />
 
           <SymbolRow
@@ -306,8 +306,8 @@ function IpaGuidePage() {
           <SymbolRow
             symbol="ɡ / b / d"
             hangul="ㄱ ㅂ ㄷ (lax)"
-            en='IPA uses voiced symbols for the underlying phoneme, but initial ㄱ ㅂ ㄷ are actually unvoiced in Korean. They become voiced between vowels (e.g. 아기 agi). The IPA represents the phoneme; position determines the actual voicing.'
-            nl='IPA gebruikt stemhebbende symbolen voor het foneem, maar begin-ㄱ ㅂ ㄷ zijn in werkelijkheid stemloos. Tussen klinkers worden ze stemhebbend. De realisatie hangt af van de positie.'
+            en='IPA uses voiced symbols for the underlying phoneme, but word-initial ㄱ ㅂ ㄷ are usually voiceless or only weakly voiced in Korean. Between vowels they are often more voiced (e.g. 아기 agi). Position changes the surface sound.'
+            nl='IPA gebruikt stemhebbende symbolen voor het onderliggende foneem, maar woordinitiaal ㄱ ㅂ ㄷ zijn in het Koreaans meestal stemloos of slechts zwak stemhebbend. Tussen klinkers klinken ze vaak stemhebbender. De positie bepaalt de concrete uitspraak.'
           />
 
           <SymbolRow
@@ -339,7 +339,7 @@ function IpaGuidePage() {
                   { ipa: 'ʌ',   k: 'ㅓ',          en: 'u in "cup"',              nl: 'geen — open, ongerond'         },
                   { ipa: 'ɯ',   k: 'ㅡ',          en: '"oo" unrounded',           nl: 'eu (deur) maar ongerond'       },
                   { ipa: 'ɛ',   k: 'ㅐ',          en: 'a in "cat"',              nl: 'e in "bed"'                    },
-                  { ipa: 'ø',   k: 'ㅚ (hist.)',  en: 'geen equivalent',          nl: 'eu in "deur" (hist. waarde)'  },
+                  { ipa: 'ø',   k: 'ㅚ (hist.)',  en: 'historical value only',    nl: 'eu in "deur" (hist. waarde)'  },
                   { ipa: 'ɾ',   k: 'ㄹ (begin)',  en: 'flapped t in "butter"',   nl: 'niet jouw r — tongpunttik'    },
                   { ipa: 'ŋ',   k: 'ㅇ (einde)',  en: 'ng in "sing"',            nl: 'ng in "lang"'                  },
                   { ipa: 'dʑ',  k: 'ㅈ',          en: 'j in "jazz" (palataal)',  nl: 'Engelse j in "jazz"'           },
