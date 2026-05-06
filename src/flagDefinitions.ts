@@ -2,7 +2,12 @@
 // This module is imported by both the OFREP endpoint (server) and the
 // InMemoryProvider fallback used during SSR.
 
-import type { InMemoryFlagConfiguration } from '@openfeature/web-sdk'
+// Minimal shape compatible with @openfeature/web-sdk InMemoryFlagConfiguration.
+// Defined locally to avoid adding web-sdk as an explicit dependency.
+type InMemoryFlagConfiguration = Record<
+  string,
+  { disabled?: boolean; variants: Record<string, boolean>; defaultVariant: string }
+>
 
 export const FLAG_DEFINITIONS = {
   'syllable-chart': {

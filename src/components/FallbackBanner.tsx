@@ -14,7 +14,9 @@ export function FallbackBanner({ slug }: { slug: string }) {
       <span>
         Deze pagina is nog niet vertaald naar het Nederlands. Je ziet nu de Engelse versie.{' '}
         <Link
-          to={`/en/${slug}`}
+          to="/$locale/$slug"
+          params={{ locale: 'en', slug }}
+          search={{ from: undefined }}
           style={{ color: 'var(--c-accent-text)' }}
           className="underline underline-offset-2"
         >

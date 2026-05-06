@@ -1,11 +1,7 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/ipa-guide')({
-  beforeLoad: ({ search }) => {
-    throw redirect({
-      to: '/en/ipa-guide',
-      search: (search as Record<string, string>).from ? search : { from: 'legacy' },
-      statusCode: 301,
-    })
+  beforeLoad: () => {
+    throw redirect({ to: '/$locale/$slug', params: { locale: 'en', slug: 'ipa-guide' }, search: { from: 'legacy' }, statusCode: 301 })
   },
 })

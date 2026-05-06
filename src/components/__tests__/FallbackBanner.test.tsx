@@ -8,17 +8,23 @@ import { FallbackBanner } from '../FallbackBanner'
 vi.mock('@tanstack/react-router', () => ({
   Link: ({
     to,
+    params,
     children,
     ...props
   }: {
     to: string
+    params?: Record<string, string>
     children: React.ReactNode
     [key: string]: unknown
-  }) => (
-    <a href={String(to)} {...props}>
-      {children}
-    </a>
-  ),
+  }) => {
+    let href = String(to)
+    if (params) {
+      for (const [key, value] of Object.entries(params)) {
+        href = href.replace(`$${key}`, String(value))
+      }
+    }
+    return <a href={href} {...props}>{children}</a>
+  },
 }))
 
 function renderBanner(slug: string) {

@@ -1,5 +1,6 @@
 import { createStart, createMiddleware } from '@tanstack/react-start'
 import { FLAG_DEFINITIONS } from './flagDefinitions'
+import type { FlagDefinition } from './flagDefinitions'
 
 const OFREP_PATH = '/ofrep/v1/evaluate/flags'
 
@@ -27,7 +28,7 @@ const ofrepMiddleware = createMiddleware().server(async ({ request, next }: any)
     return new Response(null, { status: 304, headers: { ETag: etag } })
   }
 
-  const flags = Object.entries(FLAG_DEFINITIONS).map(([key, def]) => {
+  const flags = (Object.entries(FLAG_DEFINITIONS) as [string, FlagDefinition][]).map(([key, def]) => {
     if (def.disabled) {
       return { key, errorCode: 'FLAG_NOT_FOUND', errorDetails: 'Flag is disabled' }
     }

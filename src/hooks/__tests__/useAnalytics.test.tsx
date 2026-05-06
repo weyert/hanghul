@@ -78,7 +78,8 @@ describe('useAnalytics', () => {
       rendered.button().click()
     })
 
-    expect(JSON.parse(fetch.mock.calls[0][1].body)).toEqual({
+    const [, options] = fetch.mock.calls[0] as unknown as [string, RequestInit]
+    expect(JSON.parse(options.body as string)).toEqual({
       event: 'lesson_started',
       timestamp: new Date('2026-05-05T12:00:00.000Z').getTime(),
     })

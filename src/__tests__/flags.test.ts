@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { FLAG_DEFINITIONS } from '../flagDefinitions'
+import type { FlagDefinition } from '../flagDefinitions'
 import { FLAGS } from '../flags'
 
 describe('feature flag registry', () => {
@@ -18,7 +19,7 @@ describe('feature flag registry', () => {
   })
 
   it('keeps all configured flags boolean-compatible', () => {
-    for (const [flagKey, definition] of Object.entries(FLAG_DEFINITIONS)) {
+    for (const [flagKey, definition] of Object.entries(FLAG_DEFINITIONS) as [string, FlagDefinition][]) {
       expect(definition.variants).toEqual({ on: true, off: false })
       expect(['on', 'off']).toContain(definition.defaultVariant)
       expect(typeof definition.disabled).toBe('boolean')
