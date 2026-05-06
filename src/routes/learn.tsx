@@ -8,11 +8,14 @@ import { useSpeech } from '../hooks/useSpeech'
 import { SpeakButton } from '../components/SpeakButton'
 import { useLanguage } from '../contexts/LanguageContext'
 import { useAnalytics } from '../hooks/useAnalytics'
+import { createSeoHead } from '../seo'
 
 export const Route = createFileRoute('/learn')({
   component: LearnPage,
-  head: () => ({
-    meta: [{ title: 'Guided Lessons — 한글 배우기' }],
+  head: () => createSeoHead({
+    title: 'Guided Hangul Lessons',
+    description: 'Follow a beginner-friendly Hangul lesson path that introduces Korean letters in a practical reading order.',
+    path: '/learn',
   }),
 })
 

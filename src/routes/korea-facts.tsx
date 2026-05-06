@@ -4,11 +4,14 @@ import { useBooleanFlagValue } from '@openfeature/react-sdk'
 import { FLAGS } from '../flags'
 import { KOREA_FACTS, CATEGORY_META } from '../data/koreaFacts'
 import type { FactCategory } from '../data/koreaFacts'
+import { createSeoHead } from '../seo'
 
 export const Route = createFileRoute('/korea-facts')({
   component: KoreaFactsPage,
-  head: () => ({
-    meta: [{ title: 'Korea Facts — 한글 배우기' }],
+  head: () => createSeoHead({
+    title: 'Korea Facts',
+    description: 'Learn cultural, historical, language, food, and society facts about Korea alongside your Hangul practice.',
+    path: '/korea-facts',
   }),
 })
 

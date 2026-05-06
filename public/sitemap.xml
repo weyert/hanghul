@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://korean.youcanlearn.it/</loc>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://korean.youcanlearn.it/quiz</loc>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://korean.youcanlearn.it/pronounce</loc>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://korean.youcanlearn.it/builder</loc>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://korean.youcanlearn.it/learn</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://korean.youcanlearn.it/syllable-chart</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://korean.youcanlearn.it/vocabulary</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://korean.youcanlearn.it/stroke-order</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://korean.youcanlearn.it/typing</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://korean.youcanlearn.it/contrast-drills</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://korean.youcanlearn.it/korea-facts</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://korean.youcanlearn.it/en/consonants</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://korean.youcanlearn.it/en/consonants" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://korean.youcanlearn.it/nl/consonants" />
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://korean.youcanlearn.it/nl/consonants</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://korean.youcanlearn.it/en/consonants" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://korean.youcanlearn.it/nl/consonants" />
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://korean.youcanlearn.it/en/vowels</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://korean.youcanlearn.it/en/vowels" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://korean.youcanlearn.it/nl/vowels" />
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://korean.youcanlearn.it/nl/vowels</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://korean.youcanlearn.it/en/vowels" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://korean.youcanlearn.it/nl/vowels" />
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://korean.youcanlearn.it/en/blocks</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://korean.youcanlearn.it/en/batchim</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://korean.youcanlearn.it/en/grammar</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://korean.youcanlearn.it/en/romanization-guide</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://korean.youcanlearn.it/en/ipa-guide</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://korean.youcanlearn.it/en/english-guide</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://korean.youcanlearn.it/nl/dutch-guide</loc>
+    <priority>0.6</priority>
+  </url>
+</urlset>

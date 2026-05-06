@@ -13,11 +13,14 @@ import { useSpacedRepetition } from '../hooks/useSpacedRepetition'
 import { useAnalytics } from '../hooks/useAnalytics'
 import { PronunciationModel } from '../components/PronunciationModel'
 import { getWrongAnswerHint } from '../data/beginnerContent'
+import { createSeoHead } from '../seo'
 
 export const Route = createFileRoute('/quiz')({
   component: QuizPage,
-  head: () => ({
-    meta: [{ title: 'Quiz — 한글 배우기' }],
+  head: () => createSeoHead({
+    title: 'Hangul Quiz',
+    description: 'Test Korean consonants, vowels, words, and listening skills with a short adaptive Hangul quiz.',
+    path: '/quiz',
   }),
 })
 

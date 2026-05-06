@@ -4,11 +4,14 @@ import { FLAGS } from '../flags'
 import { CONTRAST_DRILLS } from '../data/beginnerContent'
 import { SpeakButton } from '../components/SpeakButton'
 import { PronunciationModel } from '../components/PronunciationModel'
+import { createSeoHead } from '../seo'
 
 export const Route = createFileRoute('/contrast-drills')({
   component: ContrastDrillsPage,
-  head: () => ({
-    meta: [{ title: 'Contrast Drills — 한글 배우기' }],
+  head: () => createSeoHead({
+    title: 'Korean Sound Contrast Drills',
+    description: 'Practice Korean pronunciation contrasts that beginners often confuse, including tense and aspirated consonants.',
+    path: '/contrast-drills',
   }),
 })
 

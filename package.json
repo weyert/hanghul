@@ -4,7 +4,7 @@
   "packageManager": "pnpm@10.33.2",
   "type": "module",
   "scripts": {
-    "dev": "vite dev",
+    "dev": "vite dev --host 127.0.0.1",
     "build": "vite build",
     "test": "vitest run --config vitest.config.ts",
     "test:e2e": "playwright test",

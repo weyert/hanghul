@@ -5,11 +5,14 @@ import { FLAGS } from '../flags'
 import { allCharacters, consonants, vowels } from '../data/hangul'
 import type { HangulCharacter } from '../data/hangul'
 import { SpeakButton } from '../components/SpeakButton'
+import { createSeoHead } from '../seo'
 
 export const Route = createFileRoute('/progress')({
   component: ProgressPage,
-  head: () => ({
-    meta: [{ title: 'Progress — 한글 배우기' }],
+  head: () => createSeoHead({
+    title: 'Hangul Progress',
+    description: 'Track your Hangul quiz progress and see which Korean letters are mastered, learning, or still new.',
+    path: '/progress',
   }),
 })
 

@@ -6,11 +6,14 @@ import { allCharacters } from '../data/hangul'
 import type { HangulCharacter } from '../data/hangul'
 import { SpeakButton } from '../components/SpeakButton'
 import { useAnalytics } from '../hooks/useAnalytics'
+import { createSeoHead } from '../seo'
 
 export const Route = createFileRoute('/typing')({
   component: TypingPracticePage,
-  head: () => ({
-    meta: [{ title: 'Typing Practice — 한글 배우기' }],
+  head: () => createSeoHead({
+    title: 'Hangul Typing Practice',
+    description: 'Practice typing Korean letter romanizations and build faster recall for Hangul consonants and vowels.',
+    path: '/typing',
   }),
 })
 

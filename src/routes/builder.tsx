@@ -8,11 +8,15 @@ import {
   composeSyllable,
 } from '../utils/hangul'
 import { SpeakButton } from '../components/SpeakButton'
+import { PageArtwork } from '../components/PageArtwork'
+import { createSeoHead } from '../seo'
 
 export const Route = createFileRoute('/builder')({
   component: BuilderPage,
-  head: () => ({
-    meta: [{ title: 'Builder — 한글 배우기' }],
+  head: () => createSeoHead({
+    title: 'Hangul Syllable Builder',
+    description: 'Build Korean syllable blocks from initial consonants, vowels, and final consonants, then hear the result aloud.',
+    path: '/builder',
   }),
 })
 
@@ -120,6 +124,10 @@ function BuilderPage() {
         <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Builder</h1>
         <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>조합 Jo-hap — Pick a consonant + vowel to compose a syllable block</p>
       </div>
+      <PageArtwork
+        src="/artwork/syllable-tools.jpg"
+        alt="Initial, vowel, and final consonant pieces sliding together into a Hangul syllable block."
+      />
 
       {/* Mobile preview */}
       <div className="lg:hidden glass-card rounded-2xl p-6 flex items-center justify-center gap-6 min-h-[7rem]">

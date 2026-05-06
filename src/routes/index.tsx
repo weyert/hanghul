@@ -2,9 +2,14 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { useBooleanFlagValue } from '@openfeature/react-sdk'
 import { FLAGS } from '../flags'
 import { PronunciationModel } from '../components/PronunciationModel'
+import { createSeoHead } from '../seo'
 
 export const Route = createFileRoute('/')({
   component: HomePage,
+  head: () => createSeoHead({
+    description: 'Learn Hangul from scratch with Korean alphabet cards, syllable block tools, pronunciation breakdowns, and quizzes.',
+    path: '/',
+  }),
 })
 
 function ArrowRight({ size = 14 }: { size?: number }) {
@@ -121,6 +126,42 @@ function HomePage() {
           </div>
         </div>
       </div>
+
+      {/* ── Artwork feature ─────────────────────────────── */}
+      <section className="grid lg:grid-cols-[minmax(0,1.15fr)_minmax(280px,0.85fr)] gap-6 items-center">
+        <div className="overflow-hidden rounded-2xl glass-card">
+          <img
+            src="/social/hangul-og-syllables.png"
+            alt="Hangul consonant, vowel, and final consonant pieces combining into a Korean syllable block."
+            className="block w-full aspect-[1200/630] object-cover"
+            loading="eager"
+            fetchPriority="high"
+          />
+        </div>
+        <div className="space-y-5">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--c-3)' }}>How Hangul Clicks</p>
+            <h2 className="text-2xl sm:text-3xl font-black font-display leading-tight" style={{ color: 'var(--c-1)' }}>
+              Letters become blocks. Blocks become words.
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed" style={{ color: 'var(--c-3)' }}>
+              Hangul is built from a small set of shapes that stack into compact syllables. The lessons, builder, and drills keep that structure visible while you practice.
+            </p>
+          </div>
+          <div className="grid grid-cols-3 gap-3">
+            {[
+              { label: 'Initial', char: 'ㄱ', color: 'var(--c-initial-text)', bg: 'rgba(200,67,43,0.10)' },
+              { label: 'Vowel', char: 'ㅏ', color: 'var(--c-vowel-text)', bg: 'rgba(74,158,138,0.13)' },
+              { label: 'Final', char: 'ㅇ', color: 'var(--c-final-text)', bg: 'rgba(196,154,60,0.13)' },
+            ].map((item) => (
+              <div key={item.label} className="rounded-xl p-4 text-center" style={{ background: item.bg, border: '1px solid var(--c-border-card)' }}>
+                <p className="text-3xl korean-serif font-black leading-none" style={{ color: item.color }}>{item.char}</p>
+                <p className="mt-2 text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--c-3)' }}>{item.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {beginnerRoadmap && (
         <div>

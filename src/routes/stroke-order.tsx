@@ -6,11 +6,14 @@ import { consonants, vowels } from '../data/hangul'
 import { STROKE_ORDER, type StrokeData } from '../data/strokeOrder'
 import { SpeakButton } from '../components/SpeakButton'
 import { useAnalytics } from '../hooks/useAnalytics'
+import { createSeoHead } from '../seo'
 
 export const Route = createFileRoute('/stroke-order')({
   component: StrokeOrderPage,
-  head: () => ({
-    meta: [{ title: 'Stroke Order — 한글 배우기' }],
+  head: () => createSeoHead({
+    title: 'Hangul Stroke Order',
+    description: 'Learn how to write Korean consonants and vowels with stroke order animations and practice guidance.',
+    path: '/stroke-order',
   }),
 })
 

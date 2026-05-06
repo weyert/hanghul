@@ -6,6 +6,8 @@ import { useLanguage } from '../../contexts/LanguageContext'
 import type { Locale } from '../../contexts/LanguageContext'
 import { FlagGate } from '../../components/FlagGate'
 import { FallbackBanner } from '../../components/FallbackBanner'
+import { CONTENT_ARTWORK, PageArtwork } from '../../components/PageArtwork'
+import { SITE_URL, createSeoHead } from '../../seo'
 
 const VALID_LOCALES = new Set<string>(['en', 'nl'])
 const STORAGE_KEY = 'hangul-language'
@@ -22,17 +24,21 @@ export const Route = createFileRoute('/$locale/$slug')({
       const meta = getContentPageMeta(params.slug, params.locale as Locale)
       const alternates = (['en', 'nl'] as Locale[]).map(l => ({
         rel: 'alternate',
-        hreflang: l,
-        href: `/${l}/${params.slug}`,
+        hrefLang: l,
+        href: `${SITE_URL}/${l}/${params.slug}`,
       }))
+      const seo = createSeoHead({
+        title: meta.title,
+        description: meta.description,
+        path: `/${meta.locale}/${params.slug}`,
+        type: 'article',
+      })
       return {
-        meta: [
-          { title: `${meta.title} — 한글 배우기` },
-          { name: 'description', content: meta.description },
-        ],
+        ...seo,
         links: [
-          { rel: 'canonical', href: `/${params.locale}/${params.slug}` },
+          ...seo.links,
           ...alternates,
+          { rel: 'alternate', hrefLang: 'x-default', href: `${SITE_URL}/en/${params.slug}` },
         ],
       }
     } catch {
@@ -88,12 +94,14 @@ function ContentPage() {
 
   const meta = getContentPageMeta(slug, locale as Locale)
   const MDXContent = result.module.default
+  const artwork = CONTENT_ARTWORK[slug]
 
   return (
     <div className="space-y-10 max-w-3xl mx-auto">
       <LocaleSync locale={locale as Locale} />
       {from === 'legacy' && <LegacyRefiner locale={locale as Locale} slug={slug} />}
       {result.fallback && <FallbackBanner slug={slug} />}
+      {artwork && <PageArtwork {...artwork} />}
       <FlagGate flag={meta.flag}>
         <MDXContent components={MDX_COMPONENTS as Record<string, unknown>} />
       </FlagGate>

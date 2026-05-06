@@ -6,11 +6,15 @@ import { VOCAB_CATEGORIES } from '../data/vocabulary'
 import type { VocabEntry } from '../data/vocabulary'
 import { SpeakButton } from '../components/SpeakButton'
 import { SENTENCE_PATTERNS } from '../data/beginnerContent'
+import { PageArtwork } from '../components/PageArtwork'
+import { createSeoHead } from '../seo'
 
 export const Route = createFileRoute('/vocabulary')({
   component: VocabularyPage,
-  head: () => ({
-    meta: [{ title: 'Vocabulary — 한글 배우기' }],
+  head: () => createSeoHead({
+    title: 'Korean Vocabulary',
+    description: 'Study beginner Korean vocabulary by category with Hangul, romanization, English meanings, and audio.',
+    path: '/vocabulary',
   }),
 })
 
@@ -106,6 +110,10 @@ function VocabularyPage() {
           </button>
         )}
       </div>
+      <PageArtwork
+        src="/artwork/vocabulary.jpg"
+        alt="Grouped Korean vocabulary cards with small category symbols and Hangul tiles."
+      />
 
       {sentencePatterns && (
         <section className="space-y-4">

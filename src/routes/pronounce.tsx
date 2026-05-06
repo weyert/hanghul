@@ -6,6 +6,7 @@ import { analyzeText } from '../utils/hangul'
 import type { SyllableAnalysis, OtherChar } from '../utils/hangul'
 import { SpeakButton } from '../components/SpeakButton'
 import { useSpeech } from '../hooks/useSpeech'
+import { createSeoHead } from '../seo'
 
 function buildIpaTranscription(analyzed: Array<SyllableAnalysis | OtherChar>): string {
   const parts: string[] = []
@@ -30,8 +31,10 @@ function buildIpaTranscription(analyzed: Array<SyllableAnalysis | OtherChar>): s
 
 export const Route = createFileRoute('/pronounce')({
   component: PronouncePage,
-  head: () => ({
-    meta: [{ title: 'Pronounce — 한글 배우기' }],
+  head: () => createSeoHead({
+    title: 'Korean Pronunciation Tool',
+    description: 'Break Korean words into syllables, initials, vowels, finals, romanization, and IPA pronunciation hints.',
+    path: '/pronounce',
   }),
 })
 

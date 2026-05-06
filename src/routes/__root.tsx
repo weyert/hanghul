@@ -16,28 +16,49 @@ import { useAnalytics } from '../hooks/useAnalytics'
 import { FLAGS } from '../flags'
 import { CONTENT_NAV_ITEMS } from '../content/registry'
 import type { ContentNavItem } from '../content/registry'
+import { createSeoHead, SITE_URL, SITE_NAME } from '../seo'
 import '../styles.css'
 
 // Runs before any CSS to avoid flash of wrong theme
 const THEME_SCRIPT = `(function(){try{var t=localStorage.getItem('theme');if(t){document.documentElement.setAttribute('data-theme',t);}else if(window.matchMedia('(prefers-color-scheme: light)').matches){document.documentElement.setAttribute('data-theme','light');}}catch(e){}})();`
+const STRUCTURED_DATA = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: SITE_NAME,
+  alternateName: 'Learn Hangul',
+  url: SITE_URL,
+  inLanguage: ['en', 'nl'],
+  about: {
+    '@type': 'Thing',
+    name: 'Hangul',
+    alternateName: 'Korean alphabet',
+  },
+  educationalLevel: 'Beginner',
+})
 
 export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      { charSet: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { title: '한글 배우기 — Learn Hangul' },
-      { name: 'description', content: 'Learn the Korean Hangul alphabet with flashcards and quizzes.' },
-    ],
-    links: [
-      { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-      { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous' },
-      {
-        rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Noto+Sans+KR:wght@300;400;500;700;900&family=Noto+Serif+KR:wght@600;700;900&family=Inter:wght@400;500;600;700;800;900&display=swap',
-      },
-    ],
-  }),
+  head: () => {
+    const seo = createSeoHead()
+    return {
+      meta: [
+        { charSet: 'utf-8' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        ...seo.meta,
+      ],
+      links: [
+        ...seo.links,
+        { rel: 'alternate', hrefLang: 'en', href: `${SITE_URL}/en/consonants` },
+        { rel: 'alternate', hrefLang: 'nl', href: `${SITE_URL}/nl/consonants` },
+        { rel: 'alternate', hrefLang: 'x-default', href: SITE_URL },
+        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous' },
+        {
+          rel: 'stylesheet',
+          href: 'https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Noto+Sans+KR:wght@300;400;500;700;900&family=Noto+Serif+KR:wght@600;700;900&family=Inter:wght@400;500;600;700;800;900&display=swap',
+        },
+      ],
+    }
+  },
   notFoundComponent: NotFoundPage,
   component: RootComponent,
 })
@@ -427,10 +448,11 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
   }, [language])
 
   return (
-    <html lang={language}>
+    <html lang={language} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
         <HeadContent />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: STRUCTURED_DATA }} />
       </head>
       <body
         style={{
@@ -504,4 +526,3 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
     </html>
   )
 }
-

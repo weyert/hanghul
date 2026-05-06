@@ -4,11 +4,14 @@ import { useBooleanFlagValue } from '@openfeature/react-sdk'
 import { FLAGS } from '../flags'
 import { CHOSEONG, CHOSEONG_ROMAN, JUNGSEONG, JUNGSEONG_ROMAN, composeSyllable } from '../utils/hangul'
 import { SpeakButton } from '../components/SpeakButton'
+import { createSeoHead } from '../seo'
 
 export const Route = createFileRoute('/syllable-chart')({
   component: SyllableChartPage,
-  head: () => ({
-    meta: [{ title: 'Syllable Chart — 한글 배우기' }],
+  head: () => createSeoHead({
+    title: 'Hangul Syllable Chart',
+    description: 'Explore Korean syllable combinations in a chart of initial consonants and vowels, with audio for each block.',
+    path: '/syllable-chart',
   }),
 })
 
