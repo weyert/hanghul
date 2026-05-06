@@ -95,3 +95,4 @@ yalc.lock
 /*.cookie
 .turbo/runs
 .output/
+test-results/

@@ -21,12 +21,16 @@ import { Route as ProgressRouteImport } from './routes/progress'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as KoreaFactsRouteImport } from './routes/korea-facts'
 import { Route as IpaGuideRouteImport } from './routes/ipa-guide'
+import { Route as GrammarRouteImport } from './routes/grammar'
 import { Route as EnglishGuideRouteImport } from './routes/english-guide'
 import { Route as DutchGuideRouteImport } from './routes/dutch-guide'
+import { Route as ContrastDrillsRouteImport } from './routes/contrast-drills'
 import { Route as ConsonantsRouteImport } from './routes/consonants'
 import { Route as BuilderRouteImport } from './routes/builder'
 import { Route as BlocksRouteImport } from './routes/blocks'
+import { Route as BatchimRouteImport } from './routes/batchim'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LocaleSlugRouteImport } from './routes/$locale/$slug'
 
 const VowelsRoute = VowelsRouteImport.update({
   id: '/vowels',
@@ -88,6 +92,11 @@ const IpaGuideRoute = IpaGuideRouteImport.update({
   path: '/ipa-guide',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GrammarRoute = GrammarRouteImport.update({
+  id: '/grammar',
+  path: '/grammar',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EnglishGuideRoute = EnglishGuideRouteImport.update({
   id: '/english-guide',
   path: '/english-guide',
@@ -96,6 +105,11 @@ const EnglishGuideRoute = EnglishGuideRouteImport.update({
 const DutchGuideRoute = DutchGuideRouteImport.update({
   id: '/dutch-guide',
   path: '/dutch-guide',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContrastDrillsRoute = ContrastDrillsRouteImport.update({
+  id: '/contrast-drills',
+  path: '/contrast-drills',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ConsonantsRoute = ConsonantsRouteImport.update({
@@ -113,19 +127,32 @@ const BlocksRoute = BlocksRouteImport.update({
   path: '/blocks',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BatchimRoute = BatchimRouteImport.update({
+  id: '/batchim',
+  path: '/batchim',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LocaleSlugRoute = LocaleSlugRouteImport.update({
+  id: '/$locale/$slug',
+  path: '/$locale/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/batchim': typeof BatchimRoute
   '/blocks': typeof BlocksRoute
   '/builder': typeof BuilderRoute
   '/consonants': typeof ConsonantsRoute
+  '/contrast-drills': typeof ContrastDrillsRoute
   '/dutch-guide': typeof DutchGuideRoute
   '/english-guide': typeof EnglishGuideRoute
+  '/grammar': typeof GrammarRoute
   '/ipa-guide': typeof IpaGuideRoute
   '/korea-facts': typeof KoreaFactsRoute
   '/learn': typeof LearnRoute
@@ -138,14 +165,18 @@ export interface FileRoutesByFullPath {
   '/typing': typeof TypingRoute
   '/vocabulary': typeof VocabularyRoute
   '/vowels': typeof VowelsRoute
+  '/$locale/$slug': typeof LocaleSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/batchim': typeof BatchimRoute
   '/blocks': typeof BlocksRoute
   '/builder': typeof BuilderRoute
   '/consonants': typeof ConsonantsRoute
+  '/contrast-drills': typeof ContrastDrillsRoute
   '/dutch-guide': typeof DutchGuideRoute
   '/english-guide': typeof EnglishGuideRoute
+  '/grammar': typeof GrammarRoute
   '/ipa-guide': typeof IpaGuideRoute
   '/korea-facts': typeof KoreaFactsRoute
   '/learn': typeof LearnRoute
@@ -158,15 +189,19 @@ export interface FileRoutesByTo {
   '/typing': typeof TypingRoute
   '/vocabulary': typeof VocabularyRoute
   '/vowels': typeof VowelsRoute
+  '/$locale/$slug': typeof LocaleSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/batchim': typeof BatchimRoute
   '/blocks': typeof BlocksRoute
   '/builder': typeof BuilderRoute
   '/consonants': typeof ConsonantsRoute
+  '/contrast-drills': typeof ContrastDrillsRoute
   '/dutch-guide': typeof DutchGuideRoute
   '/english-guide': typeof EnglishGuideRoute
+  '/grammar': typeof GrammarRoute
   '/ipa-guide': typeof IpaGuideRoute
   '/korea-facts': typeof KoreaFactsRoute
   '/learn': typeof LearnRoute
@@ -179,16 +214,20 @@ export interface FileRoutesById {
   '/typing': typeof TypingRoute
   '/vocabulary': typeof VocabularyRoute
   '/vowels': typeof VowelsRoute
+  '/$locale/$slug': typeof LocaleSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/batchim'
     | '/blocks'
     | '/builder'
     | '/consonants'
+    | '/contrast-drills'
     | '/dutch-guide'
     | '/english-guide'
+    | '/grammar'
     | '/ipa-guide'
     | '/korea-facts'
     | '/learn'
@@ -201,14 +240,18 @@ export interface FileRouteTypes {
     | '/typing'
     | '/vocabulary'
     | '/vowels'
+    | '/$locale/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/batchim'
     | '/blocks'
     | '/builder'
     | '/consonants'
+    | '/contrast-drills'
     | '/dutch-guide'
     | '/english-guide'
+    | '/grammar'
     | '/ipa-guide'
     | '/korea-facts'
     | '/learn'
@@ -221,14 +264,18 @@ export interface FileRouteTypes {
     | '/typing'
     | '/vocabulary'
     | '/vowels'
+    | '/$locale/$slug'
   id:
     | '__root__'
     | '/'
+    | '/batchim'
     | '/blocks'
     | '/builder'
     | '/consonants'
+    | '/contrast-drills'
     | '/dutch-guide'
     | '/english-guide'
+    | '/grammar'
     | '/ipa-guide'
     | '/korea-facts'
     | '/learn'
@@ -241,15 +288,19 @@ export interface FileRouteTypes {
     | '/typing'
     | '/vocabulary'
     | '/vowels'
+    | '/$locale/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BatchimRoute: typeof BatchimRoute
   BlocksRoute: typeof BlocksRoute
   BuilderRoute: typeof BuilderRoute
   ConsonantsRoute: typeof ConsonantsRoute
+  ContrastDrillsRoute: typeof ContrastDrillsRoute
   DutchGuideRoute: typeof DutchGuideRoute
   EnglishGuideRoute: typeof EnglishGuideRoute
+  GrammarRoute: typeof GrammarRoute
   IpaGuideRoute: typeof IpaGuideRoute
   KoreaFactsRoute: typeof KoreaFactsRoute
   LearnRoute: typeof LearnRoute
@@ -262,6 +313,7 @@ export interface RootRouteChildren {
   TypingRoute: typeof TypingRoute
   VocabularyRoute: typeof VocabularyRoute
   VowelsRoute: typeof VowelsRoute
+  LocaleSlugRoute: typeof LocaleSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -350,6 +402,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IpaGuideRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/grammar': {
+      id: '/grammar'
+      path: '/grammar'
+      fullPath: '/grammar'
+      preLoaderRoute: typeof GrammarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/english-guide': {
       id: '/english-guide'
       path: '/english-guide'
@@ -362,6 +421,13 @@ declare module '@tanstack/react-router' {
       path: '/dutch-guide'
       fullPath: '/dutch-guide'
       preLoaderRoute: typeof DutchGuideRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contrast-drills': {
+      id: '/contrast-drills'
+      path: '/contrast-drills'
+      fullPath: '/contrast-drills'
+      preLoaderRoute: typeof ContrastDrillsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/consonants': {
@@ -385,6 +451,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlocksRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/batchim': {
+      id: '/batchim'
+      path: '/batchim'
+      fullPath: '/batchim'
+      preLoaderRoute: typeof BatchimRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -392,16 +465,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$locale/$slug': {
+      id: '/$locale/$slug'
+      path: '/$locale/$slug'
+      fullPath: '/$locale/$slug'
+      preLoaderRoute: typeof LocaleSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BatchimRoute: BatchimRoute,
   BlocksRoute: BlocksRoute,
   BuilderRoute: BuilderRoute,
   ConsonantsRoute: ConsonantsRoute,
+  ContrastDrillsRoute: ContrastDrillsRoute,
   DutchGuideRoute: DutchGuideRoute,
   EnglishGuideRoute: EnglishGuideRoute,
+  GrammarRoute: GrammarRoute,
   IpaGuideRoute: IpaGuideRoute,
   KoreaFactsRoute: KoreaFactsRoute,
   LearnRoute: LearnRoute,
@@ -414,6 +497,7 @@ const rootRouteChildren: RootRouteChildren = {
   TypingRoute: TypingRoute,
   VocabularyRoute: VocabularyRoute,
   VowelsRoute: VowelsRoute,
+  LocaleSlugRoute: LocaleSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

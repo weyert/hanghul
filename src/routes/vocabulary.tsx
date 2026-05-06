@@ -5,6 +5,7 @@ import { FLAGS } from '../flags'
 import { VOCAB_CATEGORIES } from '../data/vocabulary'
 import type { VocabEntry } from '../data/vocabulary'
 import { SpeakButton } from '../components/SpeakButton'
+import { SENTENCE_PATTERNS } from '../data/beginnerContent'
 
 export const Route = createFileRoute('/vocabulary')({
   component: VocabularyPage,
@@ -42,9 +43,20 @@ function PhraseRow({ entry, accent }: { entry: VocabEntry; accent: string }) {
       onMouseLeave={(e) => (e.currentTarget.style.background = '')}
     >
       <td className="px-4 py-3">
-        <div className="flex items-center gap-2">
-          <span className="text-xl korean-text font-bold" style={{ color: 'var(--c-1)' }}>{entry.korean}</span>
-          <SpeakButton text={entry.korean} size="sm" />
+        <div className="flex flex-col gap-1.5">
+          <div className="flex items-center gap-2">
+            <span className="text-xl korean-text font-bold" style={{ color: 'var(--c-1)' }}>{entry.korean}</span>
+            <SpeakButton text={entry.korean} size="sm" />
+          </div>
+          {entry.politeness && (
+            <span className={`text-[10px] font-black uppercase tracking-tighter px-1.5 py-0.5 rounded inline-block w-fit ${
+              entry.politeness === 'formal' ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/30' :
+              entry.politeness === 'polite' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30' :
+              'bg-amber-500/10 text-amber-400 border border-amber-500/30'
+            }`}>
+              {entry.politeness}
+            </span>
+          )}
         </div>
       </td>
       <td className="px-4 py-3 text-sm font-semibold" style={{ color: c.text }}>{entry.romanized}</td>
@@ -55,7 +67,10 @@ function PhraseRow({ entry, accent }: { entry: VocabEntry; accent: string }) {
 
 function VocabularyPage() {
   const enabled = useBooleanFlagValue(FLAGS.VOCABULARY, false)
+  const sentencePatterns = useBooleanFlagValue(FLAGS.SENTENCE_PATTERNS, false)
+  const conjugationEnabled = useBooleanFlagValue(FLAGS.VERB_CONJUGATION, false)
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
+  const [showConjugated, setShowConjugated] = useState(false)
 
   if (!enabled) {
     return (
@@ -71,10 +86,49 @@ function VocabularyPage() {
 
   return (
     <div className="space-y-8 max-w-3xl mx-auto">
-      <div>
-        <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Vocabulary</h1>
-        <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>어휘 Eo-hwi — Tourist phrases, K-drama expressions, emotions, and more — with audio</p>
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+          <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Vocabulary</h1>
+          <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>어휘 Eo-hwi — Tourist phrases, K-drama expressions, emotions, and more — with audio</p>
+        </div>
+        {conjugationEnabled && (
+          <button
+            onClick={() => setShowConjugated(!showConjugated)}
+            className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border h-fit"
+            style={{
+              background: showConjugated ? 'var(--c-accent-muted)' : 'var(--c-surface)',
+              borderColor: showConjugated ? 'var(--c-accent-border)' : 'var(--c-border)',
+              color: showConjugated ? 'var(--c-accent-text)' : 'var(--c-3)',
+            }}
+          >
+            <div className={`w-3 h-3 rounded-full border-2 transition-all ${showConjugated ? 'bg-[var(--c-accent-text)]' : 'bg-transparent'}`} />
+            Show Polite Forms (-요)
+          </button>
+        )}
       </div>
+
+      {sentencePatterns && (
+        <section className="space-y-4">
+          <h2 className="text-sm font-bold" style={{ color: 'var(--c-1)' }}>Beginner sentence patterns</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {SENTENCE_PATTERNS.map((pattern) => (
+              <div key={pattern.id} className="glass-card rounded-2xl p-5 space-y-2.5">
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl korean-text font-black" style={{ color: 'var(--c-1)' }}>{pattern.pattern}</span>
+                  <SpeakButton text={pattern.pattern} size="sm" />
+                </div>
+                <p className="text-sm font-mono font-bold" style={{ color: 'var(--c-accent-text)' }}>{pattern.romanized}</p>
+                <p className="text-sm" style={{ color: 'var(--c-2)' }}>{pattern.meaning}</p>
+                <div className="pt-2" style={{ borderTop: '1px solid var(--c-border-sub)' }}>
+                  <p className="text-xs korean-text font-semibold" style={{ color: 'var(--c-1)' }}>{pattern.example}</p>
+                  <p className="text-xs font-mono mt-1" style={{ color: 'var(--c-3)' }}>{pattern.exampleRomanized}</p>
+                  <p className="text-xs mt-1" style={{ color: 'var(--c-4)' }}>{pattern.exampleMeaning}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Category filter */}
       <div className="flex flex-wrap gap-2">
@@ -130,13 +184,16 @@ function VocabularyPage() {
                     <tr style={{ borderBottom: '1px solid var(--c-border-sub)', background: 'var(--c-surface)' }}>
                       <th className="text-left px-4 py-2.5 text-xs font-bold text-zinc-600 uppercase tracking-wide">Korean</th>
                       <th className="text-left px-4 py-2.5 text-xs font-bold text-zinc-600 uppercase tracking-wide">Romanization</th>
-                      <th className="text-left px-4 py-2.5 text-xs font-bold text-zinc-600 uppercase tracking-wide hidden sm:table-cell">Meaning</th>
+                      <th className="text-left px-4 py-2.5 text-xs font-bold text-zinc-600 uppercase tracking-wide">Meaning</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {cat.entries.map((e) => (
-                      <PhraseRow key={e.id} entry={e} accent={cat.accent} />
-                    ))}
+                    {cat.entries.map((e) => {
+                      const displayKorean = (showConjugated && e.politeForm) ? e.politeForm : e.korean
+                      return (
+                        <PhraseRow key={e.id} entry={{ ...e, korean: displayKorean }} accent={cat.accent} />
+                      )
+                    })}
                   </tbody>
                 </table>
               </div>

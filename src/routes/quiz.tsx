@@ -11,6 +11,8 @@ import { SpeakButton } from '../components/SpeakButton'
 import { useSpeech } from '../hooks/useSpeech'
 import { useSpacedRepetition } from '../hooks/useSpacedRepetition'
 import { useAnalytics } from '../hooks/useAnalytics'
+import { PronunciationModel } from '../components/PronunciationModel'
+import { getWrongAnswerHint } from '../data/beginnerContent'
 
 export const Route = createFileRoute('/quiz')({
   component: QuizPage,
@@ -21,13 +23,28 @@ export const Route = createFileRoute('/quiz')({
 
 const QUIZ_LENGTH = 10
 
-type QuizMode = 'consonants' | 'vowels' | 'all' | 'listen' | 'words' | 'mixed'
+type QuizMode = 'consonants' | 'vowels' | 'all' | 'listen' | 'words' | 'mixed' | 'audio-contrast'
 
 interface Question    { correct: HangulCharacter; options: HangulCharacter[] }
 interface WordQuestion { correct: VocabEntry;       options: VocabEntry[] }
 
 function shuffle<T>(arr: T[]): T[] {
   return [...arr].sort(() => Math.random() - 0.5)
+}
+
+const CONTRAST_SETS = [
+  ['giyeok', 'kieuk', 'ssanggiyeok'], // ㄱ ㅋ ㄲ
+  ['digeut', 'tieut', 'ssangdigeut'],  // ㄷ ㅌ ㄸ
+  ['bieup', 'pieup-aspirated', 'ssangbieup'], // ㅂ ㅍ ㅃ
+  ['siot', 'ssangsiot'], // ㅅ ㅆ
+  ['jieut', 'chieut', 'ssangjieut'], // ㅈ ㅊ ㅉ
+]
+
+function buildContrastQuestion(): Question {
+  const setIds = CONTRAST_SETS[Math.floor(Math.random() * CONTRAST_SETS.length)]
+  const set = setIds.map(id => allCharacters.find(c => c.id === id)!).filter(Boolean)
+  const correct = set[Math.floor(Math.random() * set.length)]
+  return { correct, options: shuffle(set) }
 }
 
 function buildQuestion(pool: HangulCharacter[], pick: (pool: HangulCharacter[]) => HangulCharacter): Question {
@@ -119,10 +136,13 @@ function QuizPage() {
   const listenEnabled     = useBooleanFlagValue(FLAGS.LISTEN_QUIZ, false)
   const wordEnabled       = useBooleanFlagValue(FLAGS.WORD_QUIZ, false)
   const mixedEnabled      = useBooleanFlagValue(FLAGS.MIXED_QUIZ, false)
+  const contrastEnabled   = useBooleanFlagValue(FLAGS.AUDIO_CONTRAST_QUIZ, false)
   const retryWrongEnabled = useBooleanFlagValue(FLAGS.QUIZ_RETRY_WRONG, false)
   const autoAudioEnabled  = useBooleanFlagValue(FLAGS.QUIZ_AUTO_AUDIO, false)
   const correctTipEnabled = useBooleanFlagValue(FLAGS.QUIZ_CORRECT_TIP, false)
   const hangulFirst       = useBooleanFlagValue(FLAGS.HANGUL_FIRST, false)
+  const wrongHintsEnabled = useBooleanFlagValue(FLAGS.QUIZ_WRONG_HINTS, false)
+  const pronunciationModel = useBooleanFlagValue(FLAGS.PRONUNCIATION_MODEL, false)
 
   const koreanName = (char: HangulCharacter) => char.name.split(' ')[0]
 
@@ -157,7 +177,7 @@ function QuizPage() {
   )
 
   useEffect(() => {
-    if (mode === 'listen' && question && !selected) {
+    if ((mode === 'listen' || mode === 'audio-contrast') && question && !selected) {
       speak(question.correct.char)
     }
   }, [question, mode, selected, speak])
@@ -173,15 +193,17 @@ function QuizPage() {
     setSelected(null); setFinished(false); setMixedIsWord(false)
     setWrongChars([])
     setActivePool(customPool ?? null)
-    const pool = customPool ?? (m === 'mixed' ? allCharacters : m !== 'words' ? getCharPool(m) : null)
-    if (m === 'words') {
-      setWordQuestion(buildWordQuestion(srEnabled ? wordPickFn : undefined))
+    if (m === 'audio-contrast') {
+      setQuestion(buildContrastQuestion())
+      setWordQuestion(null)
+    } else if (m === 'words') {
       setQuestion(null)
+      setWordQuestion(buildWordQuestion(srEnabled ? wordPickFn : undefined))
     } else if (m === 'mixed') {
-      setQuestion(buildQuestion(pool!, pickFn))
+      setQuestion(buildQuestion(customPool ?? allCharacters, pickFn))
       setWordQuestion(null)
     } else {
-      setQuestion(buildQuestion(pool!, pickFn))
+      setQuestion(buildQuestion(customPool ?? getCharPool(m), pickFn))
       setWordQuestion(null)
     }
   }, [pickFn, srEnabled, wordPickFn, track])
@@ -224,6 +246,8 @@ function QuizPage() {
     setSelected(null)
     if (mode === 'words') {
       setWordQuestion(buildWordQuestion(srEnabled ? wordPickFn : undefined))
+    } else if (mode === 'audio-contrast') {
+      setQuestion(buildContrastQuestion())
     } else if (mode === 'mixed') {
       const nextIsWord = nextNum % 3 === 0
       setMixedIsWord(nextIsWord)
@@ -277,10 +301,21 @@ function QuizPage() {
           </div>
         </div>
 
-        {(listenEnabled || wordEnabled || mixedEnabled) && (
+        {(listenEnabled || wordEnabled || mixedEnabled || contrastEnabled) && (
           <div>
             <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--c-3)' }}>More Modes</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {contrastEnabled && (
+                <ModeCard
+                  mode="audio-contrast"
+                  label="Audio Contrast"
+                  subLabel="변별 Byeon-byeol"
+                  count="ㄱ/ㅋ/ㄲ etc — pick the sound you hear"
+                  accent="amber"
+                  char="ㄱ vs ㅋ"
+                  onStart={startQuiz}
+                />
+              )}
               {listenEnabled && (
                 <ModeCard
                   mode="listen"
@@ -329,6 +364,8 @@ function QuizPage() {
             : 'Character modes: see a character, pick the romanization. Listen: hear it, pick the character. Vocabulary: see a word, pick the meaning.'
           }
         </div>
+
+        {pronunciationModel && <PronunciationModel compact />}
       </div>
     )
   }
@@ -477,7 +514,8 @@ function QuizPage() {
   const isAnswered = selected !== null
   const isCorrect  = selected === question.correct.id
   const stats      = srEnabled ? getStats(question.correct.id) : null
-  const isListen   = mode === 'listen'
+  const isListen   = mode === 'listen' || mode === 'audio-contrast'
+  const wrongHint  = wrongHintsEnabled && isAnswered && !isCorrect ? getWrongAnswerHint(question.correct.id) : null
 
   /* ── Listen / character quiz ─────────────────────────── */
   return (
@@ -600,6 +638,11 @@ function QuizPage() {
               </div>
             )}
           </div>
+          {wrongHint && (
+            <div className="rounded-xl p-4 text-sm text-center" style={{ background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.24)', color: 'var(--c-2)' }}>
+              <strong style={{ color: '#fcd34d' }}>Why this is hard:</strong> {wrongHint}
+            </div>
+          )}
           <button onClick={handleNext} className="btn-primary w-full text-white py-3.5 rounded-xl font-bold cursor-pointer text-sm">
             {questionNumber >= QUIZ_LENGTH ? 'See Results' : 'Next Question →'}
           </button>

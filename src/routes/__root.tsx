@@ -7,12 +7,15 @@ import {
   Scripts,
   Link,
   useRouterState,
+  useNavigate,
 } from '@tanstack/react-router'
 import { OpenFeatureProvider, useBooleanFlagValue } from '@openfeature/react-sdk'
 import { LanguageProvider, useLanguage, LANGUAGE_LABELS } from '../contexts/LanguageContext'
-import type { Language } from '../contexts/LanguageContext'
+import type { Locale } from '../contexts/LanguageContext'
 import { useAnalytics } from '../hooks/useAnalytics'
 import { FLAGS } from '../flags'
+import { CONTENT_NAV_ITEMS } from '../content/registry'
+import type { ContentNavItem } from '../content/registry'
 import '../styles.css'
 
 // Runs before any CSS to avoid flash of wrong theme
@@ -35,8 +38,23 @@ export const Route = createRootRoute({
       },
     ],
   }),
+  notFoundComponent: NotFoundPage,
   component: RootComponent,
 })
+
+// ─── Not found ────────────────────────────────────────────────────────
+
+function NotFoundPage() {
+  return (
+    <div className="text-center py-24 space-y-3">
+      <p className="text-4xl font-black" style={{ color: 'var(--c-1)' }}>404</p>
+      <p className="text-sm" style={{ color: 'var(--c-3)' }}>Page not found.</p>
+      <Link to="/" className="text-sm underline underline-offset-2" style={{ color: 'var(--c-accent-text)' }}>
+        Go home
+      </Link>
+    </div>
+  )
+}
 
 // ─── Nav link ────────────────────────────────────────────────────────
 
@@ -78,57 +96,92 @@ function MobileNavLink({ to, children, onClick }: { to: string; children: ReactN
   )
 }
 
-// ─── More dropdown (desktop flagged links) ────────────────────────────
+// ─── Flagged routes (non-content) ─────────────────────────────────────
 
 const FLAGGED_ROUTES = [
-  { flag: FLAGS.GUIDED_LEARN,       to: '/learn',              label: 'Lessons'         },
-  { flag: FLAGS.SYLLABLE_BLOCKS,    to: '/blocks',             label: 'Blocks'          },
-  { flag: FLAGS.SYLLABLE_CHART,     to: '/syllable-chart',     label: 'Syllable Chart'  },
-  { flag: FLAGS.VOCABULARY,         to: '/vocabulary',         label: 'Vocabulary'      },
-  { flag: FLAGS.STROKE_ORDER,       to: '/stroke-order',       label: 'Stroke Order'    },
-  { flag: FLAGS.TYPING_PRACTICE,    to: '/typing',             label: 'Typing'          },
-  { flag: FLAGS.PROGRESS_DASHBOARD, to: '/progress',           label: 'Progress'        },
-  { flag: FLAGS.KOREA_FACTS,        to: '/korea-facts',        label: 'Korea Facts'     },
-  { flag: FLAGS.ENGLISH_GUIDE,      to: '/english-guide',      label: 'English Guide'   },
-  { flag: FLAGS.DUTCH_GUIDE,        to: '/dutch-guide',        label: 'Dutch Guide'     },
-  { flag: FLAGS.ROMANIZATION_GUIDE, to: '/romanization-guide', label: 'Romanization'    },
-  { flag: FLAGS.IPA_GUIDE,         to: '/ipa-guide',          label: 'IPA Guide'       },
+  { flag: FLAGS.GUIDED_LEARN,       to: '/learn',          label: 'Lessons'         },
+  { flag: FLAGS.SYLLABLE_CHART,     to: '/syllable-chart', label: 'Syllable Chart'  },
+  { flag: FLAGS.VOCABULARY,         to: '/vocabulary',     label: 'Vocabulary'      },
+  { flag: FLAGS.STROKE_ORDER,       to: '/stroke-order',   label: 'Stroke Order'    },
+  { flag: FLAGS.TYPING_PRACTICE,    to: '/typing',         label: 'Typing'          },
+  { flag: FLAGS.PROGRESS_DASHBOARD, to: '/progress',       label: 'Progress'        },
+  { flag: FLAGS.KOREA_FACTS,        to: '/korea-facts',    label: 'Korea Facts'     },
+  { flag: FLAGS.CONTRAST_DRILLS,    to: '/contrast-drills',label: 'Contrast Drills' },
 ] as const
+
+// ─── Shared nav items hook ────────────────────────────────────────────
+// Single source of truth — both desktop and mobile call this.
+
+type NavItem = { to: string; label: string }
+
+function useNavItems(): NavItem[] {
+  const { language: locale } = useLanguage()
+
+  // Non-content flagged routes
+  const guidedLearn    = useBooleanFlagValue(FLAGS.GUIDED_LEARN, false)
+  const syllableChart  = useBooleanFlagValue(FLAGS.SYLLABLE_CHART, false)
+  const vocabulary     = useBooleanFlagValue(FLAGS.VOCABULARY, false)
+  const typingPractice = useBooleanFlagValue(FLAGS.TYPING_PRACTICE, false)
+  const progressDash   = useBooleanFlagValue(FLAGS.PROGRESS_DASHBOARD, false)
+  const strokeOrder    = useBooleanFlagValue(FLAGS.STROKE_ORDER, false)
+  const koreaFacts     = useBooleanFlagValue(FLAGS.KOREA_FACTS, false)
+  const contrastDrills = useBooleanFlagValue(FLAGS.CONTRAST_DRILLS, false)
+
+  // Content guide flags
+  const romanizationGuide = useBooleanFlagValue(FLAGS.ROMANIZATION_GUIDE, false)
+  const ipaGuide          = useBooleanFlagValue(FLAGS.IPA_GUIDE, false)
+  const englishGuide      = useBooleanFlagValue(FLAGS.ENGLISH_GUIDE, false)
+  const dutchGuide        = useBooleanFlagValue(FLAGS.DUTCH_GUIDE, false)
+  const grammarGuide      = useBooleanFlagValue(FLAGS.GRAMMAR_GUIDE, false)
+  const batchimLesson     = useBooleanFlagValue(FLAGS.BATCHIM_LESSON, false)
+  const syllableBlocks    = useBooleanFlagValue(FLAGS.SYLLABLE_BLOCKS, false)
+
+  const contentFlagMap: Record<string, boolean> = {
+    [FLAGS.ROMANIZATION_GUIDE]: romanizationGuide,
+    [FLAGS.IPA_GUIDE]:          ipaGuide,
+    [FLAGS.ENGLISH_GUIDE]:      englishGuide,
+    [FLAGS.DUTCH_GUIDE]:        dutchGuide,
+    [FLAGS.GRAMMAR_GUIDE]:      grammarGuide,
+    [FLAGS.BATCHIM_LESSON]:     batchimLesson,
+    [FLAGS.SYLLABLE_BLOCKS]:    syllableBlocks,
+  }
+
+  const appFlagMap: Record<string, boolean> = {
+    [FLAGS.GUIDED_LEARN]:       guidedLearn,
+    [FLAGS.SYLLABLE_CHART]:     syllableChart,
+    [FLAGS.VOCABULARY]:         vocabulary,
+    [FLAGS.STROKE_ORDER]:       strokeOrder,
+    [FLAGS.TYPING_PRACTICE]:    typingPractice,
+    [FLAGS.PROGRESS_DASHBOARD]: progressDash,
+    [FLAGS.KOREA_FACTS]:        koreaFacts,
+    [FLAGS.CONTRAST_DRILLS]:    contrastDrills,
+  }
+
+  const appItems: NavItem[] = FLAGGED_ROUTES
+    .filter(r => appFlagMap[r.flag])
+    .map(r => ({ to: r.to, label: r.label }))
+
+  const contentItems: NavItem[] = CONTENT_NAV_ITEMS
+    .filter((item: ContentNavItem) => {
+      if (item.flag && !contentFlagMap[item.flag]) return false
+      if (item.exclusiveToLocale && item.exclusiveToLocale !== locale) return false
+      return true
+    })
+    .map((item: ContentNavItem) => ({
+      to: `/${locale}/${item.slug}`,
+      label: item.navLabel[locale],
+    }))
+
+  return [...appItems, ...contentItems]
+}
+
+// ─── More dropdown (desktop) ──────────────────────────────────────────
 
 function MoreDropdown() {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
   const { location } = useRouterState()
-
-  const guidedLearn       = useBooleanFlagValue(FLAGS.GUIDED_LEARN, false)
-  const syllableBlocks    = useBooleanFlagValue(FLAGS.SYLLABLE_BLOCKS, false)
-  const syllableChart     = useBooleanFlagValue(FLAGS.SYLLABLE_CHART, false)
-  const vocabulary        = useBooleanFlagValue(FLAGS.VOCABULARY, false)
-  const typingPractice    = useBooleanFlagValue(FLAGS.TYPING_PRACTICE, false)
-  const progressDash      = useBooleanFlagValue(FLAGS.PROGRESS_DASHBOARD, false)
-  const strokeOrder       = useBooleanFlagValue(FLAGS.STROKE_ORDER, false)
-  const koreaFacts        = useBooleanFlagValue(FLAGS.KOREA_FACTS, false)
-  const englishGuide      = useBooleanFlagValue(FLAGS.ENGLISH_GUIDE, false)
-  const dutchGuide        = useBooleanFlagValue(FLAGS.DUTCH_GUIDE, false)
-  const romanizationGuide = useBooleanFlagValue(FLAGS.ROMANIZATION_GUIDE, false)
-  const ipaGuide          = useBooleanFlagValue(FLAGS.IPA_GUIDE, false)
-
-  const flagMap: Record<string, boolean> = {
-    [FLAGS.GUIDED_LEARN]:        guidedLearn,
-    [FLAGS.SYLLABLE_BLOCKS]:     syllableBlocks,
-    [FLAGS.SYLLABLE_CHART]:      syllableChart,
-    [FLAGS.VOCABULARY]:          vocabulary,
-    [FLAGS.STROKE_ORDER]:        strokeOrder,
-    [FLAGS.TYPING_PRACTICE]:     typingPractice,
-    [FLAGS.PROGRESS_DASHBOARD]:  progressDash,
-    [FLAGS.KOREA_FACTS]:         koreaFacts,
-    [FLAGS.ENGLISH_GUIDE]:       englishGuide,
-    [FLAGS.DUTCH_GUIDE]:         dutchGuide,
-    [FLAGS.ROMANIZATION_GUIDE]:  romanizationGuide,
-    [FLAGS.IPA_GUIDE]:           ipaGuide,
-  }
-
-  const routes = FLAGGED_ROUTES.filter(r => flagMap[r.flag])
+  const routes = useNavItems()
 
   useEffect(() => { setOpen(false) }, [location.pathname])
 
@@ -204,40 +257,13 @@ function MoreDropdown() {
   )
 }
 
-// ─── Flagged mobile nav links ─────────────────────────────────────────
+// ─── Mobile nav links ─────────────────────────────────────────────────
 
 function FlaggedMobileNavLinks({ onLinkClick }: { onLinkClick?: () => void }) {
-  const guidedLearn       = useBooleanFlagValue(FLAGS.GUIDED_LEARN, false)
-  const syllableBlocks    = useBooleanFlagValue(FLAGS.SYLLABLE_BLOCKS, false)
-  const syllableChart     = useBooleanFlagValue(FLAGS.SYLLABLE_CHART, false)
-  const vocabulary        = useBooleanFlagValue(FLAGS.VOCABULARY, false)
-  const typingPractice    = useBooleanFlagValue(FLAGS.TYPING_PRACTICE, false)
-  const progressDash      = useBooleanFlagValue(FLAGS.PROGRESS_DASHBOARD, false)
-  const strokeOrder       = useBooleanFlagValue(FLAGS.STROKE_ORDER, false)
-  const koreaFacts        = useBooleanFlagValue(FLAGS.KOREA_FACTS, false)
-  const englishGuide      = useBooleanFlagValue(FLAGS.ENGLISH_GUIDE, false)
-  const dutchGuide        = useBooleanFlagValue(FLAGS.DUTCH_GUIDE, false)
-  const romanizationGuide = useBooleanFlagValue(FLAGS.ROMANIZATION_GUIDE, false)
-  const ipaGuide          = useBooleanFlagValue(FLAGS.IPA_GUIDE, false)
-
-  const flagMap: Record<string, boolean> = {
-    [FLAGS.GUIDED_LEARN]:        guidedLearn,
-    [FLAGS.SYLLABLE_BLOCKS]:     syllableBlocks,
-    [FLAGS.SYLLABLE_CHART]:      syllableChart,
-    [FLAGS.VOCABULARY]:          vocabulary,
-    [FLAGS.STROKE_ORDER]:        strokeOrder,
-    [FLAGS.TYPING_PRACTICE]:     typingPractice,
-    [FLAGS.PROGRESS_DASHBOARD]:  progressDash,
-    [FLAGS.KOREA_FACTS]:         koreaFacts,
-    [FLAGS.ENGLISH_GUIDE]:       englishGuide,
-    [FLAGS.DUTCH_GUIDE]:         dutchGuide,
-    [FLAGS.ROMANIZATION_GUIDE]:  romanizationGuide,
-    [FLAGS.IPA_GUIDE]:           ipaGuide,
-  }
-
+  const routes = useNavItems()
   return (
     <>
-      {FLAGGED_ROUTES.filter(r => flagMap[r.flag]).map(({ to, label }) => (
+      {routes.map(({ to, label }) => (
         <MobileNavLink key={to} to={to} onClick={onLinkClick}>{label}</MobileNavLink>
       ))}
     </>
@@ -249,13 +275,29 @@ function FlaggedMobileNavLinks({ onLinkClick }: { onLinkClick?: () => void }) {
 function LanguageSwitcher() {
   const { language, setLanguage } = useLanguage()
   const { track } = useAnalytics()
-  const languages = Object.entries(LANGUAGE_LABELS) as Array<[Language, string]>
+  const { location } = useRouterState()
+  const navigate = useNavigate()
+
+  const languages = Object.entries(LANGUAGE_LABELS) as Array<[Locale, string]>
+
+  function handleSwitch(code: Locale) {
+    track('language_changed', { from: language, to: code })
+
+    // If on a locale-prefixed content route, update the URL locale.
+    const localeMatch = location.pathname.match(/^\/(en|nl)\/(.+)$/)
+    if (localeMatch) {
+      void navigate({ to: `/${code}/${localeMatch[2]}` })
+    } else {
+      setLanguage(code)
+    }
+  }
+
   return (
     <div className="flex items-center gap-0.5 rounded-lg p-0.5" style={{ background: 'var(--c-surface-2)', border: '1px solid var(--c-border)' }}>
       {languages.map(([code, label]) => (
         <button
           key={code}
-          onClick={() => { track('language_changed', { from: language, to: code }); setLanguage(code) }}
+          onClick={() => handleSwitch(code)}
           title={`Switch to ${label}`}
           className={`px-2.5 py-1 rounded-md text-xs font-bold transition-all duration-150 cursor-pointer ${
             language === code ? 'text-white shadow-sm' : ''
@@ -376,7 +418,6 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
     setMenuOpen(true)
   }
 
-  // Close on any route change (handles back/forward navigation)
   useEffect(() => { closeMenu() }, [location.pathname, closeMenu])
 
   useEffect(() => {
@@ -388,7 +429,6 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang={language}>
       <head>
-        {/* Anti-FOUC: apply saved/system theme before first paint */}
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
         <HeadContent />
       </head>
@@ -401,19 +441,16 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
           transition: 'background 0.2s ease, color 0.2s ease',
         }}
       >
-        {/* Header */}
         <header className="nav-glass sticky top-0 z-50" style={{ borderBottom: '1px solid var(--c-border-sub)' }}>
           <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-            {/* Logo */}
             <Link to="/" onClick={closeMenu} className="flex items-center gap-2.5 cursor-pointer">
               <span className="text-2xl font-black korean-serif" style={{ color: 'var(--c-accent-text)' }}>한글</span>
               <span className="text-xs font-semibold tracking-widest uppercase" style={{ color: 'var(--c-3)' }}>배우기</span>
             </Link>
 
-            {/* Desktop nav */}
             <nav className="hidden md:flex items-center gap-0.5">
-              <NavLink to="/consonants">Consonants</NavLink>
-              <NavLink to="/vowels">Vowels</NavLink>
+              <NavLink to={`/${language}/consonants`}>Consonants</NavLink>
+              <NavLink to={`/${language}/vowels`}>Vowels</NavLink>
               <NavLink to="/quiz">Quiz</NavLink>
               <NavLink to="/pronounce">Pronounce</NavLink>
               <NavLink to="/builder">Builder</NavLink>
@@ -424,7 +461,6 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
               <LanguageSwitcher />
             </nav>
 
-            {/* Mobile controls — only ThemeToggle + hamburger to keep header slim */}
             <div className="flex items-center gap-2 md:hidden">
               <ThemeToggle />
               <button
@@ -441,14 +477,13 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
             </div>
           </div>
 
-          {/* Mobile menu */}
           {menuMounted && (
             <div
               className={`md:hidden px-4 py-3 space-y-1 ${menuOpen ? 'menu-slide-down' : 'menu-slide-up'}`}
               style={{ background: 'var(--c-overlay)', borderTop: '1px solid var(--c-border-sub)' }}
             >
-              <MobileNavLink to="/consonants" onClick={closeMenu}>Consonants</MobileNavLink>
-              <MobileNavLink to="/vowels" onClick={closeMenu}>Vowels</MobileNavLink>
+              <MobileNavLink to={`/${language}/consonants`} onClick={closeMenu}>Consonants</MobileNavLink>
+              <MobileNavLink to={`/${language}/vowels`} onClick={closeMenu}>Vowels</MobileNavLink>
               <MobileNavLink to="/quiz" onClick={closeMenu}>Quiz</MobileNavLink>
               <MobileNavLink to="/pronounce" onClick={closeMenu}>Pronounce</MobileNavLink>
               <MobileNavLink to="/builder" onClick={closeMenu}>Builder</MobileNavLink>
@@ -469,3 +504,4 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
     </html>
   )
 }
+

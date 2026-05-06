@@ -1,16 +1,16 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 import type { ReactNode } from 'react'
 
-export type Language = 'en' | 'nl'
+export type Locale = 'en' | 'nl'
 
-export const LANGUAGE_LABELS: Record<Language, string> = {
+export const LANGUAGE_LABELS: Record<Locale, string> = {
   en: 'English',
   nl: 'Nederlands',
 }
 
 interface LanguageContextValue {
-  language: Language
-  setLanguage: (lang: Language) => void
+  language: Locale
+  setLanguage: (lang: Locale) => void
 }
 
 const LanguageContext = createContext<LanguageContextValue>({
@@ -21,7 +21,7 @@ const LanguageContext = createContext<LanguageContextValue>({
 const STORAGE_KEY = 'hangul-language'
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<Language>('en')
+  const [language, setLanguageState] = useState<Locale>('en')
 
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY)
@@ -30,7 +30,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  function setLanguage(lang: Language) {
+  function setLanguage(lang: Locale) {
     setLanguageState(lang)
     localStorage.setItem(STORAGE_KEY, lang)
   }

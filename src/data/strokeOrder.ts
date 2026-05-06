@@ -6,177 +6,149 @@ export interface StrokeData {
 
 export const STROKE_ORDER: Record<string, StrokeData> = {
   // ── Basic Consonants ──────────────────────────────────────────────
-  'ㄱ': { char: 'ㄱ', strokes: 2, steps: [
-    'Horizontal → (left to right, top)',
-    'Vertical ↓ (top to bottom, right side)',
+  'ㄱ': { char: 'ㄱ', strokes: 1, steps: [
+    'Horizontal → then vertical ↓ in one fluid movement',
   ]},
-  'ㄴ': { char: 'ㄴ', strokes: 2, steps: [
-    'Vertical ↓ (top to bottom, left side)',
-    'Horizontal → (left to right, bottom)',
+  'ㄴ': { char: 'ㄴ', strokes: 1, steps: [
+    'Vertical ↓ then horizontal → in one fluid movement',
   ]},
-  'ㄷ': { char: 'ㄷ', strokes: 3, steps: [
-    'Horizontal → (left to right, top)',
-    'Vertical ↓ (top to bottom, left side)',
-    'Horizontal → (left to right, bottom)',
+  'ㄷ': { char: 'ㄷ', strokes: 2, steps: [
+    'Horizontal → (top bar)',
+    'Vertical ↓ then horizontal → (bottom hook) in one movement',
   ]},
-  'ㄹ': { char: 'ㄹ', strokes: 5, steps: [
-    'Horizontal → (left to right, top)',
-    'Short vertical ↓ (left-middle)',
-    'Horizontal → (left to right, middle)',
-    'Short vertical ↓ (right-middle, curving left)',
-    'Horizontal → (left to right, bottom)',
+  'ㄹ': { char: 'ㄹ', strokes: 3, steps: [
+    'Horizontal → then vertical ↓ (top part)',
+    'Horizontal → (middle bar)',
+    'Vertical ↓ then horizontal → (bottom part)',
   ]},
-  'ㅁ': { char: 'ㅁ', strokes: 4, steps: [
-    'Horizontal → (left to right, top)',
-    'Vertical ↓ (top to bottom, left side)',
-    'Vertical ↓ (top to bottom, right side)',
-    'Horizontal → (left to right, bottom)',
+  'ㅁ': { char: 'ㅁ', strokes: 3, steps: [
+    'Vertical ↓ (left side)',
+    'Horizontal → then vertical ↓ (top and right)',
+    'Horizontal → (bottom closing bar)',
   ]},
   'ㅂ': { char: 'ㅂ', strokes: 4, steps: [
-    'Vertical ↓ (top to bottom, left)',
-    'Vertical ↓ (top to bottom, right)',
-    'Short horizontal → (left to right, upper middle)',
-    'Horizontal → (left to right, bottom)',
+    'Vertical ↓ (left side)',
+    'Vertical ↓ (right side)',
+    'Horizontal → (middle bar)',
+    'Horizontal → (bottom closing bar)',
   ]},
   'ㅅ': { char: 'ㅅ', strokes: 2, steps: [
-    'Diagonal ↙ (top-center to bottom-left)',
-    'Diagonal ↘ (top-center to bottom-right)',
+    'Diagonal ↙ (left leg)',
+    'Diagonal ↘ (right leg)',
   ]},
   'ㅇ': { char: 'ㅇ', strokes: 1, steps: [
-    'Circle ↺ (counterclockwise, starting from the top)',
+    'Circle ↺ (starting from top, counterclockwise)',
   ]},
-  'ㅈ': { char: 'ㅈ', strokes: 3, steps: [
-    'Horizontal → (left to right, top)',
-    'Diagonal ↙ (center to bottom-left)',
-    'Diagonal ↘ (center to bottom-right)',
+  'ㅈ': { char: 'ㅈ', strokes: 2, steps: [
+    'Horizontal → then diagonal ↙ in one movement',
+    'Diagonal ↘ (right leg)',
   ]},
-  'ㅊ': { char: 'ㅊ', strokes: 4, steps: [
-    'Short tick → (very top, a short horizontal)',
-    'Horizontal → (left to right, main bar)',
-    'Diagonal ↙ (center to bottom-left)',
-    'Diagonal ↘ (center to bottom-right)',
+  'ㅊ': { char: 'ㅊ', strokes: 3, steps: [
+    'Short horizontal tick → (top)',
+    'Horizontal → then diagonal ↙ in one movement',
+    'Diagonal ↘ (right leg)',
   ]},
-  'ㅋ': { char: 'ㅋ', strokes: 3, steps: [
-    'Horizontal → (left to right, top)',
-    'Short horizontal → (left to right, middle — the extra bar)',
-    'Vertical ↓ (top to bottom, right side)',
+  'ㅋ': { char: 'ㅋ', strokes: 2, steps: [
+    'Horizontal → then vertical ↓ in one movement (like ㄱ)',
+    'Short horizontal bar → (middle)',
   ]},
-  'ㅌ': { char: 'ㅌ', strokes: 4, steps: [
-    'Horizontal → (left to right, top)',
-    'Vertical ↓ (top to bottom, left side)',
-    'Horizontal → (left to right, middle)',
-    'Horizontal → (left to right, bottom)',
+  'ㅌ': { char: 'ㅌ', strokes: 3, steps: [
+    'Horizontal → (top bar)',
+    'Horizontal → (middle bar)',
+    'Vertical ↓ then horizontal → (bottom part, like ㄴ)',
   ]},
   'ㅍ': { char: 'ㅍ', strokes: 4, steps: [
-    'Horizontal → (left to right, top)',
-    'Vertical ↓ (top to bottom, left)',
-    'Vertical ↓ (top to bottom, right)',
-    'Horizontal → (left to right, bottom)',
+    'Horizontal → (top bar)',
+    'Vertical ↓ (left pillar)',
+    'Vertical ↓ (right pillar)',
+    'Horizontal → (bottom bar)',
   ]},
   'ㅎ': { char: 'ㅎ', strokes: 3, steps: [
-    'Short horizontal → (the top "hat")',
-    'Short vertical ↓ (center stem below hat)',
-    'Circle ↺ (counterclockwise, the round body)',
+    'Short horizontal tick → (top)',
+    'Horizontal → (main bar)',
+    'Circle ↺ (body)',
   ]},
 
   // ── Tense Consonants ─────────────────────────────────────────────
-  'ㄲ': { char: 'ㄲ', strokes: 4, steps: [
-    'Left ㄱ — Horizontal →',
-    'Left ㄱ — Vertical ↓',
-    'Right ㄱ — Horizontal →',
-    'Right ㄱ — Vertical ↓',
+  'ㄲ': { char: 'ㄲ', strokes: 2, steps: [
+    'Left ㄱ — One fluid movement',
+    'Right ㄱ — One fluid movement',
   ]},
-  'ㄸ': { char: 'ㄸ', strokes: 6, steps: [
-    'Left ㄷ — Horizontal top →',
-    'Left ㄷ — Vertical ↓',
-    'Left ㄷ — Horizontal bottom →',
-    'Right ㄷ — Horizontal top →',
-    'Right ㄷ — Vertical ↓',
-    'Right ㄷ — Horizontal bottom →',
+  'ㄸ': { char: 'ㄸ', strokes: 4, steps: [
+    'Left ㄷ — Top bar then bottom hook',
+    'Right ㄷ — Top bar then bottom hook',
   ]},
   'ㅃ': { char: 'ㅃ', strokes: 8, steps: [
-    'Left ㅂ — Vertical left ↓',
-    'Left ㅂ — Vertical right ↓',
-    'Left ㅂ — Horizontal middle →',
-    'Left ㅂ — Horizontal bottom →',
-    'Right ㅂ — Vertical left ↓',
-    'Right ㅂ — Vertical right ↓',
-    'Right ㅂ — Horizontal middle →',
-    'Right ㅂ — Horizontal bottom →',
+    'Left ㅂ — Left, right, middle, bottom',
+    'Right ㅂ — Left, right, middle, bottom',
   ]},
   'ㅆ': { char: 'ㅆ', strokes: 4, steps: [
-    'Left ㅅ — Diagonal ↙',
-    'Left ㅅ — Diagonal ↘',
-    'Right ㅅ — Diagonal ↙',
-    'Right ㅅ — Diagonal ↘',
+    'Left ㅅ — Left leg then right leg',
+    'Right ㅅ — Left leg then right leg',
   ]},
-  'ㅉ': { char: 'ㅉ', strokes: 6, steps: [
-    'Left ㅈ — Horizontal →',
-    'Left ㅈ — Diagonal ↙',
-    'Left ㅈ — Diagonal ↘',
-    'Right ㅈ — Horizontal →',
-    'Right ㅈ — Diagonal ↙',
-    'Right ㅈ — Diagonal ↘',
+  'ㅉ': { char: 'ㅉ', strokes: 4, steps: [
+    'Left ㅈ — Top-left part then right leg',
+    'Right ㅈ — Top-left part then right leg',
   ]},
 
   // ── Basic Vowels ──────────────────────────────────────────────────
   'ㅏ': { char: 'ㅏ', strokes: 2, steps: [
     'Vertical ↓ (top to bottom)',
-    'Short horizontal → (pointing right from center)',
+    'Short horizontal → (center to right)',
   ]},
   'ㅐ': { char: 'ㅐ', strokes: 3, steps: [
     'Vertical ↓ (left bar)',
-    'Short horizontal → (pointing right from left bar)',
+    'Short horizontal → (middle)',
     'Vertical ↓ (right bar)',
   ]},
   'ㅑ': { char: 'ㅑ', strokes: 3, steps: [
     'Vertical ↓ (main bar)',
-    'Short horizontal → (upper, pointing right)',
-    'Short horizontal → (lower, pointing right)',
+    'Short horizontal → (upper)',
+    'Short horizontal → (lower)',
   ]},
   'ㅒ': { char: 'ㅒ', strokes: 4, steps: [
     'Vertical ↓ (left bar)',
-    'Short horizontal upper → (pointing right)',
-    'Short horizontal lower → (pointing right)',
+    'Short horizontal → (upper)',
+    'Short horizontal → (lower)',
     'Vertical ↓ (right bar)',
   ]},
   'ㅓ': { char: 'ㅓ', strokes: 2, steps: [
-    'Short horizontal ← (pointing left from center)',
-    'Vertical ↓ (top to bottom)',
+    'Short horizontal → (pointing into the bar)',
+    'Vertical ↓ (main bar)',
   ]},
   'ㅔ': { char: 'ㅔ', strokes: 3, steps: [
+    'Short horizontal → (pointing out from center)',
     'Vertical ↓ (left bar)',
-    'Short horizontal → (pointing right from left bar)',
     'Vertical ↓ (right bar)',
   ]},
   'ㅕ': { char: 'ㅕ', strokes: 3, steps: [
-    'Short horizontal ← (upper, pointing left)',
-    'Short horizontal ← (lower, pointing left)',
+    'Short horizontal → (upper)',
+    'Short horizontal → (lower)',
     'Vertical ↓ (main bar)',
   ]},
   'ㅖ': { char: 'ㅖ', strokes: 4, steps: [
+    'Short horizontal → (upper)',
+    'Short horizontal → (lower)',
     'Vertical ↓ (left bar)',
-    'Short horizontal upper ← (pointing left)',
-    'Short horizontal lower ← (pointing left)',
     'Vertical ↓ (right bar)',
   ]},
   'ㅗ': { char: 'ㅗ', strokes: 2, steps: [
+    'Short vertical ↓ (top to center)',
     'Horizontal → (left to right)',
-    'Short vertical ↓ (downward from center)',
   ]},
   'ㅛ': { char: 'ㅛ', strokes: 3, steps: [
-    'Horizontal → (left to right)',
-    'Short vertical ↓ (left of center)',
-    'Short vertical ↓ (right of center)',
+    'Short vertical ↓ (left)',
+    'Short vertical ↓ (right)',
+    'Horizontal → (bottom bar)',
   ]},
   'ㅜ': { char: 'ㅜ', strokes: 2, steps: [
     'Horizontal → (left to right)',
-    'Vertical ↓ (downward from center)',
+    'Vertical ↓ (center downwards)',
   ]},
   'ㅠ': { char: 'ㅠ', strokes: 3, steps: [
-    'Horizontal → (left to right)',
-    'Vertical ↓ (left of center)',
-    'Vertical ↓ (right of center)',
+    'Horizontal → (top bar)',
+    'Vertical ↓ (left)',
+    'Vertical ↓ (right)',
   ]},
   'ㅡ': { char: 'ㅡ', strokes: 1, steps: [
     'Horizontal → (left to right)',

@@ -1,4 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { useBooleanFlagValue } from '@openfeature/react-sdk'
+import { FLAGS } from '../flags'
+import { PronunciationModel } from '../components/PronunciationModel'
 
 export const Route = createFileRoute('/')({
   component: HomePage,
@@ -57,6 +60,12 @@ function ToolCard({ to, korean, label, subLabel, desc }: {
 }
 
 function HomePage() {
+  const beginnerRoadmap = useBooleanFlagValue(FLAGS.BEGINNER_ROADMAP, false)
+  const pronunciationModel = useBooleanFlagValue(FLAGS.PRONUNCIATION_MODEL, false)
+  const batchimLesson = useBooleanFlagValue(FLAGS.BATCHIM_LESSON, false)
+  const grammarGuide = useBooleanFlagValue(FLAGS.GRAMMAR_GUIDE, false)
+  const contrastDrills = useBooleanFlagValue(FLAGS.CONTRAST_DRILLS, false)
+
   return (
     <div className="space-y-16">
 
@@ -113,6 +122,34 @@ function HomePage() {
         </div>
       </div>
 
+      {beginnerRoadmap && (
+        <div>
+          <div className="flex items-center gap-3 mb-5">
+            <p className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--c-3)' }}>Beginner Roadmap</p>
+            <div className="flex-1 h-px" style={{ background: 'var(--c-divider)' }} />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {[
+              { step: '1', title: 'Core letters', time: '10-15 min', desc: 'Start with the plainest consonants and vowels first.' },
+              { step: '2', title: 'Simple blocks', time: '10 min', desc: 'Read CV blocks before worrying about every sound rule.' },
+              { step: '3', title: 'Batchim basics', time: '10 min', desc: 'Learn what changes when a consonant moves to the bottom.' },
+              { step: '4', title: 'Contrast practice', time: '5-10 min', desc: 'Train the pairs beginners confuse most often.' },
+            ].map((item) => (
+              <div key={item.step} className="glass-card rounded-xl p-4 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-black" style={{ background: 'var(--c-accent-muted)', border: '1px solid var(--c-accent-border)', color: 'var(--c-accent-text)' }}>{item.step}</span>
+                  <span className="text-xs font-semibold" style={{ color: 'var(--c-4)' }}>{item.time}</span>
+                </div>
+                <p className="text-sm font-bold" style={{ color: 'var(--c-1)' }}>{item.title}</p>
+                <p className="text-xs leading-relaxed" style={{ color: 'var(--c-3)' }}>{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {pronunciationModel && <PronunciationModel compact />}
+
       {/* ── Learning Path ────────────────────────────────── */}
       <div>
         <div className="flex items-center gap-3 mb-5">
@@ -124,7 +161,7 @@ function HomePage() {
             { step: 1, label: 'Consonants', sub: '자음', to: '/consonants', desc: '14 basic + 5 tense consonants' },
             { step: 2, label: 'Vowels',     sub: '모음', to: '/vowels',     desc: '10 basic + 11 compound vowels' },
             { step: 3, label: 'How Blocks Work', sub: '음절', to: '/blocks', desc: 'Understand how letters stack into syllable blocks' },
-            { step: 4, label: 'Quiz',       sub: '연습', to: '/quiz',      desc: 'Test recognition and recall' },
+            { step: 4, label: grammarGuide ? 'Grammar 101' : (batchimLesson ? 'Batchim Basics' : 'Quiz'), sub: grammarGuide ? '문법' : (batchimLesson ? '받침' : '연습'), to: grammarGuide ? '/grammar' : (batchimLesson ? '/batchim' : '/quiz'), desc: grammarGuide ? 'Learn SOV structure and particles' : (batchimLesson ? 'Learn final consonants before broader drills' : 'Test recognition and recall') },
           ] as const).map(({ step, label, sub, to, desc }) => (
             <Link
               key={step}
@@ -184,7 +221,7 @@ function HomePage() {
           <p className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--c-3)' }}>Pronunciation Tools</p>
           <div className="flex-1 h-px" style={{ background: 'var(--c-divider)' }} />
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className={`grid grid-cols-1 gap-4 ${contrastDrills ? 'sm:grid-cols-3' : 'sm:grid-cols-2'}`}>
           <ToolCard
             to="/pronounce"
             korean="발"
@@ -192,6 +229,15 @@ function HomePage() {
             subLabel="발음 Bal-eum"
             desc="Type any Korean word and see each syllable decomposed into initial consonant, vowel, and final components with romanization."
           />
+          {grammarGuide && (
+            <ToolCard
+              to="/grammar"
+              korean="문"
+              label="Grammar 101"
+              subLabel="문법 Mun-beop"
+              desc="Understand Subject-Object-Verb order and how particles glue sentences together."
+            />
+          )}
           <ToolCard
             to="/builder"
             korean="조"
@@ -199,6 +245,15 @@ function HomePage() {
             subLabel="조합 Jo-hap"
             desc="Pick an initial consonant, vowel, and optional final — watch the syllable block compose in real time and hear it spoken."
           />
+          {contrastDrills && (
+            <ToolCard
+              to="/contrast-drills"
+              korean="변"
+              label="Contrast Drills"
+              subLabel="변별 Byeon-byeol"
+              desc="Train the Korean sound contrasts beginners usually collapse into one category."
+            />
+          )}
         </div>
       </div>
 

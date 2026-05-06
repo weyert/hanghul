@@ -1,0 +1,172 @@
+---
+title: "Romanization: What It Is and Why to Move Past It"
+description: A tool for the first week, not a crutch for life
+flag: romanization-guide
+navLabel: Romanization
+audience: general
+---
+
+<PageHeader
+  title="Romanization: What It Is and Why to Move Past It"
+  subtitle="로마자 표기법 안내 — A tool for the first week, not a crutch for life"
+/>
+
+## What is romanization?
+
+Romanization is the practice of writing Korean sounds using the Latin alphabet — the same letters used in English,
+Dutch, French, and most Western languages. Because Korean has its own script (Hangul), romanization was developed
+to help non-Korean speakers approximate the sounds without first learning to read 한글.
+
+You will encounter romanization on street signs in Seoul, in passports, in tourist materials, and in most beginner
+textbooks aimed at English-speaking learners. It is everywhere — and it is a trap.
+
+## The three main systems
+
+<div className="space-y-3">
+
+<SectionCard variant="primary" title="Revised Romanization of Korean (RR)" badge="Official since 2000">
+
+The South Korean government standard. Used on all road signs, official publications, and passports.
+If you see "Seoul" (서울), "Busan" (부산), or "Hangang" (한강), you're reading RR.
+
+Designed to be *typable* without special characters — which means it makes phonetic compromises.
+The letter "g" can represent a soft sound closer to English "k" at the start of words.
+
+</SectionCard>
+
+<SectionCard variant="warning" title="McCune–Reischauer (MR)" badge="Academic / older texts">
+
+Developed in 1937, used in North Korea and much older scholarship. Uses diacritics (ŏ, ŭ) to
+represent sounds that don't exist in English. More phonetically precise than RR, but requires
+special characters that most keyboards can't type.
+
+</SectionCard>
+
+<SectionCard variant="muted" title="Yale Romanization">
+
+A linguist's tool, not a learner's tool. Maps Korean morphophonology systematically but looks
+nothing like how the words sound. You will only encounter it in academic Korean linguistics papers.
+
+</SectionCard>
+
+</div>
+
+## One character, many spellings — why romanization breaks down
+
+Korean consonants change sound depending on their position in a syllable and what surrounds them.
+Romanization attempts to capture this by changing the spelling — which means the same character
+gets written differently every time. Take ㄱ:
+
+<ComparisonTable
+  headers={["Context", "Example", "RR spelling", "Actual sound"]}
+  koreanColumn={1}
+  codeColumn={2}
+  rows={[
+    ["Word-initial",    "가다", "gada",  "k (unaspirated, lax)"],
+    ["After a vowel",   "아기", "agi",   "g (voiced)"],
+    ["Word-final",      "책",  "chaek", "k (unreleased)"],
+    ["Doubled (tense)", "까다", "kkada", "kk (tense, no air)"],
+    ["Before ㅎ",       "각하", "gakha", "kh (aspirated)"],
+  ]}
+/>
+
+If you're reading romanization, you now need to memorise *when* "g" means "k" and when
+it means "g" — which is exactly the phonological rule you'd have to learn anyway. You haven't
+saved any work; you've just added an extra layer.
+
+## Why romanization misleads your ears
+
+<div className="space-y-3">
+
+<SectionCard variant="danger" title='"g" is not g'>
+
+ㄱ at the start of a word is romanized as "g" in RR, but it's unaspirated and unvoiced — closer to English "k" in
+"skill". Reading "gada" (가다) with a full voiced English "g" sounds wrong to Korean ears: initial ㄱ is voiceless,
+not voiced, so the voiced English "g" blurs the distinction with intervocalic ㄱ.
+
+</SectionCard>
+
+<SectionCard variant="danger" title='"eo" is not "eo"'>
+
+ㅓ is romanized as "eo" but sounds like the vowel in British English "her" or "word". Most English speakers
+mispronounce it as "ee-oh" or "eo" (two syllables). This is one of the most common beginner mistakes.
+
+</SectionCard>
+
+<SectionCard variant="danger" title='"eu" is not "oo" or "ew"'>
+
+ㅡ is romanized as "eu" which English speakers read as "oo" or "yoo". It's actually an unrounded central vowel
+with no English equivalent — pronounced with lips flat and spread, not rounded.
+
+</SectionCard>
+
+<SectionCard variant="danger" title="Aspirated vs. tense: the p/pp distinction disappears">
+
+RR uses "b" for ㅂ, "bb" for ㅃ, and "p" for ㅍ, but an English speaker reading "b" will voice it — and initial
+ㅂ is unvoiced. English "b" is also unaspirated, but so is ㅂ; the mismatch is voicing. The result is a sound
+that doesn't clearly match ㅂ, ㅃ, or ㅍ.
+
+</SectionCard>
+
+</div>
+
+<Callout type="info" title="The case for learning Hangul first">
+
+- Hangul is one of the most systematic writing systems ever designed — you can learn all the letters in a few hours
+- Each character represents a consistent sound (with predictable rules for positional changes) — far more reliable than romanization approximations
+- Korean children learn to read before romanization was even standardised — it's a learner tool, not a native tool
+- Once you can read Hangul, every dictionary, app, and native material is open to you without a translation layer
+- Your pronunciation will be better from day one because you're listening to the actual sounds, not filtering them through a Latin-alphabet lens
+
+</Callout>
+
+## When romanization is actually useful
+
+Romanization isn't worthless — it serves specific, narrow purposes:
+
+<ExampleGrid cols={2}>
+
+<SectionCard title="First 48 hours">
+
+A temporary scaffold while you haven't yet memorised the alphabet. Use it, then put it away.
+
+</SectionCard>
+
+<SectionCard title="Typing your name">
+
+Passports, hotel reservations, and airline tickets use romanization. You need to know how your name is spelled in RR.
+
+</SectionCard>
+
+<SectionCard title="Place names in English text">
+
+Seoul, Busan, Jeju — you'll encounter Korean place names in English contexts and need to recognise them.
+
+</SectionCard>
+
+<SectionCard title="Teaching pronunciation to others">
+
+Describing a Korean sound to someone who doesn't know Hangul. But IPA is more accurate for this purpose.
+
+</SectionCard>
+
+</ExampleGrid>
+
+## How this site handles romanization
+
+By default, this site shows romanization alongside Hangul as a reading aid. Cards show both the Korean
+character and its romanized form so you can build an initial connection. But the goal is always to
+wean yourself off it.
+
+In quiz mode, you can switch to **Hangul-first** practice — where prompts and answer choices are shown
+in Korean only. This is how native Korean children learn, and it forces your brain to build a direct
+sound-to-character connection rather than routing through romanization.
+
+<CtaCard
+  title="Ready to read Hangul directly?"
+  description="Start with the consonants — there are only 14 basic shapes, and several will already feel familiar."
+  primaryTo="/consonants"
+  primaryLabel="Learn consonants →"
+  secondaryTo="/quiz"
+  secondaryLabel="Try a quiz"
+/>

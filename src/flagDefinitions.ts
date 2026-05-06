@@ -2,7 +2,12 @@
 // This module is imported by both the OFREP endpoint (server) and the
 // InMemoryProvider fallback used during SSR.
 
-import type { InMemoryFlagConfiguration } from '@openfeature/web-sdk'
+// Minimal shape compatible with @openfeature/web-sdk InMemoryFlagConfiguration.
+// Defined locally to avoid adding web-sdk as an explicit dependency.
+type InMemoryFlagConfiguration = Record<
+  string,
+  { disabled?: boolean; variants: Record<string, boolean>; defaultVariant: string }
+>
 
 export const FLAG_DEFINITIONS = {
   'syllable-chart': {
@@ -121,6 +126,51 @@ export const FLAG_DEFINITIONS = {
     defaultVariant: 'on',
   },
   'ipa-guide': {
+    disabled: false,
+    variants: { on: true, off: false },
+    defaultVariant: 'on',
+  },
+  'pronunciation-model': {
+    disabled: false,
+    variants: { on: true, off: false },
+    defaultVariant: 'on',
+  },
+  'batchim-lesson': {
+    disabled: false,
+    variants: { on: true, off: false },
+    defaultVariant: 'on',
+  },
+  'grammar-guide': {
+    disabled: false,
+    variants: { on: true, off: false },
+    defaultVariant: 'on',
+  },
+  'audio-contrast-quiz': {
+    disabled: false,
+    variants: { on: true, off: false },
+    defaultVariant: 'on',
+  },
+  'verb-conjugation': {
+    disabled: false,
+    variants: { on: true, off: false },
+    defaultVariant: 'on',
+  },
+  'contrast-drills': {
+    disabled: false,
+    variants: { on: true, off: false },
+    defaultVariant: 'on',
+  },
+  'sentence-patterns': {
+    disabled: false,
+    variants: { on: true, off: false },
+    defaultVariant: 'on',
+  },
+  'beginner-roadmap': {
+    disabled: false,
+    variants: { on: true, off: false },
+    defaultVariant: 'on',
+  },
+  'quiz-wrong-hints': {
     disabled: false,
     variants: { on: true, off: false },
     defaultVariant: 'on',
