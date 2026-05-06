@@ -1,0 +1,110 @@
+---
+title: Syllable Blocks
+description: Every Korean character is a compact square block. Here's how they're built.
+flag: syllable-blocks
+navLabel: Blocks
+audience: general
+---
+
+<PageHeader
+  title="Syllable Blocks"
+  subtitle="음절 Eum-jeol — Every Korean character is a compact square block. Here's how they're built."
+/>
+
+<SectionCard>
+
+Unlike English where letters are written in a line, Korean letters (**자모 jamo**) are stacked into square blocks. Each block represents exactly **one syllable**. The word <span className="korean-serif font-black text-base" style={{ color: 'var(--c-accent-text)' }}>한국어</span> has three blocks — <span className="korean-serif font-bold" style={{ color: 'var(--c-1)' }}>한</span>, <span className="korean-serif font-bold" style={{ color: 'var(--c-1)' }}>국</span>, <span className="korean-serif font-bold" style={{ color: 'var(--c-1)' }}>어</span> — and three syllables: han · guk · eo.
+
+</SectionCard>
+
+## The Three Positions
+
+Every syllable block has up to three layers — two required, one optional.
+
+<ExampleGrid cols={3}>
+
+<PositionCard
+  role="initial"
+  korean="초성"
+  en="Initial consonant"
+  detail="Always comes first. Every syllable starts with one. If there's no consonant sound, use ㅇ as a placeholder."
+  example="ㄱ ㄴ ㄷ ㄹ…"
+/>
+
+<PositionCard
+  role="vowel"
+  korean="중성"
+  en="Vowel"
+  detail="Sits next to or below the initial consonant. Determines the block shape — vertical vowels sit to the right; horizontal vowels sit below."
+  example="ㅏ ㅓ ㅗ ㅜ…"
+/>
+
+<PositionCard
+  role="final"
+  korean="종성"
+  en="Final consonant"
+  detail="Optional. Known as 받침 (batchim). Sits at the bottom of the block. About half of all Korean syllables have one."
+  example="ㄴ ㄹ ㅁ ㄱ…"
+/>
+
+</ExampleGrid>
+
+## Two Block Shapes
+
+The vowel's orientation determines how the block is arranged. The consonant grows to fill the space.
+
+<ExampleGrid cols={4}>
+
+<ShapeDiagram type="V" char="가" initial="ㄱ" vowel="ㅏ" />
+
+<ShapeDiagram type="H" char="고" initial="ㄱ" vowel="ㅗ" />
+
+<ShapeDiagram type="VF" char="한" initial="ㅎ" vowel="ㅏ" final="ㄴ" />
+
+<ShapeDiagram type="HF" char="국" initial="ㄱ" vowel="ㅜ" final="ㄱ" />
+
+</ExampleGrid>
+
+<ExampleGrid cols={2}>
+
+<SectionCard title="Vertical vowels → side by side">
+
+ㅏ ㅑ ㅓ ㅕ ㅣ ㅐ ㅒ ㅔ ㅖ and their compounds — the consonant sits *left*, vowel *right*
+
+</SectionCard>
+
+<SectionCard title="Horizontal vowels → stacked">
+
+ㅗ ㅛ ㅜ ㅠ ㅡ and their compounds — the consonant sits *above*, vowel *below*
+
+</SectionCard>
+
+</ExampleGrid>
+
+## Step-by-Step Examples
+
+<ExampleGrid cols={2}>
+
+<BlockExample initial="ㄴ" vowel="ㅏ" combined="나" note="나 (na) — I / me. Vertical vowel, no batchim." />
+
+<BlockExample initial="ㅇ" vowel="ㅗ" combined="오" note="오 (o) — five / come. Horizontal vowel. ㅇ is silent as an initial." />
+
+<BlockExample initial="ㅎ" vowel="ㅏ" final="ㄴ" combined="한" note="한 (han) — Korean. Vertical vowel + batchim ㄴ below." />
+
+<BlockExample initial="ㄱ" vowel="ㅜ" final="ㄱ" combined="국" note="국 (guk) — country / soup. Horizontal vowel + batchim ㄱ below." />
+
+<BlockExample initial="ㅅ" vowel="ㅏ" final="ㄹ" combined="살" note="살 (sal) — years old (age counter). Vertical vowel + batchim ㄹ." />
+
+<BlockExample initial="ㄱ" vowel="ㅡ" final="ㄹ" combined="글" note="글 (geul) — writing / text. Horizontal vowel + batchim ㄹ." />
+
+</ExampleGrid>
+
+<ExampleGrid cols={3}>
+
+<NavCard to="/consonants" korean="자음" label="Learn Consonants" description="The building blocks of every syllable" />
+
+<NavCard to="/vowels" korean="모음" label="Learn Vowels" description="Determines the block shape" />
+
+<NavCard to="/builder" korean="조합" label="Build Syllables" description="Compose your own blocks live" />
+
+</ExampleGrid>

@@ -4,7 +4,7 @@ import { act, useEffect } from 'react'
 import { createRoot } from 'react-dom/client'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { LanguageProvider, useLanguage } from '../LanguageContext'
-import type { Language } from '../LanguageContext'
+import type { Locale } from '../LanguageContext'
 
 const STORAGE_KEY = 'hangul-language'
 
@@ -14,7 +14,7 @@ function flushEffects() {
   })
 }
 
-function renderLanguageConsumer(onLanguage?: (language: Language) => void) {
+function renderLanguageConsumer(onLanguage?: (language: Locale) => void) {
   const host = document.createElement('div')
   document.body.appendChild(host)
   const root = createRoot(host)
@@ -94,7 +94,7 @@ describe('LanguageProvider', () => {
   })
 
   it('updates context state and persists language changes', async () => {
-    const observed: Language[] = []
+    const observed: Locale[] = []
     const rendered = renderLanguageConsumer((language) => observed.push(language))
     await flushEffects()
 

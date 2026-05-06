@@ -1,6 +1,4 @@
-import type { Language } from '../contexts/LanguageContext'
-
-export type { Language }
+import type { Locale } from '../contexts/LanguageContext'
 
 export interface HangulCharacter {
   id: string
@@ -8,7 +6,7 @@ export interface HangulCharacter {
   romanization: string
   ipa: string
   name: string
-  descriptions: Record<Language, string>
+  descriptions: Record<Locale, string>
   examples: Array<{ korean: string; romanized: string; meaning: string }>
   category: 'basic-consonant' | 'tense-consonant' | 'basic-vowel' | 'compound-vowel'
 }

@@ -30,6 +30,7 @@ import { Route as BuilderRouteImport } from './routes/builder'
 import { Route as BlocksRouteImport } from './routes/blocks'
 import { Route as BatchimRouteImport } from './routes/batchim'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LocaleSlugRouteImport } from './routes/$locale/$slug'
 
 const VowelsRoute = VowelsRouteImport.update({
   id: '/vowels',
@@ -136,6 +137,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LocaleSlugRoute = LocaleSlugRouteImport.update({
+  id: '/$locale/$slug',
+  path: '/$locale/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -159,6 +165,7 @@ export interface FileRoutesByFullPath {
   '/typing': typeof TypingRoute
   '/vocabulary': typeof VocabularyRoute
   '/vowels': typeof VowelsRoute
+  '/$locale/$slug': typeof LocaleSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -182,6 +189,7 @@ export interface FileRoutesByTo {
   '/typing': typeof TypingRoute
   '/vocabulary': typeof VocabularyRoute
   '/vowels': typeof VowelsRoute
+  '/$locale/$slug': typeof LocaleSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -206,6 +214,7 @@ export interface FileRoutesById {
   '/typing': typeof TypingRoute
   '/vocabulary': typeof VocabularyRoute
   '/vowels': typeof VowelsRoute
+  '/$locale/$slug': typeof LocaleSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -231,6 +240,7 @@ export interface FileRouteTypes {
     | '/typing'
     | '/vocabulary'
     | '/vowels'
+    | '/$locale/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -254,6 +264,7 @@ export interface FileRouteTypes {
     | '/typing'
     | '/vocabulary'
     | '/vowels'
+    | '/$locale/$slug'
   id:
     | '__root__'
     | '/'
@@ -277,6 +288,7 @@ export interface FileRouteTypes {
     | '/typing'
     | '/vocabulary'
     | '/vowels'
+    | '/$locale/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -301,6 +313,7 @@ export interface RootRouteChildren {
   TypingRoute: typeof TypingRoute
   VocabularyRoute: typeof VocabularyRoute
   VowelsRoute: typeof VowelsRoute
+  LocaleSlugRoute: typeof LocaleSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -452,6 +465,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$locale/$slug': {
+      id: '/$locale/$slug'
+      path: '/$locale/$slug'
+      fullPath: '/$locale/$slug'
+      preLoaderRoute: typeof LocaleSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -477,6 +497,7 @@ const rootRouteChildren: RootRouteChildren = {
   TypingRoute: TypingRoute,
   VocabularyRoute: VocabularyRoute,
   VowelsRoute: VowelsRoute,
+  LocaleSlugRoute: LocaleSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
