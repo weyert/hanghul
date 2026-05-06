@@ -3,6 +3,7 @@ import {
   analyzeText,
   composeSyllable,
   decomposeSyllable,
+  JONGSEONG_CLUSTER,
   SYLLABLE_END,
   SYLLABLE_START,
 } from '../hangul'
@@ -56,5 +57,50 @@ describe('hangul utilities', () => {
       { char: ' ', type: 'other', romanization: ' ' },
       { char: 'A', type: 'other', romanization: 'A' },
     ])
+  })
+})
+
+describe('analyzeText — open syllables (no final consonant)', () => {
+  it('produces empty final fields for a syllable with no batchim', () => {
+    // 가 = ㄱ + ㅏ, finalIdx 0 means no final consonant
+    const [result] = analyzeText('가')
+    expect(result.type).toBe('syllable')
+    if (result.type === 'syllable') {
+      expect(result.finalIdx).toBe(0)
+      expect(result.final).toBe('')
+      expect(result.finalRoman).toBe('')
+      expect(result.finalIpa).toBe('')
+      expect(result.romanization).toBe('ga')
+    }
+  })
+
+  it('correctly romanizes a multi-syllable open-syllable word', () => {
+    // 나라 = 나 (na) + 라 (ra) — both open syllables
+    const chars = analyzeText('나라')
+    expect(chars).toHaveLength(2)
+    for (const char of chars) {
+      expect(char.type).toBe('syllable')
+      if (char.type === 'syllable') {
+        expect(char.finalIdx).toBe(0)
+        expect(char.final).toBe('')
+      }
+    }
+    expect(chars.map((c) => c.romanization).join('')).toBe('nara')
+  })
+})
+
+describe('analyzeText — consonant-cluster batchim', () => {
+  it('maps a cluster final (ㄺ) to its romanized and IPA forms', () => {
+    // 읽 = ㅇ + ㅣ + ㄺ — JONGSEONG index 9, a cluster final
+    const [result] = analyzeText('읽')
+    expect(result.type).toBe('syllable')
+    if (result.type === 'syllable') {
+      expect(result.finalIdx).toBe(9)
+      expect(result.final).toBe('ㄺ')
+      expect(result.finalRoman).toBe('k')
+      expect(result.finalIpa).toBe('k̚')
+      expect(result.romanization).toBe('ik')
+      expect(JONGSEONG_CLUSTER).toContain(result.finalIdx)
+    }
   })
 })
