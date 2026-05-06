@@ -130,11 +130,11 @@ test.describe('navigation', () => {
     await page.goto('/')
 
     await page.getByRole('navigation').getByRole('link', { name: 'Consonants' }).click()
-    await expect(page).toHaveURL('/consonants')
+    await expect(page).toHaveURL('/en/consonants')
     await expect(page.getByRole('heading', { level: 1, name: 'Consonants' })).toBeVisible()
 
     await page.getByRole('navigation').getByRole('link', { name: 'Vowels' }).click()
-    await expect(page).toHaveURL('/vowels')
+    await expect(page).toHaveURL('/en/vowels')
     await expect(page.getByRole('heading', { level: 1, name: 'Vowels' })).toBeVisible()
 
     await page.getByRole('navigation').getByRole('link', { name: 'Quiz' }).click()
