@@ -2,6 +2,8 @@ import { describe, it, expect } from 'vitest'
 import {
   getContentPage,
   getContentPageMeta,
+  getAllSlugs,
+  getContentPageLocales,
   getStaticRoutes,
   CONTENT_NAV_ITEMS,
 } from '../registry'
@@ -27,10 +29,10 @@ describe('getContentPage fallback', () => {
     expect(result.fallback).toBe(false)
   })
 
-  it('falls back to English when no Dutch content exists for a slug', () => {
-    const result = getContentPage('english-guide', 'nl')
-    expect(result.fallback).toBe(true)
-    expect(result.module.frontmatter.title).toContain('English')
+  it('does not serve the English-only guide as Dutch content', () => {
+    expect(() => getContentPage('english-guide', 'nl')).toThrow(
+      'No content found for "english-guide" in locale "nl"',
+    )
   })
 
   it('returns Dutch content directly for dutch-guide', () => {
@@ -45,6 +47,22 @@ describe('getContentPage fallback', () => {
   it('throws when a slug has no content for any locale', () => {
     // dutch-guide has no English version, requesting English should throw
     expect(() => getContentPage('dutch-guide', 'en')).toThrow()
+  })
+})
+
+describe('Dutch content coverage', () => {
+  it('has Dutch MDX for every non-exclusive content page', () => {
+    const exclusiveSlugs = new Set(['english-guide', 'dutch-guide'])
+
+    for (const slug of getAllSlugs()) {
+      if (exclusiveSlugs.has(slug)) continue
+      expect(getContentPageLocales(slug)).toEqual(expect.arrayContaining(['en', 'nl']))
+    }
+  })
+
+  it('keeps locale-specific guides exclusive instead of using fallback copy', () => {
+    expect(getContentPageLocales('english-guide')).toEqual(['en'])
+    expect(getContentPageLocales('dutch-guide')).toEqual(['nl'])
   })
 })
 

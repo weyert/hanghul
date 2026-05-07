@@ -5,6 +5,7 @@ import { FLAGS } from '../flags'
 import { KOREA_FACTS, CATEGORY_META } from '../data/koreaFacts'
 import type { FactCategory } from '../data/koreaFacts'
 import { PageArtwork } from '../components/PageArtwork'
+import { useLanguage } from '../contexts/LanguageContext'
 import { createSeoHead } from '../seo'
 
 export const Route = createFileRoute('/korea-facts')({
@@ -39,6 +40,7 @@ function CategoryPill({
   active: boolean
   count: number
   onClick: () => void
+  allLabel: string
 }) {
   const meta = category === 'all' ? null : CATEGORY_META[category]
   return (
@@ -54,7 +56,7 @@ function CategoryPill({
       onMouseEnter={e => { if (!active) (e.currentTarget as HTMLElement).style.color = 'var(--c-1)' }}
       onMouseLeave={e => { if (!active) (e.currentTarget as HTMLElement).style.color = 'var(--c-3)' }}
     >
-      {category === 'all' ? 'All' : meta!.label}
+      {category === 'all' ? allLabel : meta!.label}
       {meta && <span className="ml-1 korean-text text-xs opacity-70">{meta.korean}</span>}
       <span className="ml-1.5 text-xs opacity-60">{count}</span>
     </button>
@@ -131,6 +133,7 @@ function FactCard({
 
 function KoreaFactsPage() {
   const enabled = useBooleanFlagValue(FLAGS.KOREA_FACTS, false)
+  const { language } = useLanguage()
 
   const [activeCategory, setActiveCategory] = useState<FactCategory | 'all'>('all')
   const [indices, setIndices]               = useState<number[]>(() => shuffle(KOREA_FACTS.map((_, i) => i)))
@@ -145,6 +148,31 @@ function KoreaFactsPage() {
 
   // Shuffled order for the filtered set
   const [shuffledFiltered, setShuffledFiltered] = useState(() => shuffle(KOREA_FACTS.map((_, i) => i)))
+  const copy = language === 'nl'
+    ? {
+        disabled: 'Deze functie is niet ingeschakeld.',
+        title: 'Feiten over Korea',
+        intro: (count: number) => `한국 이야기. ${count} feiten over geschiedenis, cultuur, eten, technologie en dagelijks leven.`,
+        shuffle: 'Schud',
+        shuffleTitle: 'Volgorde schudden',
+        artAlt: 'Een redactionele collage van Koreaanse culturele, historische en moderne studieobjecten.',
+        all: 'Alles',
+        previous: 'Vorige',
+        of: 'van',
+        next: 'Volgend feit',
+      }
+    : {
+        disabled: 'This feature is not enabled.',
+        title: 'Korea Facts',
+        intro: (count: number) => `한국 이야기. ${count} facts across history, culture, food, tech, and daily life.`,
+        shuffle: 'Shuffle',
+        shuffleTitle: 'Shuffle order',
+        artAlt: 'A curated editorial collage of Korean cultural, historical, and modern study objects.',
+        all: 'All',
+        previous: 'Previous',
+        of: 'of',
+        next: 'Next fact',
+      }
 
   const getFilteredIndices = useCallback((cat: FactCategory | 'all') => {
     const base = cat === 'all'
@@ -182,7 +210,7 @@ function KoreaFactsPage() {
   if (!enabled) {
     return (
       <div className="text-center py-24 text-zinc-600">
-        <p className="text-base font-medium">This feature is not enabled.</p>
+        <p className="text-base font-medium">{copy.disabled}</p>
       </div>
     )
   }
@@ -195,14 +223,14 @@ function KoreaFactsPage() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Korea Facts</h1>
+          <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>{copy.title}</h1>
           <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>
-            한국 이야기. {KOREA_FACTS.length} facts across history, culture, food, tech, and daily life.
+            {copy.intro(KOREA_FACTS.length)}
           </p>
         </div>
         <button
           onClick={handleShuffle}
-          title="Shuffle order"
+          title={copy.shuffleTitle}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer mt-1 flex-shrink-0"
           style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border-card)', color: 'var(--c-3)' }}
           onMouseEnter={e => (e.currentTarget.style.color = 'var(--c-1)')}
@@ -214,12 +242,12 @@ function KoreaFactsPage() {
             <polyline points="21 16 21 21 16 21" />
             <line x1="15" y1="15" x2="21" y2="21" />
           </svg>
-          Shuffle
+          {copy.shuffle}
         </button>
       </div>
       <PageArtwork
         src="/artwork/korea-facts.jpg"
-        alt="A curated editorial collage of Korean cultural, historical, and modern study objects."
+        alt={copy.artAlt}
       />
 
       {/* Category filter */}
@@ -229,6 +257,7 @@ function KoreaFactsPage() {
           active={activeCategory === 'all'}
           count={categoryCounts.all ?? 0}
           onClick={() => handleCategoryChange('all')}
+          allLabel={copy.all}
         />
         {(Object.keys(CATEGORY_META) as FactCategory[]).map(cat => (
           <CategoryPill
@@ -237,6 +266,7 @@ function KoreaFactsPage() {
             active={activeCategory === cat}
             count={categoryCounts[cat] ?? 0}
             onClick={() => handleCategoryChange(cat)}
+            allLabel={copy.all}
           />
         ))}
       </div>
@@ -270,18 +300,18 @@ function KoreaFactsPage() {
             <line x1="12" y1="7" x2="2" y2="7" />
             <polyline points="6,3 2,7 6,11" />
           </svg>
-          Previous
+          {copy.previous}
         </button>
 
         <span className="text-xs font-semibold tabular-nums" style={{ color: 'var(--c-4)' }}>
-          {(cursor % factCount) + 1} of {factCount}
+          {(cursor % factCount) + 1} {copy.of} {factCount}
         </span>
 
         <button
           onClick={next}
           className="flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-sm transition-all cursor-pointer btn-primary text-white"
         >
-          Next fact
+          {copy.next}
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <line x1="2" y1="7" x2="12" y2="7" />
             <polyline points="8,3 12,7 8,11" />

@@ -54,17 +54,17 @@ function buildOptions(char: HangulCharacter): HangulCharacter[] {
 // ─── Progress bar ────────────────────────────────────────────────────
 
 function ProgressBar({
-  charIdx, total, score, badge,
+  charIdx, total, score, badge, language,
 }: {
-  charIdx: number; total: number; score: number; badge: React.ReactNode
+  charIdx: number; total: number; score: number; badge: React.ReactNode; language: 'en' | 'nl'
 }) {
   return (
     <div className="space-y-2">
       <div className="flex justify-between items-center text-xs" style={{ color: 'var(--c-3)' }}>
-        <span>Character {charIdx + 1} of {total}</span>
+        <span>{language === 'nl' ? 'Teken' : 'Character'} {charIdx + 1} {language === 'nl' ? 'van' : 'of'} {total}</span>
         <div className="flex items-center gap-2">
           {badge}
-          <span className="font-semibold" style={{ color: 'var(--c-2)' }}>Score: {score}</span>
+          <span className="font-semibold" style={{ color: 'var(--c-2)' }}>{language === 'nl' ? 'Score' : 'Score'}: {score}</span>
         </div>
       </div>
       <div className="rounded-full h-1" style={{ background: 'var(--c-border-card)' }}>
@@ -79,16 +79,42 @@ function ProgressBar({
 
 // ─── Landing screen ──────────────────────────────────────────────────
 
-function LandingScreen({ onStart }: { onStart: () => void }) {
+function LandingScreen({ onStart, language }: { onStart: () => void; language: 'en' | 'nl' }) {
+  const copy = language === 'nl'
+    ? {
+        title: 'Begeleide lessen',
+        intro: '배우기. Leer elk teken kennen en test jezelf daarna.',
+        artAlt: 'Een stapsgewijs Hangul-lespad met eenvoudige kaarten richting gevorderde tegels.',
+        promise: 'Zie het. Hoor het. Test het.',
+        body: 'Elk teken krijgt audio, voorbeelden en een quizvraag voordat je doorgaat.',
+        basic: 'Basistekens',
+        steps: 'Intro + quiz',
+        audio: 'Elke klank',
+        start: 'Start met leren →',
+        note: 'Geen account · duurt ongeveer 15 minuten',
+      }
+    : {
+        title: 'Guided Lessons',
+        intro: '배우기. Meet each character, then test it.',
+        artAlt: 'A step-by-step Hangul lesson path with simple cards leading into more advanced tiles.',
+        promise: 'See it. Hear it. Test it.',
+        body: 'Each character gets audio, examples, and one quiz question before you move on.',
+        basic: 'Basic characters',
+        steps: 'Intro + quiz',
+        audio: 'Every sound',
+        start: 'Start Learning →',
+        note: 'No account · takes about 15 minutes',
+      }
+
   return (
     <div className="max-w-lg mx-auto space-y-8 py-10">
       <div className="text-center">
-        <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Guided Lessons</h1>
-        <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>배우기. Meet each character, then test it.</p>
+        <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>{copy.title}</h1>
+        <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>{copy.intro}</p>
       </div>
       <PageArtwork
         src="/artwork/learn-path.jpg"
-        alt="A step-by-step Hangul lesson path with simple cards leading into more advanced tiles."
+        alt={copy.artAlt}
       />
 
       <div className="glass-card rounded-2xl p-8 space-y-5">
@@ -100,17 +126,17 @@ function LandingScreen({ onStart }: { onStart: () => void }) {
             ㄴ
           </div>
           <div className="space-y-1">
-            <p className="font-bold" style={{ color: 'var(--c-1)' }}>See it. Hear it. Test it.</p>
+            <p className="font-bold" style={{ color: 'var(--c-1)' }}>{copy.promise}</p>
             <p className="text-sm leading-relaxed" style={{ color: 'var(--c-3)' }}>
-              Each character gets audio, examples, and one quiz question before you move on.
+              {copy.body}
             </p>
           </div>
         </div>
         <div className="grid grid-cols-3 gap-3 text-center pt-1">
           {([
-            { stat: '24', sub: 'Basic characters' },
-            { stat: '2 steps', sub: 'Intro + quiz' },
-            { stat: 'Audio', sub: 'Every sound' },
+            { stat: '24', sub: copy.basic },
+            { stat: language === 'nl' ? '2 stappen' : '2 steps', sub: copy.steps },
+            { stat: 'Audio', sub: copy.audio },
           ] as const).map(({ stat, sub }) => (
             <div key={stat} className="rounded-xl p-3" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
               <p className="font-bold text-sm" style={{ color: 'var(--c-1)' }}>{stat}</p>
@@ -125,9 +151,9 @@ function LandingScreen({ onStart }: { onStart: () => void }) {
           onClick={onStart}
           className="btn-primary px-10 py-3.5 rounded-xl font-bold text-white cursor-pointer text-sm w-full max-w-xs"
         >
-          Start Learning →
+          {copy.start}
         </button>
-        <p className="text-xs" style={{ color: 'var(--c-4)' }}>No account · takes about 15 minutes</p>
+        <p className="text-xs" style={{ color: 'var(--c-4)' }}>{copy.note}</p>
       </div>
     </div>
   )
@@ -167,20 +193,20 @@ function IntroScreen({
       className="px-2 py-0.5 rounded-full text-xs font-bold"
       style={{ background: accent.bg, border: `1px solid ${accent.border}`, color: accent.text }}
     >
-      {isConsonant ? 'Consonant' : 'Vowel'}
+      {language === 'nl' ? (isConsonant ? 'Medeklinker' : 'Klinker') : (isConsonant ? 'Consonant' : 'Vowel')}
     </span>
   )
 
   return (
     <div className="max-w-lg mx-auto space-y-5">
-      <ProgressBar charIdx={charIdx} total={total} score={score} badge={badge} />
+      <ProgressBar charIdx={charIdx} total={total} score={score} badge={badge} language={language as 'en' | 'nl'} />
 
       <div
         className="glass-card rounded-2xl py-12 px-6 text-center relative"
         style={{ background: accent.bg, border: `1px solid ${accent.border}` }}
       >
         <p className="text-xs uppercase tracking-widest font-bold mb-5" style={{ color: accent.text }}>
-          New character
+          {language === 'nl' ? 'Nieuw teken' : 'New character'}
         </p>
         <div
           className="korean-serif font-black leading-none mb-4"
@@ -217,7 +243,7 @@ function IntroScreen({
             className="flex items-center gap-2 pt-2 flex-wrap"
             style={{ borderTop: '1px solid var(--c-border-sub)' }}
           >
-            <span className="text-xs font-bold uppercase tracking-wide" style={{ color: 'var(--c-4)' }}>Example</span>
+            <span className="text-xs font-bold uppercase tracking-wide" style={{ color: 'var(--c-4)' }}>{language === 'nl' ? 'Voorbeeld' : 'Example'}</span>
             <span className="korean-text font-bold" style={{ color: 'var(--c-1)' }}>{char.examples[0].korean}</span>
             <span className="text-xs font-mono" style={{ color: 'var(--c-3)' }}>{char.examples[0].romanized}</span>
             <span className="text-xs" style={{ color: 'var(--c-4)' }}>·</span>
@@ -231,7 +257,7 @@ function IntroScreen({
         onClick={onReady}
         className="btn-primary w-full py-3.5 rounded-xl font-bold text-white cursor-pointer text-sm"
       >
-        Test me! →
+        {language === 'nl' ? 'Test mij →' : 'Test me! →'}
       </button>
     </div>
   )
@@ -240,7 +266,7 @@ function IntroScreen({
 // ─── Quiz screen ─────────────────────────────────────────────────────
 
 function QuizScreen({
-  char, charIdx, total, score, onNext, hangulFirst,
+  char, charIdx, total, score, onNext, hangulFirst, language,
 }: {
   char: HangulCharacter
   charIdx: number
@@ -248,6 +274,7 @@ function QuizScreen({
   score: number
   onNext: (correct: boolean) => void
   hangulFirst: boolean
+  language: 'en' | 'nl'
 }) {
   const [selected, setSelected] = useState<string | null>(null)
   const [options] = useState(() => buildOptions(char))
@@ -264,17 +291,17 @@ function QuizScreen({
 
   const badge = (
     <span className="text-xs font-semibold" style={{ color: 'var(--c-3)' }}>
-      Quiz
+      {language === 'nl' ? 'Quiz' : 'Quiz'}
     </span>
   )
 
   return (
     <div className="max-w-lg mx-auto space-y-5">
-      <ProgressBar charIdx={charIdx} total={total} score={score} badge={badge} />
+      <ProgressBar charIdx={charIdx} total={total} score={score} badge={badge} language={language} />
 
       <div className="glass-card rounded-2xl py-12 px-6 text-center relative">
         <p className="text-xs text-zinc-600 uppercase tracking-widest mb-5 font-bold">
-          {hangulFirst ? '이름? Korean name' : 'Romanization?'}
+          {hangulFirst ? (language === 'nl' ? '이름? Koreaanse naam' : '이름? Korean name') : (language === 'nl' ? 'Romanisering?' : 'Romanization?')}
         </p>
         <div
           className="korean-serif font-black leading-none"
@@ -328,16 +355,16 @@ function QuizScreen({
             }
           >
             {isCorrect ? (
-              <p className="font-bold text-[var(--c-vowel-text)]">Correct! 정답이에요!</p>
+              <p className="font-bold text-[var(--c-vowel-text)]">{language === 'nl' ? 'Goed! 정답이에요!' : 'Correct! 정답이에요!'}</p>
             ) : (
               <div className="space-y-1">
                 <p className="font-bold text-red-400">
                   {hangulFirst
-                    ? <>It's <strong className="text-red-300 korean-text text-xl">{koreanName(char)}</strong></>
-                    : <>It's <strong className="text-red-300">{char.romanization}</strong></>
+                    ? <>{language === 'nl' ? 'Het is ' : "It's "}<strong className="text-red-300 korean-text text-xl">{koreanName(char)}</strong></>
+                    : <>{language === 'nl' ? 'Het is ' : "It's "}<strong className="text-red-300">{char.romanization}</strong></>
                   }
                 </p>
-                <p className="text-xs" style={{ color: 'var(--c-3)' }}>Tap the character above to hear it</p>
+                <p className="text-xs" style={{ color: 'var(--c-3)' }}>{language === 'nl' ? 'Tik op het teken hierboven om het te horen.' : 'Tap the character above to hear it'}</p>
               </div>
             )}
           </div>
@@ -345,7 +372,7 @@ function QuizScreen({
             onClick={() => onNext(isCorrect)}
             className="btn-primary w-full text-white py-3.5 rounded-xl font-bold cursor-pointer text-sm"
           >
-            {charIdx + 1 >= total ? 'See Results' : 'Next Character →'}
+            {charIdx + 1 >= total ? (language === 'nl' ? 'Bekijk resultaat' : 'See Results') : (language === 'nl' ? 'Volgend teken →' : 'Next Character →')}
           </button>
         </div>
       )}
@@ -356,16 +383,16 @@ function QuizScreen({
 // ─── Finished screen ─────────────────────────────────────────────────
 
 function FinishedScreen({
-  score, total, onRestart,
+  score, total, onRestart, language,
 }: {
-  score: number; total: number; onRestart: () => void
+  score: number; total: number; onRestart: () => void; language: 'en' | 'nl'
 }) {
   const pct = Math.round((score / total) * 100)
   const grade =
-    pct >= 90 ? { korean: '완벽해요!', msg: 'Strong basics. Keep them sharp.', color: '#6ee7b7' } :
-    pct >= 70 ? { korean: '잘했어요!', msg: 'Good score. Drill the misses.',    color: '#a78bfa' } :
-    pct >= 50 ? { korean: '계속해요!', msg: 'Close. Try once more.',             color: '#fcd34d' } :
-                { korean: '다시 해요', msg: 'Repeat the set and slow down.',     color: '#f87171' }
+    pct >= 90 ? { korean: '완벽해요!', msg: language === 'nl' ? 'Sterke basis. Houd die scherp.' : 'Strong basics. Keep them sharp.', color: '#6ee7b7' } :
+    pct >= 70 ? { korean: '잘했어요!', msg: language === 'nl' ? 'Goede score. Oefen de missers.' : 'Good score. Drill the misses.',    color: '#a78bfa' } :
+    pct >= 50 ? { korean: '계속해요!', msg: language === 'nl' ? 'Bijna. Probeer nog een keer.' : 'Close. Try once more.',             color: '#fcd34d' } :
+                { korean: '다시 해요', msg: language === 'nl' ? 'Herhaal de set en neem de tijd.' : 'Repeat the set and slow down.',     color: '#f87171' }
 
   return (
     <div className="max-w-sm mx-auto text-center space-y-6 py-10">
@@ -380,7 +407,7 @@ function FinishedScreen({
         <div className="text-6xl font-black" style={{ color: grade.color }}>
           {score}<span className="text-2xl text-zinc-600">/{total}</span>
         </div>
-        <div className="text-base" style={{ color: 'var(--c-2)' }}>{pct}% first-try correct</div>
+        <div className="text-base" style={{ color: 'var(--c-2)' }}>{pct}% {language === 'nl' ? 'goed bij eerste poging' : 'first-try correct'}</div>
         <div className="w-full rounded-full h-1.5" style={{ background: 'var(--c-border-card)' }}>
           <div
             className="h-1.5 rounded-full transition-all duration-700"
@@ -394,14 +421,14 @@ function FinishedScreen({
           onClick={onRestart}
           className="btn-primary text-white px-6 py-3 rounded-xl font-bold cursor-pointer text-sm"
         >
-          Try Again
+          {language === 'nl' ? 'Opnieuw' : 'Try Again'}
         </button>
         <Link
           to="/quiz"
           className="btn-ghost px-6 py-3 rounded-xl font-bold cursor-pointer text-sm"
           style={{ color: 'var(--c-1)' }}
         >
-          Take the Quiz
+          {language === 'nl' ? 'Doe de quiz' : 'Take the Quiz'}
         </Link>
       </div>
     </div>
@@ -430,7 +457,7 @@ function LearnPage() {
   if (!enabled) {
     return (
       <div className="text-center py-24 text-zinc-600">
-        <p className="text-base font-medium">This feature is not enabled.</p>
+        <p className="text-base font-medium">{language === 'nl' ? 'Deze functie is niet ingeschakeld.' : 'This feature is not enabled.'}</p>
       </div>
     )
   }
@@ -452,10 +479,10 @@ function LearnPage() {
     }
   }
 
-  if (phase === 'landing') return <LandingScreen onStart={handleStart} />
+  if (phase === 'landing') return <LandingScreen onStart={handleStart} language={language} />
 
   if (phase === 'finished') {
-    return <FinishedScreen score={score} total={LEARN_CHARS.length} onRestart={handleStart} />
+    return <FinishedScreen score={score} total={LEARN_CHARS.length} onRestart={handleStart} language={language} />
   }
 
   if (!char) return null
@@ -484,6 +511,7 @@ function LearnPage() {
       score={score}
       onNext={handleQuizNext}
       hangulFirst={hangulFirst}
+      language={language}
     />
   )
 }

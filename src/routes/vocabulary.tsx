@@ -7,6 +7,7 @@ import type { VocabEntry } from '../data/vocabulary'
 import { SpeakButton } from '../components/SpeakButton'
 import { SENTENCE_PATTERNS } from '../data/beginnerContent'
 import { PageArtwork } from '../components/PageArtwork'
+import { useLanguage } from '../contexts/LanguageContext'
 import { createSeoHead } from '../seo'
 
 export const Route = createFileRoute('/vocabulary')({
@@ -80,13 +81,39 @@ function VocabularyPage() {
   const enabled = useBooleanFlagValue(FLAGS.VOCABULARY, false)
   const sentencePatterns = useBooleanFlagValue(FLAGS.SENTENCE_PATTERNS, false)
   const conjugationEnabled = useBooleanFlagValue(FLAGS.VERB_CONJUGATION, false)
+  const { language } = useLanguage()
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
   const [showConjugated, setShowConjugated] = useState(false)
+  const copy = language === 'nl'
+    ? {
+        disabled: 'Deze functie is niet ingeschakeld.',
+        title: 'Woordenschat',
+        intro: '어휘 Eo-hwi. Reiszinnen, K-drama-regels, emoties en audio.',
+        artAlt: 'Gegroepeerde Koreaanse woordenschatkaarten met categoriesymbolen en Hangul-tegels.',
+        showPolite: 'Toon beleefde vormen (-요)',
+        patterns: 'Zinspatronen voor beginners',
+        all: 'Alles',
+        korean: 'Koreaans',
+        romanization: 'Romanisering',
+        meaning: 'Betekenis',
+      }
+    : {
+        disabled: 'This feature is not enabled.',
+        title: 'Vocabulary',
+        intro: '어휘 Eo-hwi. Tourist phrases, K-drama lines, emotions, and audio.',
+        artAlt: 'Grouped Korean vocabulary cards with small category symbols and Hangul tiles.',
+        showPolite: 'Show Polite Forms (-요)',
+        patterns: 'Beginner sentence patterns',
+        all: 'All',
+        korean: 'Korean',
+        romanization: 'Romanization',
+        meaning: 'Meaning',
+      }
 
   if (!enabled) {
     return (
       <div className="text-center py-24 text-zinc-600">
-        <p className="text-base font-medium">This feature is not enabled.</p>
+        <p className="text-base font-medium">{copy.disabled}</p>
       </div>
     )
   }
@@ -99,8 +126,8 @@ function VocabularyPage() {
     <div className="space-y-8 max-w-3xl mx-auto">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Vocabulary</h1>
-          <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>어휘 Eo-hwi. Tourist phrases, K-drama lines, emotions, and audio.</p>
+          <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>{copy.title}</h1>
+          <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>{copy.intro}</p>
         </div>
         {conjugationEnabled && (
           <button
@@ -113,18 +140,18 @@ function VocabularyPage() {
             }}
           >
             <div className={`w-3 h-3 rounded-full border-2 transition-all ${showConjugated ? 'bg-[var(--c-accent-text)]' : 'bg-transparent'}`} />
-            Show Polite Forms (-요)
+            {copy.showPolite}
           </button>
         )}
       </div>
       <PageArtwork
         src="/artwork/vocabulary.jpg"
-        alt="Grouped Korean vocabulary cards with small category symbols and Hangul tiles."
+        alt={copy.artAlt}
       />
 
       {sentencePatterns && (
         <section className="space-y-4">
-          <h2 className="text-sm font-bold" style={{ color: 'var(--c-1)' }}>Beginner sentence patterns</h2>
+          <h2 className="text-sm font-bold" style={{ color: 'var(--c-1)' }}>{copy.patterns}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {SENTENCE_PATTERNS.map((pattern) => (
               <div key={pattern.id} className="glass-card rounded-2xl p-5 space-y-2.5">
@@ -155,7 +182,7 @@ function VocabularyPage() {
             : { background: 'var(--c-surface)', color: 'var(--c-3)', border: '1px solid var(--c-border-card)' }
           }
         >
-          All
+          {copy.all}
         </button>
         {VOCAB_CATEGORIES.map((cat) => {
           const c = ACCENT_COLORS[cat.accent]
@@ -197,9 +224,9 @@ function VocabularyPage() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr style={{ borderBottom: '1px solid var(--c-border-sub)', background: 'var(--c-surface)' }}>
-                      <th className="text-left px-4 py-2.5 text-xs font-bold text-zinc-600 uppercase tracking-wide">Korean</th>
-                      <th className="text-left px-4 py-2.5 text-xs font-bold text-zinc-600 uppercase tracking-wide">Romanization</th>
-                      <th className="text-left px-4 py-2.5 text-xs font-bold text-zinc-600 uppercase tracking-wide">Meaning</th>
+                      <th className="text-left px-4 py-2.5 text-xs font-bold text-zinc-600 uppercase tracking-wide">{copy.korean}</th>
+                      <th className="text-left px-4 py-2.5 text-xs font-bold text-zinc-600 uppercase tracking-wide">{copy.romanization}</th>
+                      <th className="text-left px-4 py-2.5 text-xs font-bold text-zinc-600 uppercase tracking-wide">{copy.meaning}</th>
                     </tr>
                   </thead>
                   <tbody>

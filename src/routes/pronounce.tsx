@@ -7,6 +7,7 @@ import type { SyllableAnalysis, OtherChar } from '../utils/hangul'
 import { SpeakButton } from '../components/SpeakButton'
 import { useSpeech } from '../hooks/useSpeech'
 import { PageArtwork } from '../components/PageArtwork'
+import { useLanguage } from '../contexts/LanguageContext'
 import { createSeoHead } from '../seo'
 
 function buildIpaTranscription(analyzed: Array<SyllableAnalysis | OtherChar>): string {
@@ -46,12 +47,12 @@ export const Route = createFileRoute('/pronounce')({
 })
 
 const EXAMPLES = [
-  { label: '안녕하세요', text: '안녕하세요', meaning: 'Hello' },
-  { label: '감사합니다', text: '감사합니다', meaning: 'Thank you' },
-  { label: '한국어', text: '한국어', meaning: 'Korean' },
-  { label: '사랑해요', text: '사랑해요', meaning: 'I love you' },
-  { label: '학교', text: '학교', meaning: 'School' },
-  { label: '서울', text: '서울', meaning: 'Seoul' },
+  { label: '안녕하세요', text: '안녕하세요', meaning: { en: 'Hello', nl: 'Hallo' } },
+  { label: '감사합니다', text: '감사합니다', meaning: { en: 'Thank you', nl: 'Dank je wel' } },
+  { label: '한국어', text: '한국어', meaning: { en: 'Korean', nl: 'Koreaans' } },
+  { label: '사랑해요', text: '사랑해요', meaning: { en: 'I love you', nl: 'Ik hou van je' } },
+  { label: '학교', text: '학교', meaning: { en: 'School', nl: 'School' } },
+  { label: '서울', text: '서울', meaning: { en: 'Seoul', nl: 'Seoel' } },
 ]
 
 function SyllableCard({ item }: { item: SyllableAnalysis | OtherChar }) {
@@ -104,12 +105,50 @@ function SyllableCard({ item }: { item: SyllableAnalysis | OtherChar }) {
 }
 
 function PronouncePage() {
+  const { language } = useLanguage()
   const [input, setInput] = useState('')
   const [analyzed, setAnalyzed] = useState<Array<SyllableAnalysis | OtherChar>>([])
   const [copied, setCopied] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const { speak } = useSpeech()
   const ipaEnabled = useBooleanFlagValue(FLAGS.IPA_DISPLAY, false)
+  const copy = language === 'nl'
+    ? {
+        title: 'Uitspreken',
+        intro: '발음 Bal-eum. Voer Koreaanse tekst in en splits die per lettergreep.',
+        artAlt: 'Hangul-tegels met een abstracte uitspraakgolf en fonetische studiemarkeringen.',
+        placeholder: 'Typ hier Koreaans... bijvoorbeeld 안녕하세요',
+        clear: 'Wissen',
+        breakdown: 'Lettergrepen',
+        initial: 'begin',
+        vowel: 'klinker',
+        final: 'eind',
+        romanization: 'Romanisering',
+        copied: 'Gekopieerd',
+        copy: 'Kopieer',
+        ipa: 'IPA-transcriptie',
+        phonemic: 'fonemisch',
+        ipaNote: 'Canonieke waarden. Uitspraak verandert wanneer klanken elkaar over lettergreepgrenzen heen raken.',
+        empty: 'Typ hierboven Koreaans of kies een voorbeeldwoord.',
+      }
+    : {
+        title: 'Pronounce',
+        intro: '발음 Bal-eum. Enter Korean text and split it by syllable.',
+        artAlt: 'Hangul tiles with abstract pronunciation waveform and phonetic study marks.',
+        placeholder: 'Type Korean here... e.g. 안녕하세요',
+        clear: 'Clear',
+        breakdown: 'Syllable Breakdown',
+        initial: 'initial',
+        vowel: 'vowel',
+        final: 'final',
+        romanization: 'Romanization',
+        copied: 'Copied!',
+        copy: 'Copy',
+        ipa: 'IPA Transcription',
+        phonemic: 'phonemic',
+        ipaNote: 'Canonical values. Pronunciation changes when sounds meet across syllable boundaries.',
+        empty: 'Type Korean above or pick an example word',
+      }
 
   const handleAnalyze = (text: string) => {
     const trimmed = text.trim()
@@ -168,12 +207,12 @@ function PronouncePage() {
   return (
     <div className="space-y-8 max-w-3xl mx-auto">
       <div>
-        <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Pronounce</h1>
-        <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>발음 Bal-eum. Enter Korean text and split it by syllable.</p>
+        <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>{copy.title}</h1>
+        <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>{copy.intro}</p>
       </div>
       <PageArtwork
         src="/artwork/ipa-guide.jpg"
-        alt="Hangul tiles with abstract pronunciation waveform and phonetic study marks."
+        alt={copy.artAlt}
       />
 
       {/* Input */}
@@ -184,7 +223,7 @@ function PronouncePage() {
             type="text"
             value={input}
             onChange={(e) => { setInput(e.target.value); handleAnalyze(e.target.value) }}
-            placeholder="Type Korean here… e.g. 안녕하세요"
+            placeholder={copy.placeholder}
             className="flex-1 input-field rounded-xl px-4 py-3 text-lg korean-text"
           />
           {input && (
@@ -192,7 +231,7 @@ function PronouncePage() {
               onClick={() => { setInput(''); setAnalyzed([]); inputRef.current?.focus() }}
               className="px-4 py-3 rounded-xl text-zinc-500 hover:text-zinc-200 transition-colors cursor-pointer"
               style={{ background: 'var(--c-input)', border: '1px solid var(--c-border)' }}
-              title="Clear"
+              title={copy.clear}
             >
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                 <line x1="2" y1="2" x2="12" y2="12" /><line x1="12" y1="2" x2="2" y2="12" />
@@ -213,7 +252,7 @@ function PronouncePage() {
               onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--c-border)'; e.currentTarget.style.color = 'var(--c-2)' }}
             >
               <span className="korean-text font-semibold">{ex.label}</span>
-              <span className="text-zinc-600 text-xs ml-1.5">{ex.meaning}</span>
+              <span className="text-zinc-600 text-xs ml-1.5">{ex.meaning[language]}</span>
             </button>
           ))}
         </div>
@@ -224,7 +263,7 @@ function PronouncePage() {
         <div className="space-y-6">
           <div>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xs font-bold text-zinc-600 uppercase tracking-widest">Syllable Breakdown</h2>
+              <h2 className="text-xs font-bold text-zinc-600 uppercase tracking-widest">{copy.breakdown}</h2>
               <SpeakButton text={input.trim()} size="md" />
             </div>
             <div className="flex flex-wrap gap-3 items-start">
@@ -234,15 +273,15 @@ function PronouncePage() {
 
           {/* Legend */}
           <div className="flex flex-wrap gap-5 text-xs pt-4" style={{ borderTop: '1px solid var(--c-border-sub)' }}>
-            <span className="flex items-center gap-1.5" style={{ color: 'var(--c-3)' }}><span className="w-2 h-2 rounded-full inline-block" style={{ background: 'var(--c-initial)' }} />초성 initial</span>
-            <span className="flex items-center gap-1.5" style={{ color: 'var(--c-3)' }}><span className="w-2 h-2 rounded-full inline-block" style={{ background: 'var(--c-vowel)' }} />중성 vowel</span>
-            <span className="flex items-center gap-1.5" style={{ color: 'var(--c-3)' }}><span className="w-2 h-2 rounded-full inline-block" style={{ background: 'var(--c-final)' }} />종성 final</span>
+            <span className="flex items-center gap-1.5" style={{ color: 'var(--c-3)' }}><span className="w-2 h-2 rounded-full inline-block" style={{ background: 'var(--c-initial)' }} />초성 {copy.initial}</span>
+            <span className="flex items-center gap-1.5" style={{ color: 'var(--c-3)' }}><span className="w-2 h-2 rounded-full inline-block" style={{ background: 'var(--c-vowel)' }} />중성 {copy.vowel}</span>
+            <span className="flex items-center gap-1.5" style={{ color: 'var(--c-3)' }}><span className="w-2 h-2 rounded-full inline-block" style={{ background: 'var(--c-final)' }} />종성 {copy.final}</span>
           </div>
 
           {/* Romanization */}
           <div className="glass-card rounded-xl p-4">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-bold text-zinc-600 uppercase tracking-widest">Romanization</span>
+              <span className="text-xs font-bold text-zinc-600 uppercase tracking-widest">{copy.romanization}</span>
               <div className="flex items-center gap-2">
                 <SpeakButton text={input.trim()} size="sm" />
                 <button
@@ -250,7 +289,7 @@ function PronouncePage() {
                   className="text-xs transition-colors px-2 py-1 rounded-md cursor-pointer"
                   style={{ color: copied ? 'var(--c-accent-text)' : 'var(--c-3)', background: copied ? 'var(--c-accent-muted)' : undefined }}
                 >
-                  {copied ? 'Copied!' : 'Copy'}
+                  {copied ? copy.copied : copy.copy}
                 </button>
               </div>
             </div>
@@ -261,12 +300,12 @@ function PronouncePage() {
           {ipaEnabled && ipaTranscription && (
             <div className="glass-card rounded-xl p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-bold text-zinc-600 uppercase tracking-widest">IPA Transcription</span>
-                <span className="text-xs" style={{ color: 'var(--c-4)' }}>phonemic</span>
+                <span className="text-xs font-bold text-zinc-600 uppercase tracking-widest">{copy.ipa}</span>
+                <span className="text-xs" style={{ color: 'var(--c-4)' }}>{copy.phonemic}</span>
               </div>
               <p className="text-xl font-mono tracking-wide" style={{ color: 'var(--c-1)' }}>/{ipaTranscription}/</p>
               <p className="text-xs mt-2" style={{ color: 'var(--c-4)' }}>
-                Canonical values. Pronunciation changes when sounds meet across syllable boundaries.
+                {copy.ipaNote}
               </p>
             </div>
           )}
@@ -277,7 +316,7 @@ function PronouncePage() {
       {!hasSyllables && !input && (
         <div className="text-center py-20">
           <div className="text-7xl korean-text font-black mb-4" style={{ color: 'var(--c-ambient)', textShadow: '0 0 40px rgba(139,92,246,0.15)' }}>한글</div>
-          <p className="text-sm text-zinc-600">Type Korean above or pick an example word</p>
+          <p className="text-sm text-zinc-600">{copy.empty}</p>
         </div>
       )}
     </div>

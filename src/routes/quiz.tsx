@@ -96,7 +96,7 @@ function TipToggle({ char, language }: { char: HangulCharacter; language: string
         >
           <polyline points="2,4 6,8 10,4" />
         </svg>
-        {open ? 'Hide tip' : 'Memory tip'}
+        {language === 'nl' ? (open ? 'Verberg tip' : 'Geheugentip') : (open ? 'Hide tip' : 'Memory tip')}
       </button>
       {open && (
         <div className="mt-2 space-y-1 text-xs" style={{ color: 'var(--c-3)' }}>
@@ -175,6 +175,115 @@ function QuizPage() {
   const [activePool, setActivePool]       = useState<HangulCharacter[] | null>(null)
 
   const { language } = useLanguage()
+  const copy = language === 'nl'
+    ? {
+        title: 'Quiz',
+        intro: '연습 Yeon-seup. Kies wat je wilt oefenen.',
+        reset: 'Voortgang wissen',
+        artAlt: 'Hangul-quizkaarten met een geselecteerde gouden checkmarkering.',
+        srs: 'Spaced repetition staat aan.',
+        srsBody: 'Gemiste tekens komen vaker terug.',
+        characterRecognition: 'Tekenherkenning',
+        consonants: 'Medeklinkers',
+        vowels: 'Klinkers',
+        all: 'Alles',
+        characters19: '19 tekens',
+        characters21: '21 tekens',
+        characters40: '40 tekens',
+        moreModes: 'Meer modi',
+        audioContrast: 'Audiocontrast',
+        audioContrastCount: 'ㄱ/ㅋ/ㄲ enz. Kies de klank die je hoort',
+        listen: 'Luisteren',
+        listenCount: 'Hoor een klank en kies het teken',
+        vocabulary: 'Woordenschat',
+        vocabularyCount: 'Koreaans woord → Nederlandse betekenis',
+        mixed: 'Gemengd',
+        mixedCount: 'Tekens en woordenschat door elkaar',
+        instructions: `Elke quiz heeft ${QUIZ_LENGTH} vragen.`,
+        hangulFirstHelp: 'Tekenmodi: zie een teken en kies de Koreaanse naam (기역, 니은...). Luisteren: hoor de klank en kies het teken. Woordenschat: zie een woord en kies de betekenis.',
+        romanHelp: 'Tekenmodi: zie een teken en kies de romanisering. Luisteren: hoor de klank en kies het teken. Woordenschat: zie een woord en kies de betekenis.',
+        outstanding: 'Uitstekend',
+        great: 'Goed gedaan',
+        keepGoing: 'Blijf oefenen',
+        tryAgainMsg: 'Probeer opnieuw',
+        correctPct: 'goed',
+        missed: 'gemist',
+        tryAgain: 'Opnieuw',
+        retry: 'Oefen',
+        wrong: 'foute',
+        changeMode: 'Andere modus',
+        question: 'Vraag',
+        of: 'van',
+        score: 'Score',
+        whatMean: 'Wat betekent dit?',
+        correct: 'Goed! 정답이에요!',
+        itMeans: 'Het betekent',
+        seeResults: 'Bekijk resultaat',
+        nextQuestion: 'Volgende vraag →',
+        whichCharacter: 'Welk teken is dit?',
+        playSound: 'Speel klank af',
+        replay: 'Tik om opnieuw af te spelen',
+        koreanName: '이름? Koreaanse naam',
+        romanization: 'Romanisering?',
+        thatIs: 'Dat is',
+        called: 'Het heet',
+        answerIs: 'Het antwoord is',
+        whyHard: 'Waarom dit lastig is:',
+      }
+    : {
+        title: 'Quiz',
+        intro: '연습 Yeon-seup. Choose what to practice.',
+        reset: 'Reset progress',
+        artAlt: 'Hangul quiz answer cards with a selected gold check token.',
+        srs: 'Spaced repetition on.',
+        srsBody: 'Missed characters return more often.',
+        characterRecognition: 'Character Recognition',
+        consonants: 'Consonants',
+        vowels: 'Vowels',
+        all: 'All',
+        characters19: '19 characters',
+        characters21: '21 characters',
+        characters40: '40 characters',
+        moreModes: 'More Modes',
+        audioContrast: 'Audio Contrast',
+        audioContrastCount: 'ㄱ/ㅋ/ㄲ etc. Pick the sound you hear',
+        listen: 'Listen',
+        listenCount: 'Hear a sound → pick the character',
+        vocabulary: 'Vocabulary',
+        vocabularyCount: 'Korean word → English meaning',
+        mixed: 'Mixed',
+        mixedCount: 'Characters + vocabulary interleaved',
+        instructions: `Each quiz is ${QUIZ_LENGTH} questions.`,
+        hangulFirstHelp: 'Character modes: see a character, pick its Korean name (기역, 니은...). Listen: hear it, pick the character. Vocabulary: see a word, pick the meaning.',
+        romanHelp: 'Character modes: see a character, pick the romanization. Listen: hear it, pick the character. Vocabulary: see a word, pick the meaning.',
+        outstanding: 'Outstanding',
+        great: 'Great job',
+        keepGoing: 'Keep going',
+        tryAgainMsg: 'Try again',
+        correctPct: 'correct',
+        missed: 'missed',
+        tryAgain: 'Try Again',
+        retry: 'Retry',
+        wrong: 'wrong',
+        changeMode: 'Change Mode',
+        question: 'Question',
+        of: 'of',
+        score: 'Score',
+        whatMean: 'What does this mean?',
+        correct: 'Correct! 정답이에요!',
+        itMeans: 'It means',
+        seeResults: 'See Results',
+        nextQuestion: 'Next Question →',
+        whichCharacter: 'Which character is this?',
+        playSound: 'Play sound',
+        replay: 'Tap to replay',
+        koreanName: '이름? Korean name',
+        romanization: 'Romanization?',
+        thatIs: 'That is',
+        called: "It's called",
+        answerIs: 'The answer is',
+        whyHard: 'Why this is hard:',
+      }
 
   useEffect(() => {
     if (finished && mode) {
@@ -281,21 +390,21 @@ function QuizPage() {
         <div className="flex flex-col gap-4">
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
             <div>
-              <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Quiz</h1>
-              <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>연습 Yeon-seup. Choose what to practice.</p>
+              <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>{copy.title}</h1>
+              <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>{copy.intro}</p>
             </div>
             {srEnabled && (
               <button
                 onClick={resetSRS}
                 className="text-xs text-zinc-600 hover:text-red-400 transition-colors cursor-pointer sm:mt-2 sm:ml-auto"
               >
-                Reset progress
+                {copy.reset}
               </button>
             )}
           </div>
           <PageArtwork
             src="/artwork/quiz.jpg"
-            alt="Hangul quiz answer cards with a selected gold check token."
+            alt={copy.artAlt}
           />
         </div>
 
@@ -308,29 +417,29 @@ function QuizPage() {
               <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z" />
               <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z" />
             </svg>
-            <span><strong>Spaced repetition on.</strong> Missed characters return more often.</span>
+            <span><strong>{copy.srs}</strong> {copy.srsBody}</span>
           </div>
         )}
 
         <div>
-          <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--c-3)' }}>Character Recognition</p>
+          <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--c-3)' }}>{copy.characterRecognition}</p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <ModeCard mode="consonants" label="Consonants" subLabel="자음" count="19 characters" char="ㄱㄴㄷ" onStart={startQuiz} />
-            <ModeCard mode="vowels"     label="Vowels"     subLabel="모음" count="21 characters" char="ㅏㅓㅗ" onStart={startQuiz} />
-            <ModeCard mode="all"        label="All"        subLabel="전체" count="40 characters" char="한글"   onStart={startQuiz} />
+            <ModeCard mode="consonants" label={copy.consonants} subLabel="자음" count={copy.characters19} char="ㄱㄴㄷ" onStart={startQuiz} />
+            <ModeCard mode="vowels"     label={copy.vowels}     subLabel="모음" count={copy.characters21} char="ㅏㅓㅗ" onStart={startQuiz} />
+            <ModeCard mode="all"        label={copy.all}        subLabel="전체" count={copy.characters40} char="한글"   onStart={startQuiz} />
           </div>
         </div>
 
         {(listenEnabled || wordEnabled || mixedEnabled || contrastEnabled) && (
           <div>
-            <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--c-3)' }}>More Modes</p>
+            <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--c-3)' }}>{copy.moreModes}</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {contrastEnabled && (
                 <ModeCard
                   mode="audio-contrast"
-                  label="Audio Contrast"
+                  label={copy.audioContrast}
                   subLabel="변별 Byeon-byeol"
-                  count="ㄱ/ㅋ/ㄲ etc. Pick the sound you hear"
+                  count={copy.audioContrastCount}
                   accent="amber"
                   char="ㄱ vs ㅋ"
                   onStart={startQuiz}
@@ -339,9 +448,9 @@ function QuizPage() {
               {listenEnabled && (
                 <ModeCard
                   mode="listen"
-                  label="Listen"
+                  label={copy.listen}
                   subLabel="듣기 Deut-gi"
-                  count="Hear a sound → pick the character"
+                  count={copy.listenCount}
                   accent="emerald"
                   char={
                     <svg className="w-10 h-10 mx-auto" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -355,9 +464,9 @@ function QuizPage() {
               {wordEnabled && (
                 <ModeCard
                   mode="words"
-                  label="Vocabulary"
+                  label={copy.vocabulary}
                   subLabel="어휘 Eo-hwi"
-                  count="Korean word → English meaning"
+                  count={copy.vocabularyCount}
                   accent="amber"
                   char="가방→bag"
                   onStart={startQuiz}
@@ -366,9 +475,9 @@ function QuizPage() {
               {mixedEnabled && (
                 <ModeCard
                   mode="mixed"
-                  label="Mixed"
+                  label={copy.mixed}
                   subLabel="혼합 Honhap"
-                  count="Characters + vocabulary interleaved"
+                  count={copy.mixedCount}
                   char="가→ㄱ"
                   onStart={startQuiz}
                 />
@@ -378,11 +487,8 @@ function QuizPage() {
         )}
 
         <div className="rounded-xl px-4 py-3 text-sm" style={{ color: 'var(--c-2)', background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
-          Each quiz is <strong style={{ color: 'var(--c-1)' }}>{QUIZ_LENGTH} questions</strong>.{' '}
-          {hangulFirst
-            ? 'Character modes: see a character, pick its Korean name (기역, 니은…). Listen: hear it, pick the character. Vocabulary: see a word, pick the meaning.'
-            : 'Character modes: see a character, pick the romanization. Listen: hear it, pick the character. Vocabulary: see a word, pick the meaning.'
-          }
+          <strong style={{ color: 'var(--c-1)' }}>{copy.instructions}</strong>{' '}
+          {hangulFirst ? copy.hangulFirstHelp : copy.romanHelp}
         </div>
 
         {pronunciationModel && <PronunciationModel compact />}
@@ -394,10 +500,10 @@ function QuizPage() {
   if (finished) {
     const pct = Math.round((score / QUIZ_LENGTH) * 100)
     const grade =
-      pct >= 90 ? { korean: '완벽해요!', msg: 'Outstanding', color: '#6ee7b7' } :
-      pct >= 70 ? { korean: '잘했어요!', msg: 'Great job',   color: '#a78bfa' } :
-      pct >= 50 ? { korean: '계속해요!', msg: 'Keep going',  color: '#fcd34d' } :
-                  { korean: '다시 해요', msg: 'Try again',   color: '#f87171' }
+      pct >= 90 ? { korean: '완벽해요!', msg: copy.outstanding, color: '#6ee7b7' } :
+      pct >= 70 ? { korean: '잘했어요!', msg: copy.great,       color: '#a78bfa' } :
+      pct >= 50 ? { korean: '계속해요!', msg: copy.keepGoing,   color: '#fcd34d' } :
+                  { korean: '다시 해요', msg: copy.tryAgainMsg, color: '#f87171' }
 
     const hasWrong = retryWrongEnabled && wrongChars.length > 0
 
@@ -411,14 +517,14 @@ function QuizPage() {
           <div className="text-6xl font-black" style={{ color: grade.color }}>
             {score}<span className="text-2xl text-zinc-600">/{QUIZ_LENGTH}</span>
           </div>
-          <div className="text-base" style={{ color: 'var(--c-2)' }}>{pct}% correct</div>
+          <div className="text-base" style={{ color: 'var(--c-2)' }}>{pct}% {copy.correctPct}</div>
           <div className="w-full rounded-full h-1.5" style={{ background: 'var(--c-border-card)' }}>
             <div className="h-1.5 rounded-full transition-all duration-700"
               style={{ width: `${pct}%`, background: grade.color }} />
           </div>
           {hasWrong && (
             <p className="text-xs" style={{ color: 'var(--c-3)' }}>
-              {wrongChars.length} character{wrongChars.length > 1 ? 's' : ''} missed:{' '}
+              {wrongChars.length} {language === 'nl' ? 'teken' : 'character'}{language === 'en' && wrongChars.length > 1 ? 's' : ''} {copy.missed}:{' '}
               <span className="korean-text font-bold" style={{ color: 'var(--c-1)' }}>
                 {wrongChars.map(c => c.char).join(' ')}
               </span>
@@ -427,7 +533,7 @@ function QuizPage() {
         </div>
         <div className="flex gap-3 justify-center flex-wrap">
           <button onClick={() => startQuiz(mode)} className="btn-primary text-white px-6 py-3 rounded-xl font-bold cursor-pointer text-sm">
-            Try Again
+            {copy.tryAgain}
           </button>
           {hasWrong && (
             <button
@@ -435,11 +541,11 @@ function QuizPage() {
               className="px-6 py-3 rounded-xl font-bold cursor-pointer text-sm"
               style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#fca5a5' }}
             >
-              Retry {wrongChars.length} wrong →
+              {copy.retry} {wrongChars.length} {copy.wrong} →
             </button>
           )}
           <button onClick={() => setMode(null)} className="btn-ghost px-6 py-3 rounded-xl font-bold cursor-pointer text-sm" style={{ color: 'var(--c-1)' }}>
-            Change Mode
+            {copy.changeMode}
           </button>
         </div>
       </div>
@@ -455,8 +561,8 @@ function QuizPage() {
       <div className="max-w-lg mx-auto space-y-5">
         <div className="space-y-2">
           <div className="flex justify-between text-xs" style={{ color: 'var(--c-3)' }}>
-            <span>Question {questionNumber} of {QUIZ_LENGTH}</span>
-            <span className="font-semibold" style={{ color: 'var(--c-2)' }}>Score: {score}</span>
+            <span>{copy.question} {questionNumber} {copy.of} {QUIZ_LENGTH}</span>
+            <span className="font-semibold" style={{ color: 'var(--c-2)' }}>{copy.score}: {score}</span>
           </div>
           <div className="rounded-full h-1" style={{ background: 'var(--c-border-card)' }}>
             <div className="h-1 rounded-full transition-all duration-300"
@@ -465,7 +571,7 @@ function QuizPage() {
         </div>
 
         <div className="glass-card rounded-2xl py-12 px-6 text-center relative">
-          <p className="text-xs text-zinc-600 uppercase tracking-widest mb-5 font-bold">What does this mean?</p>
+          <p className="text-xs text-zinc-600 uppercase tracking-widest mb-5 font-bold">{copy.whatMean}</p>
           <div className="korean-serif font-black leading-none" style={{ fontSize: 'clamp(3rem, 12vw, 5.5rem)', color: 'var(--c-1)' }}>
             {wordQuestion.correct.korean}
           </div>
@@ -510,18 +616,18 @@ function QuizPage() {
                 : { background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)' }
             }>
               {isCorrect ? (
-                <p className="font-bold text-[var(--c-vowel-text)]">Correct! 정답이에요!</p>
+                <p className="font-bold text-[var(--c-vowel-text)]">{copy.correct}</p>
               ) : (
                 <div className="flex items-center justify-center gap-2 flex-wrap">
                   <p className="font-bold text-red-400">
-                    It means <strong className="text-red-300">{wordQuestion.correct.meaning}</strong>
+                    {copy.itMeans} <strong className="text-red-300">{wordQuestion.correct.meaning}</strong>
                   </p>
                   <SpeakButton text={wordQuestion.correct.korean} size="sm" className="text-red-500 hover:text-red-300" />
                 </div>
               )}
             </div>
             <button onClick={handleNext} className="btn-primary w-full text-white py-3.5 rounded-xl font-bold cursor-pointer text-sm">
-              {questionNumber >= QUIZ_LENGTH ? 'See Results' : 'Next Question →'}
+              {questionNumber >= QUIZ_LENGTH ? copy.seeResults : copy.nextQuestion}
             </button>
           </div>
         )}
@@ -542,12 +648,12 @@ function QuizPage() {
     <div className="max-w-lg mx-auto space-y-5">
       <div className="space-y-2">
         <div className="flex justify-between text-xs" style={{ color: 'var(--c-3)' }}>
-          <span>Question {questionNumber} of {QUIZ_LENGTH}</span>
+          <span>{copy.question} {questionNumber} {copy.of} {QUIZ_LENGTH}</span>
           <div className="flex items-center gap-3">
             {stats && (stats.correct + stats.incorrect) > 0 && (
               <span className="text-zinc-600">{stats.correct}✓ {stats.incorrect}✗</span>
             )}
-            <span className="font-semibold" style={{ color: 'var(--c-2)' }}>Score: {score}</span>
+            <span className="font-semibold" style={{ color: 'var(--c-2)' }}>{copy.score}: {score}</span>
           </div>
         </div>
         <div className="rounded-full h-1" style={{ background: 'var(--c-border-card)' }}>
@@ -559,7 +665,7 @@ function QuizPage() {
       <div className="glass-card rounded-2xl py-12 px-6 text-center relative">
         {isListen ? (
           <>
-            <p className="text-xs text-zinc-600 uppercase tracking-widest mb-6 font-bold">Which character is this?</p>
+            <p className="text-xs text-zinc-600 uppercase tracking-widest mb-6 font-bold">{copy.whichCharacter}</p>
             <div className="flex flex-col items-center gap-4">
               <button
                 onClick={() => speak(question.correct.char)}
@@ -567,20 +673,20 @@ function QuizPage() {
                 style={{ background: 'var(--c-accent-muted)', border: '2px solid var(--c-accent-border)' }}
                 onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(200,67,43,0.18)')}
                 onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--c-accent-muted)')}
-                aria-label="Play sound"
+                aria-label={copy.playSound}
               >
                 <svg className="w-10 h-10" style={{ color: 'var(--c-accent-text)' }} viewBox="0 0 24 24" fill="currentColor">
                   <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 001.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06zM18.584 5.106a.75.75 0 011.06 0c3.808 3.807 3.808 9.98 0 13.788a.75.75 0 01-1.06-1.06 8.25 8.25 0 000-11.668.75.75 0 010-1.06z" />
                   <path d="M15.932 7.757a.75.75 0 011.061 0 6 6 0 010 8.486.75.75 0 01-1.06-1.061 4.5 4.5 0 000-6.364.75.75 0 010-1.06z" />
                 </svg>
               </button>
-              <p className="text-xs text-zinc-600">Tap to replay</p>
+              <p className="text-xs text-zinc-600">{copy.replay}</p>
             </div>
           </>
         ) : (
           <>
             <p className="text-xs text-zinc-600 uppercase tracking-widest mb-5 font-bold">
-            {hangulFirst ? '이름? Korean name' : 'Romanization?'}
+            {hangulFirst ? copy.koreanName : copy.romanization}
           </p>
             <div className="korean-serif font-black leading-none" style={{ fontSize: 'clamp(5rem, 18vw, 9rem)', color: 'var(--c-1)' }}>
               {question.correct.char}
@@ -635,7 +741,7 @@ function QuizPage() {
           }>
             {isCorrect ? (
               <div className="text-center">
-                <p className="font-bold text-[var(--c-vowel-text)]">Correct! 정답이에요!</p>
+                <p className="font-bold text-[var(--c-vowel-text)]">{copy.correct}</p>
                 {/* Feature 5: memory tip on correct answers */}
                 {correctTipEnabled && !isListen && (
                   <TipToggle char={question.correct} language={language} />
@@ -646,10 +752,10 @@ function QuizPage() {
                 <div className="flex items-center justify-center gap-2 flex-wrap">
                   <p className="font-bold text-red-400">
                     {isListen
-                      ? <>That is <strong className="text-red-300 korean-text text-xl">{question.correct.char}</strong> ({question.correct.romanization})</>
+                      ? <>{copy.thatIs} <strong className="text-red-300 korean-text text-xl">{question.correct.char}</strong> ({question.correct.romanization})</>
                       : hangulFirst
-                      ? <>It's called <strong className="text-red-300 korean-text text-xl">{koreanName(question.correct)}</strong></>
-                      : <>The answer is <strong className="text-red-300">{question.correct.romanization}</strong></>
+                      ? <>{copy.called} <strong className="text-red-300 korean-text text-xl">{koreanName(question.correct)}</strong></>
+                      : <>{copy.answerIs} <strong className="text-red-300">{question.correct.romanization}</strong></>
                     }
                   </p>
                   <SpeakButton text={question.correct.char} size="sm" className="text-red-500 hover:text-red-300" />
@@ -660,11 +766,11 @@ function QuizPage() {
           </div>
           {wrongHint && (
             <div className="rounded-xl p-4 text-sm text-center" style={{ background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.24)', color: 'var(--c-2)' }}>
-              <strong style={{ color: '#fcd34d' }}>Why this is hard:</strong> {wrongHint}
+              <strong style={{ color: '#fcd34d' }}>{copy.whyHard}</strong> {wrongHint}
             </div>
           )}
           <button onClick={handleNext} className="btn-primary w-full text-white py-3.5 rounded-xl font-bold cursor-pointer text-sm">
-            {questionNumber >= QUIZ_LENGTH ? 'See Results' : 'Next Question →'}
+            {questionNumber >= QUIZ_LENGTH ? copy.seeResults : copy.nextQuestion}
           </button>
         </div>
       )}

@@ -5,6 +5,7 @@ import { CONTRAST_DRILLS } from '../data/beginnerContent'
 import { SpeakButton } from '../components/SpeakButton'
 import { PronunciationModel } from '../components/PronunciationModel'
 import { PageArtwork } from '../components/PageArtwork'
+import { useLanguage } from '../contexts/LanguageContext'
 import { createSeoHead } from '../seo'
 
 export const Route = createFileRoute('/contrast-drills')({
@@ -25,20 +26,36 @@ export const Route = createFileRoute('/contrast-drills')({
 function ContrastDrillsPage() {
   const enabled = useBooleanFlagValue(FLAGS.CONTRAST_DRILLS, false)
   const pronunciationModel = useBooleanFlagValue(FLAGS.PRONUNCIATION_MODEL, false)
+  const { language } = useLanguage()
+  const copy = language === 'nl'
+    ? {
+        disabled: 'Deze functie is niet ingeschakeld.',
+        title: 'Contrastdrills',
+        intro: '변별 연습. Train de klanken die beginners het vaakst verwarren.',
+        artAlt: 'Gepaarde Hangul-lettertegels naast elkaar voor uitspraakcontrast.',
+        listenFor: 'Luister naar:',
+      }
+    : {
+        disabled: 'This feature is not enabled.',
+        title: 'Contrast Drills',
+        intro: '변별 연습. Train the sounds beginners confuse most.',
+        artAlt: 'Paired Hangul letter tiles set side by side for pronunciation contrast practice.',
+        listenFor: 'Listen for:',
+      }
 
   if (!enabled) {
-    return <div className="text-center py-24 text-zinc-600"><p className="text-base font-medium">This feature is not enabled.</p></div>
+    return <div className="text-center py-24 text-zinc-600"><p className="text-base font-medium">{copy.disabled}</p></div>
   }
 
   return (
     <div className="space-y-8 max-w-3xl mx-auto">
       <div>
-        <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Contrast Drills</h1>
-        <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>변별 연습. Train the sounds beginners confuse most.</p>
+        <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>{copy.title}</h1>
+        <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>{copy.intro}</p>
       </div>
       <PageArtwork
         src="/artwork/contrast-drills.jpg"
-        alt="Paired Hangul letter tiles set side by side for pronunciation contrast practice."
+        alt={copy.artAlt}
       />
 
       {pronunciationModel && <PronunciationModel compact />}
@@ -47,8 +64,8 @@ function ContrastDrillsPage() {
         <section key={drill.id} className="glass-card rounded-2xl p-6 space-y-4">
           <div>
             <h2 className="text-lg font-bold" style={{ color: 'var(--c-1)' }}>{drill.title}</h2>
-            <p className="text-sm mt-1" style={{ color: 'var(--c-2)' }}>{drill.whyItMatters}</p>
-            <p className="text-xs mt-2" style={{ color: 'var(--c-3)' }}><strong style={{ color: 'var(--c-2)' }}>Listen for:</strong> {drill.listenFor}</p>
+            <p className="text-sm mt-1" style={{ color: 'var(--c-2)' }}>{language === 'nl' ? drill.whyItMattersNl : drill.whyItMatters}</p>
+            <p className="text-xs mt-2" style={{ color: 'var(--c-3)' }}><strong style={{ color: 'var(--c-2)' }}>{copy.listenFor}</strong> {language === 'nl' ? drill.listenForNl : drill.listenFor}</p>
           </div>
           <div className={`grid gap-3 ${drill.items.length > 2 ? 'sm:grid-cols-3' : 'sm:grid-cols-2'}`}>
             {drill.items.map((item) => (
@@ -58,8 +75,8 @@ function ContrastDrillsPage() {
                   <SpeakButton text={item.korean} size="sm" />
                 </div>
                 <p className="text-sm font-mono font-bold mt-2" style={{ color: 'var(--c-accent-text)' }}>{item.romanized}</p>
-                <p className="text-sm mt-1" style={{ color: 'var(--c-2)' }}>{item.meaning}</p>
-                <p className="text-xs mt-2" style={{ color: 'var(--c-3)' }}>{item.focus}</p>
+                <p className="text-sm mt-1" style={{ color: 'var(--c-2)' }}>{language === 'nl' ? item.meaningNl : item.meaning}</p>
+                <p className="text-xs mt-2" style={{ color: 'var(--c-3)' }}>{language === 'nl' ? item.focusNl : item.focus}</p>
               </div>
             ))}
           </div>

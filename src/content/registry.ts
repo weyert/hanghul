@@ -139,6 +139,11 @@ export function getContentPage(
   if (!locales) throw new Error(`Unknown content slug: "${slug}"`)
 
   if (locales[locale]) return { module: locales[locale]!, fallback: false }
+  const primary = locales.en ?? locales.nl
+  const exclusiveToLocale = primary?.frontmatter.exclusiveToLocale
+  if (exclusiveToLocale && exclusiveToLocale !== locale) {
+    throw new Error(`No content found for "${slug}" in locale "${locale}"`)
+  }
   if (locale !== 'en' && locales.en) return { module: locales.en, fallback: true }
 
   throw new Error(`No content found for "${slug}" in any locale`)

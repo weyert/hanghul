@@ -7,6 +7,7 @@ import type { HangulCharacter } from '../data/hangul'
 import { SpeakButton } from '../components/SpeakButton'
 import { useAnalytics } from '../hooks/useAnalytics'
 import { PageArtwork } from '../components/PageArtwork'
+import { useLanguage } from '../contexts/LanguageContext'
 import { createSeoHead } from '../seo'
 
 export const Route = createFileRoute('/typing')({
@@ -49,7 +50,83 @@ function checkRomanization(input: string, romanization: string): boolean {
 function TypingPracticePage() {
   const enabled              = useBooleanFlagValue(FLAGS.TYPING_PRACTICE, false)
   const beginnerFlagEnabled  = useBooleanFlagValue(FLAGS.TYPING_BEGINNER, false)
+  const { language } = useLanguage()
   const { track } = useAnalytics()
+  const copy = language === 'nl'
+    ? {
+        disabled: 'Deze functie is niet ingeschakeld.',
+        title: 'Typoefening',
+        intro: '타이핑 연습. Zie een teken en typ de romanisering.',
+        artAlt: 'Hangul-oefentegels en toetsenbordachtige invoerstukken voor typoefening.',
+        beginner: 'Beginner',
+        startSmall: 'Begin klein',
+        unlocked: 'tekens vrijgespeeld',
+        scoreToUnlock: 'Score >=70% om er 5 bij te krijgen.',
+        allCharacters: 'Alle tekens',
+        fullChallenge: 'Volledige uitdaging',
+        allCharactersDesc: 'Alle 40 tekens: medeklinkers, klinkers, gespannen tekens en samengestelde klinkers.',
+        typeInstruction: 'Typ de romanisering en druk op',
+        accepted: 'Geaccepteerde antwoorden volgen de romanisering van de site; sommige medeklinkers hebben twee gangbare waarden, bijvoorbeeld g of k voor ㄱ.',
+        startPractice: 'Start oefening',
+        questionsPerRound: `${ROUND_LENGTH} vragen per ronde · alle 40 tekens`,
+        outstanding: 'Uitstekend',
+        great: 'Goed gedaan',
+        keepGoing: 'Blijf oefenen',
+        tryAgainMsg: 'Probeer opnieuw',
+        correctPct: 'goed',
+        beginnerPool: 'Beginnerreeks',
+        of: 'van',
+        unlock: 'Speel vrij',
+        more: 'meer',
+        tryAgain: 'Opnieuw',
+        back: 'Terug',
+        question: 'Vraag',
+        score: 'Score',
+        chars: 'tekens',
+        correct: '✓ Goed',
+        answerIs: '✗ Het is',
+        prompt: 'Typ de romanisering',
+        placeholder: 'Typ romanisering...',
+        check: 'Controleer',
+        enterHint: 'Druk op Enter om te antwoorden · na feedback ga je automatisch door',
+      }
+    : {
+        disabled: 'This feature is not enabled.',
+        title: 'Typing Practice',
+        intro: '타이핑 연습. See a character, type its romanization.',
+        artAlt: 'Hangul practice tiles and keyboard-like input pieces arranged for typing practice.',
+        beginner: 'Beginner',
+        startSmall: 'Start small',
+        unlocked: 'characters unlocked',
+        scoreToUnlock: 'Score >=70% to add 5 more.',
+        allCharacters: 'All Characters',
+        fullChallenge: 'Full challenge',
+        allCharactersDesc: 'All 40 characters: consonants, vowels, tense, and compound.',
+        typeInstruction: 'Type the romanization and press',
+        accepted: 'Accepted answers follow the site romanization; some consonants allow both common values (for example, g or k for ㄱ).',
+        startPractice: 'Start Practice',
+        questionsPerRound: `${ROUND_LENGTH} questions per round · all 40 characters`,
+        outstanding: 'Outstanding',
+        great: 'Great job',
+        keepGoing: 'Keep going',
+        tryAgainMsg: 'Try again',
+        correctPct: 'correct',
+        beginnerPool: 'Beginner pool',
+        of: 'of',
+        unlock: 'Unlock',
+        more: 'more',
+        tryAgain: 'Try Again',
+        back: 'Back',
+        question: 'Question',
+        score: 'Score',
+        chars: 'chars',
+        correct: '✓ Correct!',
+        answerIs: '✗  It\'s',
+        prompt: 'Type the romanization',
+        placeholder: 'Type romanization...',
+        check: 'Check',
+        enterHint: 'Press Enter to submit · answer auto-advances after feedback',
+      }
 
   const [queue, setQueue]               = useState<HangulCharacter[]>([])
   const [current, setCurrent]           = useState<HangulCharacter | null>(null)
@@ -118,7 +195,7 @@ function TypingPracticePage() {
   if (!enabled) {
     return (
       <div className="text-center py-24 text-zinc-600">
-        <p className="text-base font-medium">This feature is not enabled.</p>
+        <p className="text-base font-medium">{copy.disabled}</p>
       </div>
     )
   }
@@ -130,12 +207,12 @@ function TypingPracticePage() {
       return (
         <div className="max-w-lg mx-auto space-y-8 py-10">
           <div className="text-center">
-            <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Typing Practice</h1>
-            <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>타이핑 연습. See a character, type its romanization.</p>
+            <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>{copy.title}</h1>
+            <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>{copy.intro}</p>
           </div>
           <PageArtwork
             src="/artwork/typing.jpg"
-            alt="Hangul practice tiles and keyboard-like input pieces arranged for typing practice."
+            alt={copy.artAlt}
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -145,12 +222,12 @@ function TypingPracticePage() {
             >
               <div className="text-4xl korean-serif font-black" style={{ color: 'var(--c-1)' }}>ㄱ→g</div>
               <div>
-                <h2 className="text-sm font-bold" style={{ color: 'var(--c-1)' }}>Beginner</h2>
-                <p className="text-xs font-semibold mt-0.5" style={{ color: 'var(--c-accent-text)' }}>Start small</p>
+                <h2 className="text-sm font-bold" style={{ color: 'var(--c-1)' }}>{copy.beginner}</h2>
+                <p className="text-xs font-semibold mt-0.5" style={{ color: 'var(--c-accent-text)' }}>{copy.startSmall}</p>
               </div>
               <p className="text-xs leading-relaxed" style={{ color: 'var(--c-3)' }}>
-                {unlockedCount} of {BEGINNER_POOL.length} characters unlocked.
-                Score ≥70% to add 5 more.
+                {unlockedCount} {copy.of} {BEGINNER_POOL.length} {copy.unlocked}.
+                {copy.scoreToUnlock}
               </p>
               <div className="w-full rounded-full h-1" style={{ background: 'var(--c-border-card)' }}>
                 <div
@@ -166,19 +243,19 @@ function TypingPracticePage() {
             >
               <div className="text-4xl korean-serif font-black" style={{ color: 'var(--c-1)' }}>한글</div>
               <div>
-                <h2 className="text-sm font-bold" style={{ color: 'var(--c-1)' }}>All Characters</h2>
-                <p className="text-xs font-semibold mt-0.5" style={{ color: 'var(--c-accent-text)' }}>Full challenge</p>
+                <h2 className="text-sm font-bold" style={{ color: 'var(--c-1)' }}>{copy.allCharacters}</h2>
+                <p className="text-xs font-semibold mt-0.5" style={{ color: 'var(--c-accent-text)' }}>{copy.fullChallenge}</p>
               </div>
               <p className="text-xs leading-relaxed" style={{ color: 'var(--c-3)' }}>
-                All 40 characters: consonants, vowels, tense, and compound.
+                {copy.allCharactersDesc}
               </p>
             </button>
           </div>
 
           <p className="text-xs text-center" style={{ color: 'var(--c-4)' }}>
-            Type the romanization and press{' '}
+            {copy.typeInstruction}{' '}
             <kbd className="px-1.5 py-0.5 rounded text-xs font-mono" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>Enter</kbd>
-            {' '}Accepted answers follow the site romanization; some consonants allow both common values (for example, g or k for ㄱ).
+            {' '}{copy.accepted}
           </p>
         </div>
       )
@@ -187,24 +264,24 @@ function TypingPracticePage() {
     return (
       <div className="max-w-lg mx-auto space-y-8 py-10 text-center">
         <div>
-          <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Typing Practice</h1>
-          <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>타이핑 연습. See a character, type its romanization.</p>
+          <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>{copy.title}</h1>
+          <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>{copy.intro}</p>
         </div>
         <PageArtwork
           src="/artwork/typing.jpg"
-          alt="Hangul practice tiles and keyboard-like input pieces arranged for typing practice."
+          alt={copy.artAlt}
         />
         <div className="glass-card rounded-2xl p-8 space-y-4">
           <div className="text-6xl korean-text font-black" style={{ color: 'var(--c-1)', textShadow: '0 0 40px rgba(167,139,250,0.3)' }}>ㄱ→g</div>
           <p className="text-sm" style={{ color: 'var(--c-2)' }}>
-            A character appears. Type its romanization and press{' '}
+            {language === 'nl' ? 'Er verschijnt een teken. Typ de romanisering en druk op' : 'A character appears. Type its romanization and press'}{' '}
             <kbd className="px-1.5 py-0.5 rounded text-xs font-mono" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>Enter</kbd>.
-            Accepted answers follow the site romanization, and some consonants allow both common values (for example, <em>g</em> or <em>k</em> for ㄱ).
+            {copy.accepted}
           </p>
-          <p className="text-sm font-semibold" style={{ color: 'var(--c-3)' }}>{ROUND_LENGTH} questions per round · all 40 characters</p>
+          <p className="text-sm font-semibold" style={{ color: 'var(--c-3)' }}>{copy.questionsPerRound}</p>
         </div>
         <button onClick={() => start('all')} className="btn-primary px-10 py-3.5 rounded-xl font-bold text-white cursor-pointer text-sm">
-          Start Practice
+          {copy.startPractice}
         </button>
       </div>
     )
@@ -215,10 +292,10 @@ function TypingPracticePage() {
   if (finished) {
     const pct = Math.round((score / ROUND_LENGTH) * 100)
     const grade =
-      pct >= 90 ? { korean: '완벽해요!', msg: 'Outstanding', color: '#6ee7b7' } :
-      pct >= 70 ? { korean: '잘했어요!', msg: 'Great job',   color: '#a78bfa' } :
-      pct >= 50 ? { korean: '계속해요!', msg: 'Keep going',  color: '#fcd34d' } :
-                  { korean: '다시 해요', msg: 'Try again',   color: '#f87171' }
+      pct >= 90 ? { korean: '완벽해요!', msg: copy.outstanding, color: '#6ee7b7' } :
+      pct >= 70 ? { korean: '잘했어요!', msg: copy.great,       color: '#a78bfa' } :
+      pct >= 50 ? { korean: '계속해요!', msg: copy.keepGoing,   color: '#fcd34d' } :
+                  { korean: '다시 해요', msg: copy.tryAgainMsg, color: '#f87171' }
 
     const inBeginner   = beginnerFlagEnabled && typingMode === 'beginner'
     const canUnlock    = inBeginner && pct >= 70 && unlockedCount < BEGINNER_POOL.length
@@ -235,13 +312,13 @@ function TypingPracticePage() {
           <div className="text-6xl font-black" style={{ color: grade.color }}>
             {score}<span className="text-2xl text-zinc-600">/{ROUND_LENGTH}</span>
           </div>
-          <div className="text-base" style={{ color: 'var(--c-2)' }}>{pct}% correct</div>
+          <div className="text-base" style={{ color: 'var(--c-2)' }}>{pct}% {copy.correctPct}</div>
           <div className="w-full rounded-full h-1.5" style={{ background: 'var(--c-border-card)' }}>
             <div className="h-1.5 rounded-full transition-all duration-700" style={{ width: `${pct}%`, background: grade.color }} />
           </div>
           {inBeginner && (
             <p className="text-xs" style={{ color: 'var(--c-3)' }}>
-              Beginner pool: {unlockedCount} of {BEGINNER_POOL.length} characters
+              {copy.beginnerPool}: {unlockedCount} {copy.of} {BEGINNER_POOL.length} {language === 'nl' ? 'tekens' : 'characters'}
             </p>
           )}
         </div>
@@ -254,11 +331,11 @@ function TypingPracticePage() {
               }}
               className="btn-primary text-white px-6 py-3 rounded-xl font-bold cursor-pointer text-sm"
             >
-              Unlock {unlockCount} more →
+              {copy.unlock} {unlockCount} {copy.more} →
             </button>
           ) : (
             <button onClick={() => start(typingMode)} className="btn-primary text-white px-6 py-3 rounded-xl font-bold cursor-pointer text-sm">
-              Try Again
+              {copy.tryAgain}
             </button>
           )}
           <button
@@ -266,7 +343,7 @@ function TypingPracticePage() {
             className="btn-ghost px-6 py-3 rounded-xl font-bold cursor-pointer text-sm"
             style={{ color: 'var(--c-1)' }}
           >
-            Back
+            {copy.back}
           </button>
         </div>
       </div>
@@ -287,15 +364,15 @@ function TypingPracticePage() {
     <div className="max-w-lg mx-auto space-y-5">
       <div className="space-y-2">
         <div className="flex justify-between text-xs" style={{ color: 'var(--c-3)' }}>
-          <span>Question {questionNumber} of {ROUND_LENGTH}</span>
+          <span>{copy.question} {questionNumber} {copy.of} {ROUND_LENGTH}</span>
           <div className="flex items-center gap-2">
             {beginnerFlagEnabled && typingMode === 'beginner' && (
               <span className="text-xs px-2 py-0.5 rounded-full"
                 style={{ background: 'var(--c-accent-muted)', color: 'var(--c-accent-text)' }}>
-                {unlockedCount} chars
+                {unlockedCount} {copy.chars}
               </span>
             )}
-            <span className="font-semibold" style={{ color: 'var(--c-2)' }}>Score: {score}</span>
+            <span className="font-semibold" style={{ color: 'var(--c-2)' }}>{copy.score}: {score}</span>
           </div>
         </div>
         <div className="rounded-full h-1" style={{ background: 'var(--c-border-card)' }}>
@@ -309,7 +386,7 @@ function TypingPracticePage() {
         style={{ background: bgColor }}
       >
         <p className="text-xs text-zinc-600 uppercase tracking-widest mb-5 font-bold">
-          {feedback === 'correct' ? '✓ Correct!' : feedback === 'wrong' ? `✗  It's "${current.romanization}"` : 'Type the romanization'}
+          {feedback === 'correct' ? copy.correct : feedback === 'wrong' ? `${copy.answerIs} "${current.romanization}"` : copy.prompt}
         </p>
         <div
           className="korean-text font-black leading-none"
@@ -330,7 +407,7 @@ function TypingPracticePage() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => { if (e.key === 'Enter') handleSubmit() }}
-          placeholder="Type romanization…"
+          placeholder={copy.placeholder}
           disabled={!!feedback}
           className="flex-1 input-field rounded-xl px-4 py-3 text-lg font-bold"
           autoComplete="off"
@@ -341,12 +418,12 @@ function TypingPracticePage() {
           disabled={!input.trim() || !!feedback}
           className="px-5 py-3 rounded-xl font-bold text-sm btn-primary text-white cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          Check
+          {copy.check}
         </button>
       </div>
 
       <p className="text-xs text-center text-zinc-600">
-        Press <kbd className="px-1 py-0.5 rounded font-mono text-xs" style={{ border: '1px solid var(--c-border)' }}>Enter</kbd> to submit · answer auto-advances after feedback
+        {copy.enterHint}
       </p>
     </div>
   )

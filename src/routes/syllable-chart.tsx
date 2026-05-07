@@ -5,6 +5,7 @@ import { FLAGS } from '../flags'
 import { CHOSEONG, CHOSEONG_ROMAN, JUNGSEONG, JUNGSEONG_ROMAN, composeSyllable } from '../utils/hangul'
 import { SpeakButton } from '../components/SpeakButton'
 import { PageArtwork } from '../components/PageArtwork'
+import { useLanguage } from '../contexts/LanguageContext'
 import { createSeoHead } from '../seo'
 
 export const Route = createFileRoute('/syllable-chart')({
@@ -24,12 +25,30 @@ export const Route = createFileRoute('/syllable-chart')({
 
 function SyllableChartPage() {
   const enabled = useBooleanFlagValue(FLAGS.SYLLABLE_CHART, false)
+  const { language } = useLanguage()
   const [highlighted, setHighlighted] = useState<{ row: number; col: number } | null>(null)
+  const copy = language === 'nl'
+    ? {
+        disabled: 'Deze functie is niet ingeschakeld.',
+        title: 'Lettergreeptabel',
+        intro: '음절표. Elke combinatie van beginmedeklinker en klinker. Klik op een cel om die te horen.',
+        artAlt: 'Een raster met Hangul-combinaties van medeklinkers en klinkers, opgezet als lettergreeptabel.',
+        noteStart: 'Beweeg over een cel om de rij (초성) en kolom (중성) te markeren. Elke cel toont de basislettergreep zonder eindmedeklinker. Voeg er een toe in de',
+        builder: 'Bouwer',
+      }
+    : {
+        disabled: 'This feature is not enabled.',
+        title: 'Syllable Chart',
+        intro: '음절표. Every initial consonant x vowel combination. Click a cell to hear it.',
+        artAlt: 'A grid of Hangul consonant and vowel combinations arranged like a syllable chart.',
+        noteStart: 'Hover a cell to highlight its row (초성) and column (중성). Each cell shows the basic syllable without a final consonant. Add one in the',
+        builder: 'Builder',
+      }
 
   if (!enabled) {
     return (
       <div className="text-center py-24 text-zinc-600">
-        <p className="text-base font-medium">This feature is not enabled.</p>
+        <p className="text-base font-medium">{copy.disabled}</p>
       </div>
     )
   }
@@ -37,12 +56,12 @@ function SyllableChartPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Syllable Chart</h1>
-        <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>음절표. Every initial consonant × vowel combination. Click a cell to hear it.</p>
+        <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>{copy.title}</h1>
+        <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>{copy.intro}</p>
       </div>
       <PageArtwork
         src="/artwork/syllable-chart.jpg"
-        alt="A grid of Hangul consonant and vowel combinations arranged like a syllable chart."
+        alt={copy.artAlt}
       />
 
       <div className="overflow-x-auto -mx-4 px-4">
@@ -119,8 +138,8 @@ function SyllableChartPage() {
       </div>
 
       <p className="text-xs text-zinc-600">
-        Hover a cell to highlight its row (초성) and column (중성). Each cell shows the basic syllable without a final consonant. Add one in the{' '}
-        <Link to="/builder" className="underline underline-offset-2" style={{ color: 'var(--c-accent-text)' }}>Builder</Link>.
+        {copy.noteStart}{' '}
+        <Link to="/builder" className="underline underline-offset-2" style={{ color: 'var(--c-accent-text)' }}>{copy.builder}</Link>.
       </p>
     </div>
   )

@@ -7,6 +7,7 @@ import { STROKE_ORDER, type StrokeData } from '../data/strokeOrder'
 import { SpeakButton } from '../components/SpeakButton'
 import { useAnalytics } from '../hooks/useAnalytics'
 import { PageArtwork } from '../components/PageArtwork'
+import { useLanguage } from '../contexts/LanguageContext'
 import { createSeoHead } from '../seo'
 
 export const Route = createFileRoute('/stroke-order')({
@@ -72,7 +73,7 @@ const DIR_HINT: Record<StrokeDirection, string> = {
   circle:       '↺ Draw a counterclockwise circle',
 }
 
-function DrawingCanvas({ char, data }: { char: string; data: StrokeData }) {
+function DrawingCanvas({ char, data, language }: { char: string; data: StrokeData; language: 'en' | 'nl' }) {
   const canvasRef   = useRef<HTMLCanvasElement>(null)
   const drawing     = useRef(false)
   const savedPixels = useRef<ImageData | null>(null)
@@ -164,13 +165,13 @@ function DrawingCanvas({ char, data }: { char: string; data: StrokeData }) {
       const isLast = strokeIdx === data.strokes - 1
       setResults(prev => { const r = [...prev]; r[strokeIdx] = true; return r })
       setStrokeIdx(i => i + 1)
-      setFeedback({ msg: isLast ? '완료! All strokes done!' : '✓ Correct', ok: true })
+      setFeedback({ msg: isLast ? (language === 'nl' ? '완료! Alle streken klaar.' : '완료! All strokes done!') : (language === 'nl' ? '✓ Goed' : '✓ Correct'), ok: true })
     } else {
       // Restore canvas to state before this failed stroke
       const ctx = canvasRef.current?.getContext('2d')
       if (ctx && savedPixels.current) ctx.putImageData(savedPixels.current, 0, 0)
       setResults(prev => { const r = [...prev]; r[strokeIdx] = false; return r })
-      setFeedback({ msg: dir ? DIR_HINT[dir] : 'Try again', ok: false })
+      setFeedback({ msg: dir ? DIR_HINT[dir] : (language === 'nl' ? 'Probeer opnieuw' : 'Try again'), ok: false })
     }
 
     setTimeout(() => setFeedback(null), 2500)
@@ -181,11 +182,13 @@ function DrawingCanvas({ char, data }: { char: string; data: StrokeData }) {
       {/* Current stroke prompt */}
       <div className="rounded-lg px-3 py-2 text-xs" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
         {done ? (
-          <span className="font-semibold" style={{ color: '#6ee7b7' }}>완료! All {data.strokes} strokes complete!</span>
+          <span className="font-semibold" style={{ color: '#6ee7b7' }}>
+            {language === 'nl' ? `완료! Alle ${data.strokes} streken klaar.` : `완료! All ${data.strokes} strokes complete!`}
+          </span>
         ) : (
           <div className="flex items-baseline gap-2 flex-wrap">
             <span className="font-black shrink-0" style={{ color: 'var(--c-accent-text)' }}>
-              Stroke {strokeIdx + 1} / {data.strokes}
+              {language === 'nl' ? 'Streek' : 'Stroke'} {strokeIdx + 1} / {data.strokes}
             </span>
             <span style={{ color: 'var(--c-2)' }}>{data.steps[strokeIdx]}</span>
           </div>
@@ -260,7 +263,7 @@ function DrawingCanvas({ char, data }: { char: string; data: StrokeData }) {
         onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--c-1)' }}
         onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--c-3)' }}
       >
-        Reset
+        {language === 'nl' ? 'Reset' : 'Reset'}
       </button>
     </div>
   )
@@ -269,12 +272,48 @@ function DrawingCanvas({ char, data }: { char: string; data: StrokeData }) {
 function StrokeOrderPage() {
   const enabled         = useBooleanFlagValue(FLAGS.STROKE_ORDER, false)
   const practiceEnabled = useBooleanFlagValue(FLAGS.STROKE_PRACTICE, false)
+  const { language } = useLanguage()
   const { track } = useAnalytics()
   const [selected, setSelected] = useState<string | null>(null)
   const [step, setStep]         = useState(0)
   const [view, setView]         = useState<'steps' | 'practice'>('steps')
 
   const data = selected ? STROKE_ORDER[selected] : null
+  const copy = language === 'nl'
+    ? {
+        disabled: 'Deze functie is niet ingeschakeld.',
+        title: 'Schrijfvolgorde',
+        intro: '획순 Hoek-sun. Kies een teken en bekijk de volgorde van de streken.',
+        artAlt: 'Hangul-oefenblad met schrijfgerei en richtingsmarkeringen.',
+        rules: 'Algemene regels',
+        consonants: 'Medeklinkers: 자음',
+        vowels: 'Klinkers: 모음',
+        stroke: 'streek',
+        strokes: 'streken',
+        steps: 'Stappen',
+        practice: 'Oefenen',
+        strokeOrder: 'Schrijfvolgorde',
+        all: 'Alles',
+        clickHint: 'Klik op een streek om die te markeren, of gebruik ‹ › om stap voor stap te gaan.',
+        empty: 'Kies een teken om de schrijfvolgorde te zien.',
+      }
+    : {
+        disabled: 'This feature is not enabled.',
+        title: 'Stroke Order',
+        intro: '획순 Hoek-sun. Select a character and watch its stroke order.',
+        artAlt: 'Hangul stroke practice sheet with writing tools and directional marks.',
+        rules: 'Universal Rules',
+        consonants: 'Consonants: 자음',
+        vowels: 'Vowels: 모음',
+        stroke: 'stroke',
+        strokes: 'strokes',
+        steps: 'Steps',
+        practice: 'Practice',
+        strokeOrder: 'Stroke order',
+        all: 'All',
+        clickHint: 'Click a stroke to highlight it, or use ‹ › to step through.',
+        empty: 'Select a character to see its stroke order',
+      }
 
   const select = (char: string) => {
     track('stroke_order_character_selected', { character: char })
@@ -286,7 +325,7 @@ function StrokeOrderPage() {
   if (!enabled) {
     return (
       <div className="text-center py-24 text-zinc-600">
-        <p className="text-base font-medium">This feature is not enabled.</p>
+        <p className="text-base font-medium">{copy.disabled}</p>
       </div>
     )
   }
@@ -294,17 +333,17 @@ function StrokeOrderPage() {
   return (
     <div className="space-y-8 max-w-4xl mx-auto">
       <div>
-        <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Stroke Order</h1>
-        <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>획순 Hoek-sun. Select a character and watch its stroke order.</p>
+        <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>{copy.title}</h1>
+        <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>{copy.intro}</p>
       </div>
       <PageArtwork
         src="/artwork/writing-practice.jpg"
-        alt="Hangul stroke practice sheet with writing tools and directional marks."
+        alt={copy.artAlt}
       />
 
       {/* Universal rules */}
       <div className="glass-card rounded-2xl p-5">
-        <h2 className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--c-3)' }}>Universal Rules</h2>
+        <h2 className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--c-3)' }}>{copy.rules}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {RULES.map((r) => (
             <div key={r.icon} className="flex items-start gap-2.5">
@@ -321,7 +360,7 @@ function StrokeOrderPage() {
           <section>
             <h2 className="text-xs font-bold uppercase tracking-widest mb-2.5 flex items-center gap-2" style={{ color: 'var(--c-3)' }}>
               <span className="w-2 h-2 rounded-full inline-block" style={{ background: 'var(--c-initial)' }} />
-              Consonants: 자음
+              {copy.consonants}
             </h2>
             <div className="flex flex-wrap gap-1.5">
               {consonants.map((c) => (
@@ -343,7 +382,7 @@ function StrokeOrderPage() {
           <section>
             <h2 className="text-xs font-bold uppercase tracking-widest mb-2.5 flex items-center gap-2" style={{ color: 'var(--c-3)' }}>
               <span className="w-2 h-2 rounded-full inline-block" style={{ background: 'var(--c-vowel)' }} />
-              Vowels: 모음
+              {copy.vowels}
             </h2>
             <div className="flex flex-wrap gap-1.5">
               {vowels.map((v) => (
@@ -380,7 +419,7 @@ function StrokeOrderPage() {
                     <div className="flex items-center gap-2">
                       <span className="px-2 py-0.5 rounded-full text-xs font-black"
                         style={{ background: 'rgba(139,92,246,0.15)', border: '1px solid rgba(139,92,246,0.3)', color: '#c4b5fd' }}>
-                        {data.strokes} {data.strokes === 1 ? 'stroke' : 'strokes'}
+                        {data.strokes} {data.strokes === 1 ? copy.stroke : copy.strokes}
                       </span>
                       <SpeakButton text={data.char} size="sm" />
                     </div>
@@ -408,7 +447,7 @@ function StrokeOrderPage() {
                           color: view === 'steps' ? 'var(--c-accent-text)' : 'var(--c-3)',
                         }}
                       >
-                        Steps
+                        {copy.steps}
                       </button>
                       <button
                         onClick={() => setView('practice')}
@@ -418,12 +457,12 @@ function StrokeOrderPage() {
                           color: view === 'practice' ? 'var(--c-accent-text)' : 'var(--c-3)',
                         }}
                       >
-                        Practice
+                        {copy.practice}
                       </button>
                     </div>
                   ) : (
                     <span className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--c-3)' }}>
-                      Stroke order
+                      {copy.strokeOrder}
                     </span>
                   )}
 
@@ -436,7 +475,7 @@ function StrokeOrderPage() {
                         style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}
                       >‹</button>
                       <span className="text-xs font-semibold" style={{ color: 'var(--c-2)' }}>
-                        {step === 0 ? 'All' : `${step}/${data.strokes}`}
+                        {step === 0 ? copy.all : `${step}/${data.strokes}`}
                       </span>
                       <button
                         onClick={() => setStep((s) => Math.min(data.strokes, s + 1))}
@@ -490,10 +529,10 @@ function StrokeOrderPage() {
                         )
                       })}
                     </ol>
-                    <p className="text-xs text-zinc-600">Click a stroke to highlight it, or use ‹ › to step through.</p>
+                    <p className="text-xs text-zinc-600">{copy.clickHint}</p>
                   </>
                 ) : (
-                  <DrawingCanvas key={data.char} char={data.char} data={data} />
+                  <DrawingCanvas key={data.char} char={data.char} data={data} language={language} />
                 )}
               </div>
             ) : (
@@ -502,7 +541,7 @@ function StrokeOrderPage() {
                 style={{ border: '1px dashed var(--c-border-card)' }}
               >
                 <div className="text-5xl korean-text font-black mb-3" style={{ color: 'var(--c-border-card)' }}>획</div>
-                <p className="text-sm text-zinc-600">Select a character to see its stroke order</p>
+                <p className="text-sm text-zinc-600">{copy.empty}</p>
               </div>
             )}
           </div>

@@ -6,6 +6,7 @@ import { allCharacters, consonants, vowels } from '../data/hangul'
 import type { HangulCharacter } from '../data/hangul'
 import { SpeakButton } from '../components/SpeakButton'
 import { PageArtwork } from '../components/PageArtwork'
+import { useLanguage } from '../contexts/LanguageContext'
 import { createSeoHead } from '../seo'
 
 export const Route = createFileRoute('/progress')({
@@ -36,14 +37,14 @@ function getMastery(stats: CardStats | undefined): Mastery {
   return 'struggling'
 }
 
-const MASTERY_CONFIG: Record<Mastery, { label: string; color: string; bg: string; border: string }> = {
-  mastered:   { label: 'Mastered',   color: '#6ee7b7', bg: 'rgba(16,185,129,0.12)',  border: 'rgba(16,185,129,0.3)' },
-  learning:   { label: 'Learning',   color: '#a78bfa', bg: 'rgba(139,92,246,0.12)',  border: 'rgba(139,92,246,0.3)' },
-  struggling: { label: 'Struggling', color: '#f87171', bg: 'rgba(239,68,68,0.1)',    border: 'rgba(239,68,68,0.25)' },
-  new:        { label: 'Not yet seen', color: 'var(--c-4)', bg: 'var(--c-surface)', border: 'var(--c-border-card)' },
+const MASTERY_CONFIG: Record<Mastery, { label: { en: string; nl: string }; color: string; bg: string; border: string }> = {
+  mastered:   { label: { en: 'Mastered', nl: 'Beheerst' }, color: '#6ee7b7', bg: 'rgba(16,185,129,0.12)',  border: 'rgba(16,185,129,0.3)' },
+  learning:   { label: { en: 'Learning', nl: 'Aan het leren' }, color: '#a78bfa', bg: 'rgba(139,92,246,0.12)',  border: 'rgba(139,92,246,0.3)' },
+  struggling: { label: { en: 'Struggling', nl: 'Moeilijk' }, color: '#f87171', bg: 'rgba(239,68,68,0.1)',    border: 'rgba(239,68,68,0.25)' },
+  new:        { label: { en: 'Not yet seen', nl: 'Nog niet gezien' }, color: 'var(--c-4)', bg: 'var(--c-surface)', border: 'var(--c-border-card)' },
 }
 
-function CharBadge({ char, stats }: { char: HangulCharacter; stats: CardStats | undefined }) {
+function CharBadge({ char, stats, language }: { char: HangulCharacter; stats: CardStats | undefined; language: 'en' | 'nl' }) {
   const mastery = getMastery(stats)
   const cfg = MASTERY_CONFIG[mastery]
   const total = stats ? stats.correct + stats.incorrect : 0
@@ -53,7 +54,7 @@ function CharBadge({ char, stats }: { char: HangulCharacter; stats: CardStats | 
     <div
       className="flex flex-col items-center gap-1 p-2 rounded-xl"
       style={{ background: cfg.bg, border: `1px solid ${cfg.border}` }}
-      title={`${char.name}: ${mastery}${acc !== null ? ` (${acc}% correct, ${total} attempts)` : ''}`}
+      title={`${char.name}: ${cfg.label[language]}${acc !== null ? ` (${acc}% ${language === 'nl' ? 'goed' : 'correct'}, ${total} ${language === 'nl' ? 'pogingen' : 'attempts'})` : ''}`}
     >
       <span className="text-xl korean-text font-black" style={{ color: cfg.color }}>{char.char}</span>
       <span className="text-xs font-bold" style={{ color: cfg.color, opacity: 0.7 }}>{char.romanization}</span>
@@ -78,7 +79,41 @@ function StatPill({ value, label, color }: { value: number; label: string; color
 
 function ProgressPage() {
   const enabled = useBooleanFlagValue(FLAGS.PROGRESS_DASHBOARD, false)
+  const { language } = useLanguage()
   const [statsMap, setStatsMap] = useState<Record<string, CardStats>>({})
+  const copy = language === 'nl'
+    ? {
+        disabled: 'Deze functie is niet ingeschakeld.',
+        title: 'Voortgang',
+        intro: '진행 Jin-haeng. Je quizprestaties over alle 40 tekens.',
+        artAlt: 'Gegroepeerde Hangul-tegels en beheersingsmarkeringen als voortgangsdashboard.',
+        mastered: 'Beheerst',
+        learning: 'Aan het leren',
+        struggling: 'Moeilijk',
+        notSeen: 'Niet gezien',
+        overall: 'Totale nauwkeurigheid',
+        across: 'over',
+        attempts: 'pogingen',
+        empty: 'Maak een paar quizzen om hier je voortgang te zien.',
+        consonants: 'Medeklinkers',
+        vowels: 'Klinkers',
+      }
+    : {
+        disabled: 'This feature is not enabled.',
+        title: 'Progress',
+        intro: '진행 Jin-haeng. Your quiz performance across all 40 characters.',
+        artAlt: 'Grouped Hangul tiles and mastery markers arranged like a learning progress dashboard.',
+        mastered: 'Mastered',
+        learning: 'Learning',
+        struggling: 'Struggling',
+        notSeen: 'Not seen',
+        overall: 'Overall accuracy',
+        across: 'across',
+        attempts: 'attempts',
+        empty: 'Complete some quizzes to see your progress here.',
+        consonants: 'Consonants',
+        vowels: 'Vowels',
+      }
 
   useEffect(() => {
     try {
@@ -92,7 +127,7 @@ function ProgressPage() {
   if (!enabled) {
     return (
       <div className="text-center py-24 text-zinc-600">
-        <p className="text-base font-medium">This feature is not enabled.</p>
+        <p className="text-base font-medium">{copy.disabled}</p>
       </div>
     )
   }
@@ -105,37 +140,37 @@ function ProgressPage() {
   const overallAcc    = totalAttempts > 0 ? Math.round((totalCorrect / totalAttempts) * 100) : null
 
   const groups: Array<{ title: string; mastery: Mastery; chars: HangulCharacter[] }> = [
-    { title: 'Mastered',   mastery: 'mastered',   chars: allCharacters.filter((c) => getMastery(statsMap[c.id]) === 'mastered') },
-    { title: 'Learning',   mastery: 'learning',   chars: allCharacters.filter((c) => getMastery(statsMap[c.id]) === 'learning') },
-    { title: 'Struggling', mastery: 'struggling', chars: allCharacters.filter((c) => getMastery(statsMap[c.id]) === 'struggling') },
-    { title: 'Not yet seen', mastery: 'new',      chars: allCharacters.filter((c) => getMastery(statsMap[c.id]) === 'new') },
+    { title: MASTERY_CONFIG.mastered.label[language],   mastery: 'mastered',   chars: allCharacters.filter((c) => getMastery(statsMap[c.id]) === 'mastered') },
+    { title: MASTERY_CONFIG.learning.label[language],   mastery: 'learning',   chars: allCharacters.filter((c) => getMastery(statsMap[c.id]) === 'learning') },
+    { title: MASTERY_CONFIG.struggling.label[language], mastery: 'struggling', chars: allCharacters.filter((c) => getMastery(statsMap[c.id]) === 'struggling') },
+    { title: MASTERY_CONFIG.new.label[language], mastery: 'new',      chars: allCharacters.filter((c) => getMastery(statsMap[c.id]) === 'new') },
   ]
 
   return (
     <div className="space-y-8 max-w-3xl mx-auto">
       <div>
-        <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Progress</h1>
-        <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>진행 Jin-haeng. Your quiz performance across all 40 characters.</p>
+        <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>{copy.title}</h1>
+        <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>{copy.intro}</p>
       </div>
       <PageArtwork
         src="/artwork/progress.jpg"
-        alt="Grouped Hangul tiles and mastery markers arranged like a learning progress dashboard."
+        alt={copy.artAlt}
       />
 
       {/* Summary stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <StatPill value={masteryCount.mastered}   label="Mastered"     color="#6ee7b7" />
-        <StatPill value={masteryCount.learning}   label="Learning"     color="#a78bfa" />
-        <StatPill value={masteryCount.struggling} label="Struggling"   color="#f87171" />
-        <StatPill value={masteryCount.new}        label="Not seen"     color="var(--c-3)" />
+        <StatPill value={masteryCount.mastered}   label={copy.mastered}   color="#6ee7b7" />
+        <StatPill value={masteryCount.learning}   label={copy.learning}   color="#a78bfa" />
+        <StatPill value={masteryCount.struggling} label={copy.struggling} color="#f87171" />
+        <StatPill value={masteryCount.new}        label={copy.notSeen}    color="var(--c-3)" />
       </div>
 
       {/* Overall accuracy bar */}
       {totalAttempts > 0 && (
         <div className="glass-card rounded-xl p-4 space-y-2">
           <div className="flex justify-between text-xs font-semibold" style={{ color: 'var(--c-3)' }}>
-            <span>Overall accuracy</span>
-            <span style={{ color: 'var(--c-1)' }}>{overallAcc}% across {totalAttempts} attempts</span>
+            <span>{copy.overall}</span>
+            <span style={{ color: 'var(--c-1)' }}>{overallAcc}% {copy.across} {totalAttempts} {copy.attempts}</span>
           </div>
           <div className="rounded-full h-2" style={{ background: 'var(--c-border-card)' }}>
             <div
@@ -149,7 +184,7 @@ function ProgressPage() {
       {totalAttempts === 0 && (
         <div className="text-center py-12 rounded-2xl" style={{ border: '1px dashed var(--c-border-card)' }}>
           <div className="text-5xl korean-text font-black mb-3" style={{ color: 'var(--c-border-card)' }}>한글</div>
-          <p className="text-sm text-zinc-600">Complete some quizzes to see your progress here.</p>
+          <p className="text-sm text-zinc-600">{copy.empty}</p>
         </div>
       )}
 
@@ -171,17 +206,17 @@ function ProgressPage() {
             </h2>
             {consInGroup.length > 0 && (
               <div className="mb-2">
-                <p className="text-xs text-zinc-600 mb-1.5">Consonants</p>
+                <p className="text-xs text-zinc-600 mb-1.5">{copy.consonants}</p>
                 <div className="flex flex-wrap gap-2">
-                  {consInGroup.map((c) => <CharBadge key={c.id} char={c} stats={statsMap[c.id]} />)}
+                  {consInGroup.map((c) => <CharBadge key={c.id} char={c} stats={statsMap[c.id]} language={language} />)}
                 </div>
               </div>
             )}
             {vowsInGroup.length > 0 && (
               <div>
-                <p className="text-xs text-zinc-600 mb-1.5">Vowels</p>
+                <p className="text-xs text-zinc-600 mb-1.5">{copy.vowels}</p>
                 <div className="flex flex-wrap gap-2">
-                  {vowsInGroup.map((c) => <CharBadge key={c.id} char={c} stats={statsMap[c.id]} />)}
+                  {vowsInGroup.map((c) => <CharBadge key={c.id} char={c} stats={statsMap[c.id]} language={language} />)}
                 </div>
               </div>
             )}

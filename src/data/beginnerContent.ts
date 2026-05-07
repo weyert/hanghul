@@ -12,12 +12,16 @@ export interface ContrastPair {
   id: string
   title: string
   whyItMatters: string
+  whyItMattersNl?: string
   listenFor: string
+  listenForNl?: string
   items: Array<{
     korean: string
     romanized: string
     meaning: string
+    meaningNl?: string
     focus: string
+    focusNl?: string
   }>
 }
 
@@ -65,42 +69,50 @@ export const CONTRAST_DRILLS: ContrastPair[] = [
     id: 'g-k-kk',
     title: 'ㄱ / ㅋ / ㄲ',
     whyItMatters: 'Beginners often hear these as just one “k” sound, but Korean distinguishes plain, aspirated, and tense stops.',
+    whyItMattersNl: 'Beginners horen deze vaak als een enkele k-klank, maar Koreaans maakt onderscheid tussen gewone, geaspireerde en gespannen plofklanken.',
     listenFor: 'Airflow first: ㅋ has the strongest burst, ㄲ has the tightest sound, ㄱ is the plain middle value.',
+    listenForNl: 'Luister eerst naar lucht: ㅋ heeft de sterkste luchtstoot, ㄲ klinkt het strakst, ㄱ zit als gewone klank in het midden.',
     items: [
-      { korean: '불고기', romanized: 'bul-go-gi', meaning: 'bulgogi', focus: 'ㄱ plain' },
-      { korean: '코', romanized: 'ko', meaning: 'nose', focus: 'ㅋ aspirated' },
-      { korean: '꽃', romanized: 'kkot', meaning: 'flower', focus: 'ㄲ tense' },
+      { korean: '불고기', romanized: 'bul-go-gi', meaning: 'bulgogi', meaningNl: 'bulgogi', focus: 'ㄱ plain', focusNl: 'ㄱ gewoon' },
+      { korean: '코', romanized: 'ko', meaning: 'nose', meaningNl: 'neus', focus: 'ㅋ aspirated', focusNl: 'ㅋ geaspireerd' },
+      { korean: '꽃', romanized: 'kkot', meaning: 'flower', meaningNl: 'bloem', focus: 'ㄲ tense', focusNl: 'ㄲ gespannen' },
     ],
   },
   {
     id: 'b-p-pp',
     title: 'ㅂ / ㅍ / ㅃ',
     whyItMatters: 'This contrast changes word identity fast and is hard if you rely on English-style “b” and “p”.',
+    whyItMattersNl: 'Dit contrast verandert snel de betekenis van een woord en is lastig als je vertrouwt op Nederlandse b en p.',
     listenFor: 'ㅍ pushes air out; ㅃ is tight and clipped; ㅂ is the plain series with little aspiration.',
+    listenForNl: 'ㅍ duwt lucht naar buiten; ㅃ is strak en kort; ㅂ is de gewone reeks met weinig aspiratie.',
     items: [
-      { korean: '불', romanized: 'bul', meaning: 'fire', focus: 'ㅂ plain' },
-      { korean: '풀', romanized: 'pul', meaning: 'grass', focus: 'ㅍ aspirated' },
-      { korean: '뿔', romanized: 'ppul', meaning: 'horn', focus: 'ㅃ tense' },
+      { korean: '불', romanized: 'bul', meaning: 'fire', meaningNl: 'vuur', focus: 'ㅂ plain', focusNl: 'ㅂ gewoon' },
+      { korean: '풀', romanized: 'pul', meaning: 'grass', meaningNl: 'gras', focus: 'ㅍ aspirated', focusNl: 'ㅍ geaspireerd' },
+      { korean: '뿔', romanized: 'ppul', meaning: 'horn', meaningNl: 'hoorn', focus: 'ㅃ tense', focusNl: 'ㅃ gespannen' },
     ],
   },
   {
     id: 'eo-a',
     title: 'ㅓ / ㅏ',
     whyItMatters: 'These two open vowels are one of the most common beginner confusions.',
+    whyItMattersNl: 'Deze twee open klinkers zijn een van de meest voorkomende beginnersverwarringen.',
     listenFor: 'ㅏ is brighter and more forward; ㅓ is more central and unrounded.',
+    listenForNl: 'ㅏ klinkt helderder en meer naar voren; ㅓ is centraler en ongerond.',
     items: [
-      { korean: '어머니', romanized: 'eo-meo-ni', meaning: 'mother', focus: 'ㅓ open central' },
-      { korean: '아이', romanized: 'a-i', meaning: 'child', focus: 'ㅏ open front' },
+      { korean: '어머니', romanized: 'eo-meo-ni', meaning: 'mother', meaningNl: 'moeder', focus: 'ㅓ open central', focusNl: 'ㅓ open centraal' },
+      { korean: '아이', romanized: 'a-i', meaning: 'child', meaningNl: 'kind', focus: 'ㅏ open front', focusNl: 'ㅏ open vooraan' },
     ],
   },
   {
     id: 'o-u',
     title: 'ㅗ / ㅜ',
     whyItMatters: 'Both are rounded, but one is higher and backer while the other sits slightly higher in the mouth.',
+    whyItMattersNl: 'Beide zijn gerond, maar ze liggen niet op dezelfde plek in de mond.',
     listenFor: 'ㅗ is tighter and higher in the mouth; ㅜ is deeper and more “oo”-like.',
+    listenForNl: 'ㅗ klinkt strakker en hoger in de mond; ㅜ klinkt dieper en meer als oe.',
     items: [
-      { korean: '오이', romanized: 'o-i', meaning: 'cucumber', focus: 'ㅗ' },
-      { korean: '우유', romanized: 'u-yu', meaning: 'milk', focus: 'ㅜ' },
+      { korean: '오이', romanized: 'o-i', meaning: 'cucumber', meaningNl: 'komkommer', focus: 'ㅗ', focusNl: 'ㅗ' },
+      { korean: '우유', romanized: 'u-yu', meaning: 'milk', meaningNl: 'melk', focus: 'ㅜ', focusNl: 'ㅜ' },
     ],
   },
 ]
