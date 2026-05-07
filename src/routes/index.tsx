@@ -131,14 +131,22 @@ function HomePage() {
       <section className="grid lg:grid-cols-[minmax(0,1.15fr)_minmax(280px,0.85fr)] gap-6 items-center">
         <div className="overflow-hidden rounded-2xl glass-card">
           <picture>
-            <source srcSet="/social/hangul-og-syllables.avif" type="image/avif" />
-            <source srcSet="/social/hangul-og-syllables.webp" type="image/webp" />
+            <source
+              srcSet="/social/hangul-og-syllables-720.avif 720w, /social/hangul-og-syllables.avif 1200w"
+              sizes="(min-width: 1024px) 55vw, 100vw"
+              type="image/avif"
+            />
+            <source
+              srcSet="/social/hangul-og-syllables-720.webp 720w, /social/hangul-og-syllables.webp 1200w"
+              sizes="(min-width: 1024px) 55vw, 100vw"
+              type="image/webp"
+            />
             <img
               src="/social/hangul-og-syllables.png"
               alt="Hangul consonant, vowel, and final consonant pieces combining into a Korean syllable block."
               className="block w-full aspect-[1200/630] object-cover"
-              loading="eager"
-              fetchPriority="high"
+              loading="lazy"
+              fetchPriority="auto"
               width="1200"
               height="630"
             />

@@ -5,16 +5,42 @@ type PageArtworkProps = {
 }
 
 export function PageArtwork({ src, alt, loading = 'lazy' }: PageArtworkProps) {
+  const extension = src.endsWith('.jpg') ? '.jpg' : ''
+  const base = extension ? src.slice(0, -extension.length) : src
+
   return (
     <figure className="overflow-hidden rounded-2xl glass-card">
-      <img
-        src={src}
-        alt={alt}
-        width={1200}
-        height={675}
-        loading={loading}
-        className="block w-full aspect-video object-cover"
-      />
+      {extension ? (
+        <picture>
+          <source
+            srcSet={`${base}-720.avif 720w, ${base}.avif 1200w`}
+            sizes="(min-width: 768px) 768px, 100vw"
+            type="image/avif"
+          />
+          <source
+            srcSet={`${base}-720.webp 720w, ${base}.webp 1200w`}
+            sizes="(min-width: 768px) 768px, 100vw"
+            type="image/webp"
+          />
+          <img
+            src={src}
+            alt={alt}
+            width={1200}
+            height={675}
+            loading={loading}
+            className="block w-full aspect-video object-cover"
+          />
+        </picture>
+      ) : (
+        <img
+          src={src}
+          alt={alt}
+          width={1200}
+          height={675}
+          loading={loading}
+          className="block w-full aspect-video object-cover"
+        />
+      )}
     </figure>
   )
 }

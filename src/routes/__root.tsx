@@ -48,14 +48,7 @@ export const Route = createRootRoute({
         { charSet: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       ],
-      links: [
-        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous' },
-        {
-          rel: 'stylesheet',
-          href: 'https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Noto+Sans+KR:wght@300;400;500;700;900&family=Noto+Serif+KR:wght@600;700;900&family=Inter:wght@400;500;600;700;800;900&display=swap',
-        },
-      ],
+      links: [],
     }
   },
   notFoundComponent: NotFoundPage,
@@ -455,7 +448,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
       </head>
       <body
         style={{
-          fontFamily: "'Inter', 'Noto Sans KR', system-ui, sans-serif",
+          fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif",
           background: 'var(--c-page)',
           color: 'var(--c-1)',
           minHeight: '100vh',
