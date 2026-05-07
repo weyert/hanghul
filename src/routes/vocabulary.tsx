@@ -100,7 +100,7 @@ function VocabularyPage() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Vocabulary</h1>
-          <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>어휘 Eo-hwi — Tourist phrases, K-drama expressions, emotions, and more — with audio</p>
+          <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>어휘 Eo-hwi. Tourist phrases, K-drama lines, emotions, and audio.</p>
         </div>
         {conjugationEnabled && (
           <button

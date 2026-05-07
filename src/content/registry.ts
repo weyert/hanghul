@@ -35,12 +35,17 @@ export type ContentPageMeta = {
 // available synchronously during SSR and build.
 
 import * as romanizationEn from './pages/romanization-guide/en.mdx'
+import * as romanizationNl from './pages/romanization-guide/nl.mdx'
 import * as ipaEn from './pages/ipa-guide/en.mdx'
+import * as ipaNl from './pages/ipa-guide/nl.mdx'
 import * as englishEn from './pages/english-guide/en.mdx'
 import * as dutchNl from './pages/dutch-guide/nl.mdx'
 import * as grammarEn from './pages/grammar/en.mdx'
+import * as grammarNl from './pages/grammar/nl.mdx'
 import * as batchimEn from './pages/batchim/en.mdx'
+import * as batchimNl from './pages/batchim/nl.mdx'
 import * as blocksEn from './pages/blocks/en.mdx'
+import * as blocksNl from './pages/blocks/nl.mdx'
 import * as consonantsEn from './pages/consonants/en.mdx'
 import * as consonantsNl from './pages/consonants/nl.mdx'
 import * as vowelsEn from './pages/vowels/en.mdx'
@@ -82,9 +87,11 @@ type SlugLocaleMap = Partial<Record<Locale, ContentPageModule>>
 const PAGES: Record<string, SlugLocaleMap> = {
   'romanization-guide': {
     en: romanizationEn as unknown as ContentPageModule,
+    nl: romanizationNl as unknown as ContentPageModule,
   },
   'ipa-guide': {
     en: ipaEn as unknown as ContentPageModule,
+    nl: ipaNl as unknown as ContentPageModule,
   },
   'english-guide': {
     en: englishEn as unknown as ContentPageModule,
@@ -94,12 +101,15 @@ const PAGES: Record<string, SlugLocaleMap> = {
   },
   'grammar': {
     en: grammarEn as unknown as ContentPageModule,
+    nl: grammarNl as unknown as ContentPageModule,
   },
   'batchim': {
     en: batchimEn as unknown as ContentPageModule,
+    nl: batchimNl as unknown as ContentPageModule,
   },
   'blocks': {
     en: blocksEn as unknown as ContentPageModule,
+    nl: blocksNl as unknown as ContentPageModule,
   },
   'consonants': {
     en: consonantsEn as unknown as ContentPageModule,

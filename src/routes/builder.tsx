@@ -129,7 +129,7 @@ function BuilderPage() {
     <div className="space-y-8 max-w-3xl mx-auto">
       <div>
         <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Builder</h1>
-        <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>조합 Jo-hap — Pick a consonant + vowel to compose a syllable block</p>
+        <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>조합 Jo-hap. Pick a consonant and vowel to build a syllable block.</p>
       </div>
       <PageArtwork
         src="/artwork/syllable-tools.jpg"
@@ -145,7 +145,7 @@ function BuilderPage() {
         {/* Selectors */}
         <div className="lg:col-span-2 space-y-6">
           <section>
-            <SectionHeader dot="initial" title="Initial Consonant — 초성" />
+            <SectionHeader dot="initial" title="Initial Consonant: 초성" />
             <div className="grid grid-cols-5 sm:grid-cols-7 gap-1.5">
               {CHOSEONG.map((ch, i) => (
                 <PickButton key={i} char={ch} label={CHOSEONG_ROMAN[i] || 'ø'} accent="initial"
@@ -156,7 +156,7 @@ function BuilderPage() {
           </section>
 
           <section>
-            <SectionHeader dot="vowel" title="Vowel — 중성" />
+            <SectionHeader dot="vowel" title="Vowel: 중성" />
             <div className="grid grid-cols-5 sm:grid-cols-7 gap-1.5">
               {JUNGSEONG.map((ch, i) => (
                 <PickButton key={i} char={ch} label={JUNGSEONG_ROMAN[i]} accent="vowel"
@@ -168,7 +168,7 @@ function BuilderPage() {
 
           <section>
             <div className="flex items-center justify-between mb-2.5">
-              <SectionHeader dot="final" title="Final Consonant — 종성 (optional)" />
+              <SectionHeader dot="final" title="Final Consonant: 종성 (optional)" />
               <button
                 onClick={() => setShowClusters((s) => !s)}
                 className="text-xs text-zinc-600 hover:text-zinc-300 underline underline-offset-2 cursor-pointer"
@@ -177,7 +177,7 @@ function BuilderPage() {
               </button>
             </div>
             <div className="grid grid-cols-5 sm:grid-cols-8 gap-1.5">
-              <PickButton char="—" label="none" accent="final" selected={finalIdx === 0} onClick={() => setFinalIdx(0)} />
+              <PickButton char="∅" label="none" accent="final" selected={finalIdx === 0} onClick={() => setFinalIdx(0)} />
               {JONGSEONG_SIMPLE.map((idx) => (
                 <PickButton key={idx} char={JONGSEONG[idx]} label={JONGSEONG_ROMAN[idx]} accent="final"
                   selected={finalIdx === idx} onClick={() => setFinalIdx(finalIdx === idx ? 0 : idx)}

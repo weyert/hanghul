@@ -38,7 +38,7 @@ function SyllableChartPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Syllable Chart</h1>
-        <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>음절표 — Every initial consonant × vowel combination. Click a cell to hear it.</p>
+        <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>음절표. Every initial consonant × vowel combination. Click a cell to hear it.</p>
       </div>
       <PageArtwork
         src="/artwork/syllable-chart.jpg"
@@ -119,7 +119,7 @@ function SyllableChartPage() {
       </div>
 
       <p className="text-xs text-zinc-600">
-        Hover a cell to highlight its row (초성) and column (중성). Each cell shows the basic syllable without a final consonant — add one in the{' '}
+        Hover a cell to highlight its row (초성) and column (중성). Each cell shows the basic syllable without a final consonant. Add one in the{' '}
         <Link to="/builder" className="underline underline-offset-2" style={{ color: 'var(--c-accent-text)' }}>Builder</Link>.
       </p>
     </div>

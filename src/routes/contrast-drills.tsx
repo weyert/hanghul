@@ -34,7 +34,7 @@ function ContrastDrillsPage() {
     <div className="space-y-8 max-w-3xl mx-auto">
       <div>
         <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Contrast Drills</h1>
-        <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>변별 연습 — Train the sounds beginners confuse most often.</p>
+        <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>변별 연습. Train the sounds beginners confuse most.</p>
       </div>
       <PageArtwork
         src="/artwork/contrast-drills.jpg"

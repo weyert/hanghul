@@ -9,14 +9,14 @@ import {
 describe('MDX Frontmatter Extraction', () => {
   it('extracts frontmatter correctly from romanization-guide', () => {
     const meta = getContentPageMeta('romanization-guide', 'en')
-    expect(meta.title).toBe('Romanization: What It Is and Why to Move Past It')
+    expect(meta.title).toBe('Romanization: use it, then drop it')
     expect(meta.flag).toBe('romanization-guide')
-    expect(meta.navLabel).toEqual({ en: 'Romanization', nl: 'Romanization' })
+    expect(meta.navLabel).toEqual({ en: 'Romanization', nl: 'Romanisering' })
   })
 
   it('extracts frontmatter from dutch-guide (nl only)', () => {
     const meta = getContentPageMeta('dutch-guide', 'nl')
-    expect(meta.title).toBe('Hangul leren voor Nederlandstaligen')
+    expect(meta.title).toBe('Hangul voor Nederlandstaligen')
     expect(meta.exclusiveToLocale).toBe('nl')
   })
 })
@@ -28,9 +28,9 @@ describe('getContentPage fallback', () => {
   })
 
   it('falls back to English when no Dutch content exists for a slug', () => {
-    const result = getContentPage('romanization-guide', 'nl')
+    const result = getContentPage('english-guide', 'nl')
     expect(result.fallback).toBe(true)
-    expect(result.module.frontmatter.title).toContain('Romanization')
+    expect(result.module.frontmatter.title).toContain('English')
   })
 
   it('returns Dutch content directly for dutch-guide', () => {
@@ -118,9 +118,9 @@ describe('getStaticRoutes (sitemap support)', () => {
     expect(routes).toContainEqual({ path: '/nl/vowels', slug: 'vowels', locale: 'nl' })
   })
 
-  it('does not fabricate fallback routes (no /nl/romanization-guide)', () => {
+  it('does not fabricate fallback routes (no /nl/english-guide)', () => {
     const routes = getStaticRoutes()
-    expect(routes.find((r) => r.path === '/nl/romanization-guide')).toBeUndefined()
+    expect(routes.find((r) => r.path === '/nl/english-guide')).toBeUndefined()
   })
 
   it('returns only paths that have actual MDX files', () => {

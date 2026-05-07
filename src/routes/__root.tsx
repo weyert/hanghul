@@ -17,6 +17,7 @@ import { FLAGS } from '../flags'
 import { CONTENT_NAV_ITEMS } from '../content/registry'
 import type { ContentNavItem } from '../content/registry'
 import { SITE_URL, SITE_NAME } from '../seo'
+import { translations, tr } from '../i18n/translations'
 import '../styles.css'
 
 // Runs before any CSS to avoid flash of wrong theme
@@ -58,12 +59,13 @@ export const Route = createRootRoute({
 // ─── Not found ────────────────────────────────────────────────────────
 
 function NotFoundPage() {
+  const { language } = useLanguage()
   return (
     <div className="text-center py-24 space-y-3">
       <p className="text-4xl font-black" style={{ color: 'var(--c-1)' }}>404</p>
-      <p className="text-sm" style={{ color: 'var(--c-3)' }}>Page not found.</p>
+      <p className="text-sm" style={{ color: 'var(--c-3)' }}>{tr(translations.notFound.message, language)}</p>
       <Link to="/" className="text-sm underline underline-offset-2" style={{ color: 'var(--c-accent-text)' }}>
-        Go home
+        {tr(translations.notFound.goHome, language)}
       </Link>
     </div>
   )
@@ -111,19 +113,21 @@ function MobileNavLink({ to, children, onClick }: { to: string; children: ReactN
 
 // ─── Flagged routes (non-content) ─────────────────────────────────────
 
-const FLAGGED_ROUTES = [
-  { flag: FLAGS.GUIDED_LEARN,       to: '/learn',          label: 'Lessons'         },
-  { flag: FLAGS.SYLLABLE_CHART,     to: '/syllable-chart', label: 'Syllable Chart'  },
-  { flag: FLAGS.VOCABULARY,         to: '/vocabulary',     label: 'Vocabulary'      },
-  { flag: FLAGS.STROKE_ORDER,       to: '/stroke-order',   label: 'Stroke Order'    },
-  { flag: FLAGS.TYPING_PRACTICE,    to: '/typing',         label: 'Typing'          },
-  { flag: FLAGS.PROGRESS_DASHBOARD, to: '/progress',       label: 'Progress'        },
-  { flag: FLAGS.KOREA_FACTS,        to: '/korea-facts',    label: 'Korea Facts'     },
-  { flag: FLAGS.CONTRAST_DRILLS,    to: '/contrast-drills',label: 'Contrast Drills' },
-] as const
+function getFlaggedRoutes(locale: Locale) {
+  return [
+    { flag: FLAGS.GUIDED_LEARN,       to: '/learn',          label: tr(translations.flaggedRoutes.lessons, locale)        },
+    { flag: FLAGS.SYLLABLE_CHART,     to: '/syllable-chart', label: tr(translations.flaggedRoutes.syllableChart, locale)  },
+    { flag: FLAGS.VOCABULARY,         to: '/vocabulary',     label: tr(translations.flaggedRoutes.vocabulary, locale)     },
+    { flag: FLAGS.STROKE_ORDER,       to: '/stroke-order',   label: tr(translations.flaggedRoutes.strokeOrder, locale)    },
+    { flag: FLAGS.TYPING_PRACTICE,    to: '/typing',         label: tr(translations.flaggedRoutes.typing, locale)         },
+    { flag: FLAGS.PROGRESS_DASHBOARD, to: '/progress',       label: tr(translations.flaggedRoutes.progress, locale)       },
+    { flag: FLAGS.KOREA_FACTS,        to: '/korea-facts',    label: tr(translations.flaggedRoutes.koreaFacts, locale)     },
+    { flag: FLAGS.CONTRAST_DRILLS,    to: '/contrast-drills',label: tr(translations.flaggedRoutes.contrastDrills, locale) },
+  ]
+}
 
 // ─── Shared nav items hook ────────────────────────────────────────────
-// Single source of truth — both desktop and mobile call this.
+// Single source of truth for desktop and mobile.
 
 type NavItem = { to: string; label: string }
 
@@ -170,7 +174,7 @@ function useNavItems(): NavItem[] {
     [FLAGS.CONTRAST_DRILLS]:    contrastDrills,
   }
 
-  const appItems: NavItem[] = FLAGGED_ROUTES
+  const appItems: NavItem[] = getFlaggedRoutes(locale)
     .filter(r => appFlagMap[r.flag])
     .map(r => ({ to: r.to, label: r.label }))
 
@@ -194,6 +198,7 @@ function MoreDropdown() {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
   const { location } = useRouterState()
+  const { language } = useLanguage()
   const routes = useNavItems()
 
   useEffect(() => { setOpen(false) }, [location.pathname])
@@ -224,7 +229,7 @@ function MoreDropdown() {
         onMouseEnter={(e) => { if (!anyActive && !open) (e.currentTarget as HTMLElement).style.color = 'var(--c-1)' }}
         onMouseLeave={(e) => { if (!anyActive && !open) (e.currentTarget as HTMLElement).style.color = 'var(--c-2)' }}
       >
-        More
+        {tr(translations.nav.more, language)}
         <svg
           width="12" height="12" viewBox="0 0 12 12" fill="none"
           stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
@@ -332,6 +337,7 @@ function LanguageSwitcher() {
 function ThemeToggle() {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark')
   const { track } = useAnalytics()
+  const { language } = useLanguage()
 
   useEffect(() => {
     const current = document.documentElement.getAttribute('data-theme') as 'dark' | 'light' | null
@@ -349,12 +355,12 @@ function ThemeToggle() {
   return (
     <button
       onClick={toggle}
-      title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+      title={theme === 'dark' ? tr(translations.theme.toLightMode, language) : tr(translations.theme.toDarkMode, language)}
       className="flex items-center justify-center w-8 h-8 rounded-lg transition-colors duration-150 cursor-pointer hover:bg-[var(--c-ghost-bg)]"
       style={{ color: 'var(--c-3)' }}
       onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--c-1)')}
       onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--c-3)')}
-      aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+      aria-label={theme === 'dark' ? tr(translations.theme.toLightMode, language) : tr(translations.theme.toDarkMode, language)}
     >
       {theme === 'dark' ? (
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -463,11 +469,11 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
             </Link>
 
             <nav className="hidden md:flex items-center gap-0.5">
-              <NavLink to={`/${language}/consonants`}>Consonants</NavLink>
-              <NavLink to={`/${language}/vowels`}>Vowels</NavLink>
-              <NavLink to="/quiz">Quiz</NavLink>
-              <NavLink to="/pronounce">Pronounce</NavLink>
-              <NavLink to="/builder">Builder</NavLink>
+              <NavLink to={`/${language}/consonants`}>{tr(translations.nav.consonants, language)}</NavLink>
+              <NavLink to={`/${language}/vowels`}>{tr(translations.nav.vowels, language)}</NavLink>
+              <NavLink to="/quiz">{tr(translations.nav.quiz, language)}</NavLink>
+              <NavLink to="/pronounce">{tr(translations.nav.pronounce, language)}</NavLink>
+              <NavLink to="/builder">{tr(translations.nav.builder, language)}</NavLink>
               <MoreDropdown />
               <div className="w-px h-4 mx-2" style={{ background: 'var(--c-divider)' }} />
               <ThemeToggle />
@@ -496,11 +502,11 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
               className={`md:hidden px-4 py-3 space-y-1 ${menuOpen ? 'menu-slide-down' : 'menu-slide-up'}`}
               style={{ background: 'var(--c-overlay)', borderTop: '1px solid var(--c-border-sub)' }}
             >
-              <MobileNavLink to={`/${language}/consonants`} onClick={closeMenu}>Consonants</MobileNavLink>
-              <MobileNavLink to={`/${language}/vowels`} onClick={closeMenu}>Vowels</MobileNavLink>
-              <MobileNavLink to="/quiz" onClick={closeMenu}>Quiz</MobileNavLink>
-              <MobileNavLink to="/pronounce" onClick={closeMenu}>Pronounce</MobileNavLink>
-              <MobileNavLink to="/builder" onClick={closeMenu}>Builder</MobileNavLink>
+              <MobileNavLink to={`/${language}/consonants`} onClick={closeMenu}>{tr(translations.nav.consonants, language)}</MobileNavLink>
+              <MobileNavLink to={`/${language}/vowels`} onClick={closeMenu}>{tr(translations.nav.vowels, language)}</MobileNavLink>
+              <MobileNavLink to="/quiz" onClick={closeMenu}>{tr(translations.nav.quiz, language)}</MobileNavLink>
+              <MobileNavLink to="/pronounce" onClick={closeMenu}>{tr(translations.nav.pronounce, language)}</MobileNavLink>
+              <MobileNavLink to="/builder" onClick={closeMenu}>{tr(translations.nav.builder, language)}</MobileNavLink>
               <FlaggedMobileNavLinks onLinkClick={closeMenu} />
               <div className="pt-2 mt-1" style={{ borderTop: '1px solid var(--c-border-sub)' }}>
                 <LanguageSwitcher />
@@ -515,9 +521,9 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
 
         <footer className="max-w-6xl mx-auto px-4 pb-8">
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs" style={{ color: 'var(--c-4)' }}>
-            <Link to="/about" className="hover:underline underline-offset-4">About</Link>
-            <Link to="/privacy" className="hover:underline underline-offset-4">Privacy</Link>
-            <a href="/sitemap.xml" className="hover:underline underline-offset-4">Sitemap</a>
+            <Link to="/about" className="hover:underline underline-offset-4">{tr(translations.footer.about, language)}</Link>
+            <Link to="/privacy" className="hover:underline underline-offset-4">{tr(translations.footer.privacy, language)}</Link>
+            <a href="/sitemap.xml" className="hover:underline underline-offset-4">{tr(translations.footer.sitemap, language)}</a>
           </div>
         </footer>
 

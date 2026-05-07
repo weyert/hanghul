@@ -197,7 +197,7 @@ function KoreaFactsPage() {
         <div>
           <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Korea Facts</h1>
           <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>
-            한국 이야기 — {KOREA_FACTS.length} facts across history, culture, food, tech, and more
+            한국 이야기. {KOREA_FACTS.length} facts across history, culture, food, tech, and daily life.
           </p>
         </div>
         <button

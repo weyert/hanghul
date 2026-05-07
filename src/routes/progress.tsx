@@ -53,7 +53,7 @@ function CharBadge({ char, stats }: { char: HangulCharacter; stats: CardStats | 
     <div
       className="flex flex-col items-center gap-1 p-2 rounded-xl"
       style={{ background: cfg.bg, border: `1px solid ${cfg.border}` }}
-      title={`${char.name} — ${mastery}${acc !== null ? ` (${acc}% correct, ${total} attempts)` : ''}`}
+      title={`${char.name}: ${mastery}${acc !== null ? ` (${acc}% correct, ${total} attempts)` : ''}`}
     >
       <span className="text-xl korean-text font-black" style={{ color: cfg.color }}>{char.char}</span>
       <span className="text-xs font-bold" style={{ color: cfg.color, opacity: 0.7 }}>{char.romanization}</span>
@@ -115,7 +115,7 @@ function ProgressPage() {
     <div className="space-y-8 max-w-3xl mx-auto">
       <div>
         <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Progress</h1>
-        <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>진행 Jin-haeng — Your quiz performance across all 40 characters</p>
+        <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>진행 Jin-haeng. Your quiz performance across all 40 characters.</p>
       </div>
       <PageArtwork
         src="/artwork/progress.jpg"

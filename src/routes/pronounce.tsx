@@ -62,7 +62,7 @@ function SyllableCard({ item }: { item: SyllableAnalysis | OtherChar }) {
         <div className="w-20 h-24 flex items-center justify-center rounded-xl" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border-sub)' }}>
           <span className="text-3xl text-zinc-600">{item.char}</span>
         </div>
-        <span className="text-xs text-zinc-600">—</span>
+        <span className="text-xs text-zinc-600">∅</span>
       </div>
     )
   }
@@ -81,7 +81,7 @@ function SyllableCard({ item }: { item: SyllableAnalysis | OtherChar }) {
         <div style={{ borderTop: '1px solid var(--c-border-sub)' }}>
           <div className="flex items-center gap-1.5 px-2 py-1.5" style={{ borderBottom: '1px solid var(--c-border-sub)' }}>
             <span className="text-xs font-bold w-3" style={{ color: 'var(--c-initial-text)' }}>초</span>
-            <span className="text-base korean-serif font-bold" style={{ color: 'var(--c-initial-text)' }}>{item.initial || '—'}</span>
+            <span className="text-base korean-serif font-bold" style={{ color: 'var(--c-initial-text)' }}>{item.initial || '∅'}</span>
             <span className="text-xs ml-auto" style={{ color: 'var(--c-initial)' }}>{item.initialRoman || ''}</span>
           </div>
           <div className="flex items-center gap-1.5 px-2 py-1.5" style={{ borderBottom: '1px solid var(--c-border-sub)' }}>
@@ -169,7 +169,7 @@ function PronouncePage() {
     <div className="space-y-8 max-w-3xl mx-auto">
       <div>
         <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Pronounce</h1>
-        <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>발음 Bal-eum — Enter Korean text to see its syllable-by-syllable breakdown</p>
+        <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>발음 Bal-eum. Enter Korean text and split it by syllable.</p>
       </div>
       <PageArtwork
         src="/artwork/ipa-guide.jpg"
@@ -266,7 +266,7 @@ function PronouncePage() {
               </div>
               <p className="text-xl font-mono tracking-wide" style={{ color: 'var(--c-1)' }}>/{ipaTranscription}/</p>
               <p className="text-xs mt-2" style={{ color: 'var(--c-4)' }}>
-                Canonical values — actual pronunciation varies with assimilation across syllable boundaries.
+                Canonical values. Pronunciation changes when sounds meet across syllable boundaries.
               </p>
             </div>
           )}

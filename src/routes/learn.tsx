@@ -15,14 +15,13 @@ export const Route = createFileRoute('/learn')({
   component: LearnPage,
   head: () => createSeoHead({
     title: 'Guided Hangul Lessons',
-    description: 'Follow a beginner-friendly Hangul lesson path that introduces Korean letters in a practical reading order for learning Korean online.',
+    description: 'Follow a guided Hangul lesson path that introduces Korean letters in reading order.',
     path: '/learn',
     keywords: [
       'learn Korean',
       'how to learn Korean',
       'learning Korean',
       'learn Korean online',
-      'best way to learn Korean',
       'how to learn Korean language',
     ],
   }),
@@ -85,7 +84,7 @@ function LandingScreen({ onStart }: { onStart: () => void }) {
     <div className="max-w-lg mx-auto space-y-8 py-10">
       <div className="text-center">
         <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Guided Lessons</h1>
-        <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>배우기 — Meet each character, then test yourself right away</p>
+        <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>배우기. Meet each character, then test it.</p>
       </div>
       <PageArtwork
         src="/artwork/learn-path.jpg"
@@ -103,7 +102,7 @@ function LandingScreen({ onStart }: { onStart: () => void }) {
           <div className="space-y-1">
             <p className="font-bold" style={{ color: 'var(--c-1)' }}>See it. Hear it. Test it.</p>
             <p className="text-sm leading-relaxed" style={{ color: 'var(--c-3)' }}>
-              Each character gets a full introduction with audio, then a single quiz question — before you move on.
+              Each character gets audio, examples, and one quiz question before you move on.
             </p>
           </div>
         </div>
@@ -363,10 +362,10 @@ function FinishedScreen({
 }) {
   const pct = Math.round((score / total) * 100)
   const grade =
-    pct >= 90 ? { korean: '완벽해요!', msg: 'Outstanding — you know your basics!', color: '#6ee7b7' } :
-    pct >= 70 ? { korean: '잘했어요!', msg: 'Great work — keep going!',             color: '#a78bfa' } :
-    pct >= 50 ? { korean: '계속해요!', msg: 'Good effort — try once more.',          color: '#fcd34d' } :
-                { korean: '다시 해요', msg: 'Keep practicing — you\'ll get it.',      color: '#f87171' }
+    pct >= 90 ? { korean: '완벽해요!', msg: 'Strong basics. Keep them sharp.', color: '#6ee7b7' } :
+    pct >= 70 ? { korean: '잘했어요!', msg: 'Good score. Drill the misses.',    color: '#a78bfa' } :
+    pct >= 50 ? { korean: '계속해요!', msg: 'Close. Try once more.',             color: '#fcd34d' } :
+                { korean: '다시 해요', msg: 'Repeat the set and slow down.',     color: '#f87171' }
 
   return (
     <div className="max-w-sm mx-auto text-center space-y-6 py-10">

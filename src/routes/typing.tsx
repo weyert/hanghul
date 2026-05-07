@@ -131,7 +131,7 @@ function TypingPracticePage() {
         <div className="max-w-lg mx-auto space-y-8 py-10">
           <div className="text-center">
             <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Typing Practice</h1>
-            <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>타이핑 연습 — See a character, type its romanization</p>
+            <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>타이핑 연습. See a character, type its romanization.</p>
           </div>
           <PageArtwork
             src="/artwork/typing.jpg"
@@ -170,7 +170,7 @@ function TypingPracticePage() {
                 <p className="text-xs font-semibold mt-0.5" style={{ color: 'var(--c-accent-text)' }}>Full challenge</p>
               </div>
               <p className="text-xs leading-relaxed" style={{ color: 'var(--c-3)' }}>
-                All 40 characters — consonants, vowels, tense, and compound.
+                All 40 characters: consonants, vowels, tense, and compound.
               </p>
             </button>
           </div>
@@ -178,7 +178,7 @@ function TypingPracticePage() {
           <p className="text-xs text-center" style={{ color: 'var(--c-4)' }}>
             Type the romanization and press{' '}
             <kbd className="px-1.5 py-0.5 rounded text-xs font-mono" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>Enter</kbd>
-            {' '}— accepted answers follow the site romanization; some consonants allow both common values (for example, g or k for ㄱ)
+            {' '}Accepted answers follow the site romanization; some consonants allow both common values (for example, g or k for ㄱ).
           </p>
         </div>
       )
@@ -188,7 +188,7 @@ function TypingPracticePage() {
       <div className="max-w-lg mx-auto space-y-8 py-10 text-center">
         <div>
           <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Typing Practice</h1>
-          <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>타이핑 연습 — See a character, type its romanization</p>
+          <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>타이핑 연습. See a character, type its romanization.</p>
         </div>
         <PageArtwork
           src="/artwork/typing.jpg"
@@ -197,7 +197,7 @@ function TypingPracticePage() {
         <div className="glass-card rounded-2xl p-8 space-y-4">
           <div className="text-6xl korean-text font-black" style={{ color: 'var(--c-1)', textShadow: '0 0 40px rgba(167,139,250,0.3)' }}>ㄱ→g</div>
           <p className="text-sm" style={{ color: 'var(--c-2)' }}>
-            A character appears — type its romanization and press{' '}
+            A character appears. Type its romanization and press{' '}
             <kbd className="px-1.5 py-0.5 rounded text-xs font-mono" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>Enter</kbd>.
             Accepted answers follow the site romanization, and some consonants allow both common values (for example, <em>g</em> or <em>k</em> for ㄱ).
           </p>

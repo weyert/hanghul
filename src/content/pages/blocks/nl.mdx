@@ -1,0 +1,110 @@
+---
+title: Lettergreepblokken
+description: Elk Koreaans karakter is een compact vierkant blok. Zo worden ze opgebouwd.
+flag: syllable-blocks
+navLabel: Blokken
+audience: general
+---
+
+<PageHeader
+  title="Lettergreepblokken"
+  subtitle="음절 Eum-jeol. Elk Koreaans karakter is een compact vierkant blok. Zo worden ze opgebouwd."
+/>
+
+<SectionCard>
+
+Anders dan in het Nederlands, waar letters op een rij worden geschreven, worden Koreaanse letters (**자모 jamo**) gestapeld tot vierkante blokken. Elk blok staat precies voor **één lettergreep**. Het woord <span className="korean-serif font-black text-base" style={{ color: 'var(--c-accent-text)' }}>한국어</span> heeft drie blokken: <span className="korean-serif font-bold" style={{ color: 'var(--c-1)' }}>한</span>, <span className="korean-serif font-bold" style={{ color: 'var(--c-1)' }}>국</span>, <span className="korean-serif font-bold" style={{ color: 'var(--c-1)' }}>어</span>. Het heeft ook drie lettergrepen: han · guk · eo.
+
+</SectionCard>
+
+## De Drie Posities
+
+Elk lettergreepblok heeft maximaal drie lagen: twee verplicht, één optioneel.
+
+<ExampleGrid cols={3}>
+
+<PositionCard
+  role="initial"
+  korean="초성"
+  en="Beginmedeklinker"
+  detail="Staat altijd vooraan. Elke lettergreep begint met één. Als er geen medeklinkerklank is, gebruik je ㅇ als plaatshouder."
+  example="ㄱ ㄴ ㄷ ㄹ…"
+/>
+
+<PositionCard
+  role="vowel"
+  korean="중성"
+  en="Klinker"
+  detail="Staat naast of onder de beginmedeklinker. Bepaalt de blokopbouw: verticale klinkers staan rechts; horizontale klinkers staan eronder."
+  example="ㅏ ㅓ ㅗ ㅜ…"
+/>
+
+<PositionCard
+  role="final"
+  korean="종성"
+  en="Eindmedeklinker"
+  detail="Optioneel. Ook wel 받침 (batchim) genoemd. Staat onderaan het blok. Ongeveer de helft van alle Koreaanse lettergrepen heeft een eindmedeklinker."
+  example="ㄴ ㄹ ㅁ ㄱ…"
+/>
+
+</ExampleGrid>
+
+## Twee Blokvormen
+
+De oriëntatie van de klinker bepaalt hoe het blok is opgebouwd. De medeklinker groeit mee om de ruimte te vullen.
+
+<ExampleGrid cols={4}>
+
+<ShapeDiagram type="V" char="가" initial="ㄱ" vowel="ㅏ" />
+
+<ShapeDiagram type="H" char="고" initial="ㄱ" vowel="ㅗ" />
+
+<ShapeDiagram type="VF" char="한" initial="ㅎ" vowel="ㅏ" final="ㄴ" />
+
+<ShapeDiagram type="HF" char="국" initial="ㄱ" vowel="ㅜ" final="ㄱ" />
+
+</ExampleGrid>
+
+<ExampleGrid cols={2}>
+
+<SectionCard title="Verticale klinkers → naast elkaar">
+
+ㅏ ㅑ ㅓ ㅕ ㅣ ㅐ ㅒ ㅔ ㅖ en hun samenstellingen: de medeklinker staat *links*, klinker *rechts*
+
+</SectionCard>
+
+<SectionCard title="Horizontale klinkers → gestapeld">
+
+ㅗ ㅛ ㅜ ㅠ ㅡ en hun samenstellingen: de medeklinker staat *boven*, klinker *eronder*
+
+</SectionCard>
+
+</ExampleGrid>
+
+## Stap-voor-Stap Voorbeelden
+
+<ExampleGrid cols={2}>
+
+<BlockExample initial="ㄴ" vowel="ㅏ" combined="나" note="나 (na): ik / mij. Verticale klinker, geen batchim." />
+
+<BlockExample initial="ㅇ" vowel="ㅗ" combined="오" note="오 (o): vijf / komen. Horizontale klinker. ㅇ is stil als beginmedeklinker." />
+
+<BlockExample initial="ㅎ" vowel="ㅏ" final="ㄴ" combined="한" note="한 (han): Koreaans. Verticale klinker + batchim ㄴ onderaan." />
+
+<BlockExample initial="ㄱ" vowel="ㅜ" final="ㄱ" combined="국" note="국 (guk): land / soep. Horizontale klinker + batchim ㄱ onderaan." />
+
+<BlockExample initial="ㅅ" vowel="ㅏ" final="ㄹ" combined="살" note="살 (sal): jaar oud (leeftijdsteller). Verticale klinker + batchim ㄹ." />
+
+<BlockExample initial="ㄱ" vowel="ㅡ" final="ㄹ" combined="글" note="글 (geul): schrijven / tekst. Horizontale klinker + batchim ㄹ." />
+
+</ExampleGrid>
+
+<ExampleGrid cols={3}>
+
+<NavCard to="/nl/consonants" korean="자음" label="Leer Medeklinkers" description="De bouwstenen van elke lettergreep" />
+
+<NavCard to="/nl/vowels" korean="모음" label="Leer Klinkers" description="Bepaalt de blokopbouw" />
+
+<NavCard to="/builder" korean="조합" label="Bouw Lettergrepen" description="Stel je eigen blokken live samen" />
+
+</ExampleGrid>

@@ -25,10 +25,10 @@ export const Route = createFileRoute('/stroke-order')({
 })
 
 const RULES = [
-  { icon: '→', text: 'Left to right — horizontal strokes always go left → right' },
-  { icon: '↓', text: 'Top to bottom — vertical strokes always go top → bottom' },
-  { icon: '↺', text: 'Circles — written counterclockwise, starting from the top' },
-  { icon: '↙↘', text: 'Diagonals — both strokes of ㅅ/ㅈ written from the center outward' },
+  { icon: '→', text: 'Left to right: horizontal strokes go left → right' },
+  { icon: '↓', text: 'Top to bottom: vertical strokes go top → bottom' },
+  { icon: '↺', text: 'Circles: written counterclockwise, starting from the top' },
+  { icon: '↙↘', text: 'Diagonals: both strokes of ㅅ/ㅈ written from the center outward' },
 ]
 
 const CANVAS_SIZE = 240
@@ -295,7 +295,7 @@ function StrokeOrderPage() {
     <div className="space-y-8 max-w-4xl mx-auto">
       <div>
         <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Stroke Order</h1>
-        <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>획순 Hoek-sun — Select any character to see how it is written stroke by stroke</p>
+        <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>획순 Hoek-sun. Select a character and watch its stroke order.</p>
       </div>
       <PageArtwork
         src="/artwork/writing-practice.jpg"
@@ -321,7 +321,7 @@ function StrokeOrderPage() {
           <section>
             <h2 className="text-xs font-bold uppercase tracking-widest mb-2.5 flex items-center gap-2" style={{ color: 'var(--c-3)' }}>
               <span className="w-2 h-2 rounded-full inline-block" style={{ background: 'var(--c-initial)' }} />
-              Consonants — 자음
+              Consonants: 자음
             </h2>
             <div className="flex flex-wrap gap-1.5">
               {consonants.map((c) => (
@@ -343,7 +343,7 @@ function StrokeOrderPage() {
           <section>
             <h2 className="text-xs font-bold uppercase tracking-widest mb-2.5 flex items-center gap-2" style={{ color: 'var(--c-3)' }}>
               <span className="w-2 h-2 rounded-full inline-block" style={{ background: 'var(--c-vowel)' }} />
-              Vowels — 모음
+              Vowels: 모음
             </h2>
             <div className="flex flex-wrap gap-1.5">
               {vowels.map((v) => (

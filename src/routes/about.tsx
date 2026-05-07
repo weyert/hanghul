@@ -5,7 +5,7 @@ export const Route = createFileRoute('/about')({
   component: AboutPage,
   head: () => createSeoHead({
     title: 'About Learn Hangul',
-    description: 'About 한글 배우기, a free interactive resource for learning the Korean Hangul writing system.',
+    description: 'About 한글 배우기, a free interactive resource for learning Hangul.',
     path: '/about',
   }),
 })
@@ -19,7 +19,7 @@ function AboutPage() {
           한글 배우기 / Learn Hangul
         </h1>
         <p className="text-lg leading-relaxed" style={{ color: 'var(--c-3)' }}>
-          A free interactive site for learning the Korean Hangul writing system from first principles.
+          A free interactive site for learning Hangul from first principles.
         </p>
       </header>
 
@@ -27,12 +27,12 @@ function AboutPage() {
         <p>
           The site focuses on the parts of Hangul that beginners need most: consonants, vowels,
           syllable blocks, batchim, pronunciation contrasts, romanization, IPA, and short practice
-          tools. The goal is to make the writing system visible and testable instead of hiding it
+          tools. The site makes the writing system visible and testable instead of hiding it
           behind long vocabulary lists.
         </p>
         <p>
           Content is written for English learners and Dutch learners, with extra attention to sound
-          comparisons that are easy to miss when Korean is explained only through romanization.
+          comparisons learners miss when Korean is explained through romanization alone.
         </p>
         <p>
           The lessons are free to use. If you notice a mistake or have a suggestion, use the project
@@ -46,7 +46,7 @@ function AboutPage() {
         </h2>
         <p className="text-sm leading-relaxed mb-5" style={{ color: 'var(--c-3)' }}>
           Start with the consonants and vowels, then learn how letters stack into blocks. After that,
-          batchim and pronunciation drills will make Korean text feel much less mysterious.
+          batchim and pronunciation drills make Korean text easier to hear and read.
         </p>
         <div className="flex flex-wrap gap-3">
           <Link to="/en/consonants" className="btn-primary text-white font-bold px-5 py-2.5 rounded-xl text-sm">
