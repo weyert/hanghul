@@ -111,7 +111,7 @@ function HomePage() {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
-              to="/consonants"
+              to="/en/consonants"
               className="btn-primary inline-flex items-center gap-2 text-white font-bold px-7 py-3 rounded-xl cursor-pointer text-sm"
             >
               Start Learning <ArrowRight size={15} />
@@ -130,13 +130,19 @@ function HomePage() {
       {/* ── Artwork feature ─────────────────────────────── */}
       <section className="grid lg:grid-cols-[minmax(0,1.15fr)_minmax(280px,0.85fr)] gap-6 items-center">
         <div className="overflow-hidden rounded-2xl glass-card">
-          <img
-            src="/social/hangul-og-syllables.png"
-            alt="Hangul consonant, vowel, and final consonant pieces combining into a Korean syllable block."
-            className="block w-full aspect-[1200/630] object-cover"
-            loading="eager"
-            fetchPriority="high"
-          />
+          <picture>
+            <source srcSet="/social/hangul-og-syllables.avif" type="image/avif" />
+            <source srcSet="/social/hangul-og-syllables.webp" type="image/webp" />
+            <img
+              src="/social/hangul-og-syllables.png"
+              alt="Hangul consonant, vowel, and final consonant pieces combining into a Korean syllable block."
+              className="block w-full aspect-[1200/630] object-cover"
+              loading="eager"
+              fetchPriority="high"
+              width="1200"
+              height="630"
+            />
+          </picture>
         </div>
         <div className="space-y-5">
           <div>
@@ -199,10 +205,10 @@ function HomePage() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {([
-            { step: 1, label: 'Consonants', sub: '자음', to: '/consonants', desc: '14 basic + 5 tense consonants' },
-            { step: 2, label: 'Vowels',     sub: '모음', to: '/vowels',     desc: '10 basic + 11 compound vowels' },
-            { step: 3, label: 'How Blocks Work', sub: '음절', to: '/blocks', desc: 'Understand how letters stack into syllable blocks' },
-            { step: 4, label: grammarGuide ? 'Grammar 101' : (batchimLesson ? 'Batchim Basics' : 'Quiz'), sub: grammarGuide ? '문법' : (batchimLesson ? '받침' : '연습'), to: grammarGuide ? '/grammar' : (batchimLesson ? '/batchim' : '/quiz'), desc: grammarGuide ? 'Learn SOV structure and particles' : (batchimLesson ? 'Learn final consonants before broader drills' : 'Test recognition and recall') },
+            { step: 1, label: 'Consonants', sub: '자음', to: '/en/consonants', desc: '14 basic + 5 tense consonants' },
+            { step: 2, label: 'Vowels',     sub: '모음', to: '/en/vowels',     desc: '10 basic + 11 compound vowels' },
+            { step: 3, label: 'How Blocks Work', sub: '음절', to: '/en/blocks', desc: 'Understand how letters stack into syllable blocks' },
+            { step: 4, label: grammarGuide ? 'Grammar 101' : (batchimLesson ? 'Batchim Basics' : 'Quiz'), sub: grammarGuide ? '문법' : (batchimLesson ? '받침' : '연습'), to: grammarGuide ? '/en/grammar' : (batchimLesson ? '/en/batchim' : '/quiz'), desc: grammarGuide ? 'Learn SOV structure and particles' : (batchimLesson ? 'Learn final consonants before broader drills' : 'Test recognition and recall') },
           ] as const).map(({ step, label, sub, to, desc }) => (
             <Link
               key={step}
@@ -233,14 +239,14 @@ function HomePage() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <FeatureCard
-            to="/consonants"
+            to="/en/consonants"
             char="ㄱ ㄴ ㄷ"
             label="Consonants"
             subLabel="자음 Ja-eum"
             desc="14 basic + 5 tense consonants. Interactive flip cards reveal name, romanization, and example words."
           />
           <FeatureCard
-            to="/vowels"
+            to="/en/vowels"
             char="ㅏ ㅓ ㅗ"
             label="Vowels"
             subLabel="모음 Mo-eum"
@@ -272,7 +278,7 @@ function HomePage() {
           />
           {grammarGuide && (
             <ToolCard
-              to="/grammar"
+              to="/en/grammar"
               korean="문"
               label="Grammar 101"
               subLabel="문법 Mun-beop"

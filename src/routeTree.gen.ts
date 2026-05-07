@@ -18,6 +18,7 @@ import { Route as RomanizationGuideRouteImport } from './routes/romanization-gui
 import { Route as QuizRouteImport } from './routes/quiz'
 import { Route as PronounceRouteImport } from './routes/pronounce'
 import { Route as ProgressRouteImport } from './routes/progress'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as KoreaFactsRouteImport } from './routes/korea-facts'
 import { Route as IpaGuideRouteImport } from './routes/ipa-guide'
@@ -29,6 +30,7 @@ import { Route as ConsonantsRouteImport } from './routes/consonants'
 import { Route as BuilderRouteImport } from './routes/builder'
 import { Route as BlocksRouteImport } from './routes/blocks'
 import { Route as BatchimRouteImport } from './routes/batchim'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LocaleSlugRouteImport } from './routes/$locale/$slug'
 
@@ -75,6 +77,11 @@ const PronounceRoute = PronounceRouteImport.update({
 const ProgressRoute = ProgressRouteImport.update({
   id: '/progress',
   path: '/progress',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LearnRoute = LearnRouteImport.update({
@@ -132,6 +139,11 @@ const BatchimRoute = BatchimRouteImport.update({
   path: '/batchim',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -145,6 +157,7 @@ const LocaleSlugRoute = LocaleSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/batchim': typeof BatchimRoute
   '/blocks': typeof BlocksRoute
   '/builder': typeof BuilderRoute
@@ -156,6 +169,7 @@ export interface FileRoutesByFullPath {
   '/ipa-guide': typeof IpaGuideRoute
   '/korea-facts': typeof KoreaFactsRoute
   '/learn': typeof LearnRoute
+  '/privacy': typeof PrivacyRoute
   '/progress': typeof ProgressRoute
   '/pronounce': typeof PronounceRoute
   '/quiz': typeof QuizRoute
@@ -169,6 +183,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/batchim': typeof BatchimRoute
   '/blocks': typeof BlocksRoute
   '/builder': typeof BuilderRoute
@@ -180,6 +195,7 @@ export interface FileRoutesByTo {
   '/ipa-guide': typeof IpaGuideRoute
   '/korea-facts': typeof KoreaFactsRoute
   '/learn': typeof LearnRoute
+  '/privacy': typeof PrivacyRoute
   '/progress': typeof ProgressRoute
   '/pronounce': typeof PronounceRoute
   '/quiz': typeof QuizRoute
@@ -194,6 +210,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/batchim': typeof BatchimRoute
   '/blocks': typeof BlocksRoute
   '/builder': typeof BuilderRoute
@@ -205,6 +222,7 @@ export interface FileRoutesById {
   '/ipa-guide': typeof IpaGuideRoute
   '/korea-facts': typeof KoreaFactsRoute
   '/learn': typeof LearnRoute
+  '/privacy': typeof PrivacyRoute
   '/progress': typeof ProgressRoute
   '/pronounce': typeof PronounceRoute
   '/quiz': typeof QuizRoute
@@ -220,6 +238,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
     | '/batchim'
     | '/blocks'
     | '/builder'
@@ -231,6 +250,7 @@ export interface FileRouteTypes {
     | '/ipa-guide'
     | '/korea-facts'
     | '/learn'
+    | '/privacy'
     | '/progress'
     | '/pronounce'
     | '/quiz'
@@ -244,6 +264,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
     | '/batchim'
     | '/blocks'
     | '/builder'
@@ -255,6 +276,7 @@ export interface FileRouteTypes {
     | '/ipa-guide'
     | '/korea-facts'
     | '/learn'
+    | '/privacy'
     | '/progress'
     | '/pronounce'
     | '/quiz'
@@ -268,6 +290,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/about'
     | '/batchim'
     | '/blocks'
     | '/builder'
@@ -279,6 +302,7 @@ export interface FileRouteTypes {
     | '/ipa-guide'
     | '/korea-facts'
     | '/learn'
+    | '/privacy'
     | '/progress'
     | '/pronounce'
     | '/quiz'
@@ -293,6 +317,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
   BatchimRoute: typeof BatchimRoute
   BlocksRoute: typeof BlocksRoute
   BuilderRoute: typeof BuilderRoute
@@ -304,6 +329,7 @@ export interface RootRouteChildren {
   IpaGuideRoute: typeof IpaGuideRoute
   KoreaFactsRoute: typeof KoreaFactsRoute
   LearnRoute: typeof LearnRoute
+  PrivacyRoute: typeof PrivacyRoute
   ProgressRoute: typeof ProgressRoute
   PronounceRoute: typeof PronounceRoute
   QuizRoute: typeof QuizRoute
@@ -379,6 +405,13 @@ declare module '@tanstack/react-router' {
       path: '/progress'
       fullPath: '/progress'
       preLoaderRoute: typeof ProgressRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/learn': {
@@ -458,6 +491,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BatchimRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -477,6 +517,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
   BatchimRoute: BatchimRoute,
   BlocksRoute: BlocksRoute,
   BuilderRoute: BuilderRoute,
@@ -488,6 +529,7 @@ const rootRouteChildren: RootRouteChildren = {
   IpaGuideRoute: IpaGuideRoute,
   KoreaFactsRoute: KoreaFactsRoute,
   LearnRoute: LearnRoute,
+  PrivacyRoute: PrivacyRoute,
   ProgressRoute: ProgressRoute,
   PronounceRoute: PronounceRoute,
   QuizRoute: QuizRoute,

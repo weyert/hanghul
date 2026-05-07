@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
-import { createFileRoute, notFound, useNavigate } from '@tanstack/react-router'
-import { getContentPage, getContentPageMeta } from '../../content/registry'
+import { createFileRoute, notFound } from '@tanstack/react-router'
+import { getContentPage, getContentPageLocales, getContentPageMeta } from '../../content/registry'
 import { MDX_COMPONENTS } from '../../components/mdx'
 import { useLanguage } from '../../contexts/LanguageContext'
 import type { Locale } from '../../contexts/LanguageContext'
@@ -10,23 +10,20 @@ import { CONTENT_ARTWORK, PageArtwork } from '../../components/PageArtwork'
 import { SITE_URL, createSeoHead } from '../../seo'
 
 const VALID_LOCALES = new Set<string>(['en', 'nl'])
-const STORAGE_KEY = 'hangul-language'
-
 export const Route = createFileRoute('/$locale/$slug')({
-  validateSearch: (search: Record<string, unknown>) => ({
-    from: typeof search.from === 'string' ? search.from : undefined,
-  }),
   beforeLoad: ({ params }) => {
     if (!VALID_LOCALES.has(params.locale)) throw notFound()
   },
   head: ({ params }) => {
     try {
       const meta = getContentPageMeta(params.slug, params.locale as Locale)
-      const alternates = (['en', 'nl'] as Locale[]).map(l => ({
+      const locales = getContentPageLocales(params.slug)
+      const alternates = locales.map(l => ({
         rel: 'alternate',
         hrefLang: l,
         href: `${SITE_URL}/${l}/${params.slug}`,
       }))
+      const defaultLocale = locales.includes('en') ? 'en' : (locales[0] ?? 'en')
       const seo = createSeoHead({
         title: meta.title,
         description: meta.description,
@@ -38,7 +35,7 @@ export const Route = createFileRoute('/$locale/$slug')({
         links: [
           ...seo.links,
           ...alternates,
-          { rel: 'alternate', hrefLang: 'x-default', href: `${SITE_URL}/en/${params.slug}` },
+          { rel: 'alternate', hrefLang: 'x-default', href: `${SITE_URL}/${defaultLocale}/${params.slug}` },
         ],
       }
     } catch {
@@ -60,30 +57,10 @@ function LocaleSync({ locale }: { locale: Locale }) {
   return null
 }
 
-// ─── Legacy refiner ───────────────────────────────────────────────────
-// When a user arrives via a legacy redirect (?from=legacy), read the
-// stored locale preference and silently navigate to the preferred locale.
-// This runs only once on mount (client-side only) so that direct visits
-// to /en/... or /nl/... are never rewritten by localStorage.
-
-function LegacyRefiner({ locale, slug }: { locale: Locale; slug: string }) {
-  const navigate = useNavigate()
-
-  useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY)
-    const preferred: Locale = stored === 'nl' ? 'nl' : 'en'
-    void navigate({ to: `/${preferred}/${slug}`, replace: true })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  return null
-}
-
 // ─── Page ─────────────────────────────────────────────────────────────
 
 function ContentPage() {
   const { locale, slug } = Route.useParams()
-  const { from } = Route.useSearch()
 
   let result
   try {
@@ -101,7 +78,6 @@ function ContentPage() {
   return (
     <div className="space-y-10 max-w-3xl mx-auto">
       <LocaleSync locale={locale as Locale} />
-      {from === 'legacy' && <LegacyRefiner locale={locale as Locale} slug={slug} />}
       {result.fallback && <FallbackBanner slug={slug} />}
       {artwork && <PageArtwork {...artwork} />}
       <FlagGate flag={meta.flag}>

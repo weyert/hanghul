@@ -1,0 +1,35 @@
+# 한글 배우기 — Learn Hangul
+
+> Free bilingual resource for learning the Korean Hangul writing system.
+> Covers the alphabet, syllable block structure, pronunciation, romanization, IPA, and beginner grammar.
+
+## Core Reference Pages
+
+- Consonants (EN): https://korean.youcanlearn.it/en/consonants
+- Vowels (EN): https://korean.youcanlearn.it/en/vowels
+- Syllable Blocks (EN): https://korean.youcanlearn.it/en/blocks
+- Batchim Guide (EN): https://korean.youcanlearn.it/en/batchim
+- Romanization Guide (EN): https://korean.youcanlearn.it/en/romanization-guide
+- IPA Guide (EN): https://korean.youcanlearn.it/en/ipa-guide
+- English Learner Guide (EN): https://korean.youcanlearn.it/en/english-guide
+- Grammar Basics (EN): https://korean.youcanlearn.it/en/grammar
+
+## Dutch Language Pages
+
+- Medeklinkers (NL): https://korean.youcanlearn.it/nl/consonants
+- Klinkers (NL): https://korean.youcanlearn.it/nl/vowels
+- Nederlandse Leerdersgids (NL): https://korean.youcanlearn.it/nl/dutch-guide
+
+## Practice Tools
+
+- Quiz: https://korean.youcanlearn.it/quiz
+- Pronunciation Breakdown: https://korean.youcanlearn.it/pronounce
+- Syllable Builder: https://korean.youcanlearn.it/builder
+- Syllable Chart: https://korean.youcanlearn.it/syllable-chart
+- Typing Practice: https://korean.youcanlearn.it/typing
+- Contrast Drills: https://korean.youcanlearn.it/contrast-drills
+
+## Citation Notes
+
+The site is free to use and may be cited with attribution to 한글 배우기 / Learn Hangul.
+Canonical URLs are listed in the sitemap: https://korean.youcanlearn.it/sitemap.xml

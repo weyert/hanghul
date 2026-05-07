@@ -16,7 +16,7 @@ import { useAnalytics } from '../hooks/useAnalytics'
 import { FLAGS } from '../flags'
 import { CONTENT_NAV_ITEMS } from '../content/registry'
 import type { ContentNavItem } from '../content/registry'
-import { createSeoHead, SITE_URL, SITE_NAME } from '../seo'
+import { SITE_URL, SITE_NAME } from '../seo'
 import '../styles.css'
 
 // Runs before any CSS to avoid flash of wrong theme
@@ -28,28 +28,27 @@ const STRUCTURED_DATA = JSON.stringify({
   alternateName: 'Learn Hangul',
   url: SITE_URL,
   inLanguage: ['en', 'nl'],
+  description: 'Free interactive platform to learn the Korean Hangul alphabet, including consonants, vowels, syllable blocks, pronunciation tools, and quizzes.',
   about: {
-    '@type': 'Thing',
-    name: 'Hangul',
-    alternateName: 'Korean alphabet',
+    '@type': 'Language',
+    name: 'Korean',
+    alternateName: '한국어',
   },
-  educationalLevel: 'Beginner',
+  publisher: {
+    '@type': 'Organization',
+    name: SITE_NAME,
+    url: SITE_URL,
+  },
 })
 
 export const Route = createRootRoute({
   head: () => {
-    const seo = createSeoHead()
     return {
       meta: [
         { charSet: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        ...seo.meta,
       ],
       links: [
-        ...seo.links,
-        { rel: 'alternate', hrefLang: 'en', href: `${SITE_URL}/en/consonants` },
-        { rel: 'alternate', hrefLang: 'nl', href: `${SITE_URL}/nl/consonants` },
-        { rel: 'alternate', hrefLang: 'x-default', href: SITE_URL },
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous' },
         {
@@ -520,6 +519,14 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
         <main className="max-w-6xl mx-auto px-4 py-10">
           {children}
         </main>
+
+        <footer className="max-w-6xl mx-auto px-4 pb-8">
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs" style={{ color: 'var(--c-4)' }}>
+            <Link to="/about" className="hover:underline underline-offset-4">About</Link>
+            <Link to="/privacy" className="hover:underline underline-offset-4">Privacy</Link>
+            <a href="/sitemap.xml" className="hover:underline underline-offset-4">Sitemap</a>
+          </div>
+        </footer>
 
         <Scripts />
       </body>

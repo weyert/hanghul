@@ -164,6 +164,13 @@ export function getAllSlugs(): string[] {
   return Object.keys(PAGES)
 }
 
+/** Returns locales that have their own MDX file for a slug. */
+export function getContentPageLocales(slug: string): Locale[] {
+  const locales = PAGES[slug]
+  if (!locales) throw new Error(`Unknown content slug: "${slug}"`)
+  return Object.keys(locales) as Locale[]
+}
+
 // ─── Sitemap support ──────────────────────────────────────────────────
 // Returns one entry per slug+locale combination that has its own MDX file.
 // English fallbacks are NOT duplicated — only routes with real content appear.
