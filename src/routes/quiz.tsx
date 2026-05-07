@@ -20,8 +20,15 @@ export const Route = createFileRoute('/quiz')({
   component: QuizPage,
   head: () => createSeoHead({
     title: 'Hangul Quiz',
-    description: 'Test Korean consonants, vowels, words, and listening skills with a short adaptive Hangul quiz.',
+    description: 'Test Korean consonants, vowels, words, and listening skills with a short adaptive Hangul quiz for learning Korean.',
     path: '/quiz',
+    keywords: [
+      'learn Korean',
+      'learning Korean',
+      'best app to learn Korean',
+      'how to learn Korean language',
+      'Korean language learning',
+    ],
   }),
 })
 

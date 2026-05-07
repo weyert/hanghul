@@ -13,8 +13,14 @@ export const Route = createFileRoute('/typing')({
   component: TypingPracticePage,
   head: () => createSeoHead({
     title: 'Hangul Typing Practice',
-    description: 'Practice typing Korean letter romanizations and build faster recall for Hangul consonants and vowels.',
+    description: 'Practice typing Korean letter romanizations and build faster recall for Hangul consonants and vowels while learning Korean.',
     path: '/typing',
+    keywords: [
+      'learning Korean',
+      'how to learn Korean language',
+      'Korean language learning',
+      'learn Korean online',
+    ],
   }),
 })
 

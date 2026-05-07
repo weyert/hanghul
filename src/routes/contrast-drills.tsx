@@ -11,8 +11,14 @@ export const Route = createFileRoute('/contrast-drills')({
   component: ContrastDrillsPage,
   head: () => createSeoHead({
     title: 'Korean Sound Contrast Drills',
-    description: 'Practice Korean pronunciation contrasts that beginners often confuse, including tense and aspirated consonants.',
+    description: 'Practice Korean pronunciation contrasts that beginners often confuse, including tense and aspirated consonants, as part of learning Korean.',
     path: '/contrast-drills',
+    keywords: [
+      'learning Korean',
+      'Korean language learning',
+      'learn Korean online',
+      'how to learn Korean language',
+    ],
   }),
 })
 

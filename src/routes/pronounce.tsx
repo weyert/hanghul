@@ -34,8 +34,14 @@ export const Route = createFileRoute('/pronounce')({
   component: PronouncePage,
   head: () => createSeoHead({
     title: 'Korean Pronunciation Tool',
-    description: 'Break Korean words into syllables, initials, vowels, finals, romanization, and IPA pronunciation hints.',
+    description: 'Break Korean words into syllables, initials, vowels, finals, romanization, and IPA pronunciation hints while learning Korean online.',
     path: '/pronounce',
+    keywords: [
+      'learning Korean',
+      'how to learn Korean language',
+      'Korean language learning',
+      'learn Korean online',
+    ],
   }),
 })
 

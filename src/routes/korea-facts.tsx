@@ -11,8 +11,13 @@ export const Route = createFileRoute('/korea-facts')({
   component: KoreaFactsPage,
   head: () => createSeoHead({
     title: 'Korea Facts',
-    description: 'Learn cultural, historical, language, food, and society facts about Korea alongside your Hangul practice.',
+    description: 'Learn cultural, historical, language, food, and society facts about Korea alongside your Hangul practice and Korean language learning.',
     path: '/korea-facts',
+    keywords: [
+      'learning Korean',
+      'Korean language learning',
+      'learn Korean online',
+    ],
   }),
 })
 

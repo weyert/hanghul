@@ -13,8 +13,15 @@ export const Route = createFileRoute('/vocabulary')({
   component: VocabularyPage,
   head: () => createSeoHead({
     title: 'Korean Vocabulary',
-    description: 'Study beginner Korean vocabulary by category with Hangul, romanization, English meanings, and audio.',
+    description: 'Study beginner Korean vocabulary by category with Hangul, romanization, English meanings, and audio in a browser-based learn Korean words app.',
     path: '/vocabulary',
+    keywords: [
+      'learn Korean words app',
+      'learn Korean words',
+      'learning Korean',
+      'Korean language learning',
+      'learn Korean online',
+    ],
   }),
 })
 

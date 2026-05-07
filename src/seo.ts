@@ -11,6 +11,7 @@ type SeoOptions = {
   image?: string
   imageAlt?: string
   type?: 'website' | 'article'
+  keywords?: string[]
 }
 
 export function absoluteUrl(path = '/') {
@@ -29,14 +30,23 @@ export function createSeoHead({
   image = DEFAULT_SOCIAL_IMAGE,
   imageAlt = 'Elegant Hangul learning tiles on a warm dark study surface.',
   type = 'website',
+  keywords,
 }: SeoOptions = {}) {
   const fullTitle = pageTitle(title)
   const url = absoluteUrl(path)
+  const cleanKeywords = Array.from(
+    new Set(
+      (keywords ?? [])
+        .map((keyword) => keyword.trim())
+        .filter(Boolean),
+    ),
+  )
 
   return {
     meta: [
       { title: fullTitle },
       { name: 'description', content: description },
+      ...(cleanKeywords.length > 0 ? [{ name: 'keywords', content: cleanKeywords.join(', ') }] : []),
       { property: 'og:type', content: type },
       { property: 'og:site_name', content: SITE_NAME },
       { property: 'og:url', content: url },

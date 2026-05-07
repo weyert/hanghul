@@ -11,8 +11,14 @@ export const Route = createFileRoute('/syllable-chart')({
   component: SyllableChartPage,
   head: () => createSeoHead({
     title: 'Hangul Syllable Chart',
-    description: 'Explore Korean syllable combinations in a chart of initial consonants and vowels, with audio for each block.',
+    description: 'Explore Korean syllable combinations in a chart of initial consonants and vowels, with audio for each block while learning Korean.',
     path: '/syllable-chart',
+    keywords: [
+      'learning Korean',
+      'Korean language learning',
+      'learn Korean online',
+      'how to learn Korean',
+    ],
   }),
 })
 

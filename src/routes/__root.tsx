@@ -28,7 +28,7 @@ const STRUCTURED_DATA = JSON.stringify({
   alternateName: 'Learn Hangul',
   url: SITE_URL,
   inLanguage: ['en', 'nl'],
-  description: 'Free interactive platform to learn the Korean Hangul alphabet, including consonants, vowels, syllable blocks, pronunciation tools, and quizzes.',
+  description: 'Free interactive platform to learn Korean online through Hangul consonants, vowels, syllable blocks, pronunciation tools, and quizzes.',
   about: {
     '@type': 'Language',
     name: 'Korean',

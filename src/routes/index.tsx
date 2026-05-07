@@ -7,8 +7,17 @@ import { createSeoHead } from '../seo'
 export const Route = createFileRoute('/')({
   component: HomePage,
   head: () => createSeoHead({
-    description: 'Learn Hangul from scratch with Korean alphabet cards, syllable block tools, pronunciation breakdowns, and quizzes.',
+    description: 'Learn Korean online from scratch with Hangul cards, syllable block tools, pronunciation breakdowns, and quizzes.',
     path: '/',
+    keywords: [
+      'learn Korean',
+      'how to learn Korean',
+      'Korean language learning',
+      'learn Korean online',
+      'learning Korean',
+      'best way to learn Korean',
+      'how to learn Korean language',
+    ],
   }),
 })
 
@@ -106,7 +115,7 @@ function HomePage() {
           </p>
           <p className="max-w-md mx-auto leading-relaxed mb-10 text-sm sm:text-base" style={{ color: 'var(--c-3)' }}>
             Just 24 letters — 14 consonants and 10 vowels — that combine into elegant
-            syllable blocks. Start from scratch and read Korean in days.
+            syllable blocks. A practical way to learn Korean online from scratch and start reading in days.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
@@ -124,6 +133,9 @@ function HomePage() {
               Test Yourself
             </Link>
           </div>
+          <p className="mt-4 text-xs sm:text-sm max-w-lg mx-auto" style={{ color: 'var(--c-4)' }}>
+            If you are figuring out how to learn Korean language, start with Hangul here. It is the clearest first step for reading, pronunciation, and early vocabulary.
+          </p>
         </div>
       </div>
 
@@ -324,6 +336,7 @@ function HomePage() {
             <h3 className="font-bold mb-2 font-display" style={{ color: 'var(--c-1)' }}>Created by King Sejong</h3>
             <p className="text-sm leading-relaxed" style={{ color: 'var(--c-3)' }}>
               Designed to increase literacy. Before Hangul, Koreans wrote with complex Chinese characters accessible only to scholars.
+              That is why Hangul is still one of the best ways to start learning Korean.
             </p>
           </div>
           <div>

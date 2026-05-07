@@ -12,8 +12,14 @@ export const Route = createFileRoute('/progress')({
   component: ProgressPage,
   head: () => createSeoHead({
     title: 'Hangul Progress',
-    description: 'Track your Hangul quiz progress and see which Korean letters are mastered, learning, or still new.',
+    description: 'Track your Hangul quiz progress and see which Korean letters are mastered, learning, or still new while learning Korean.',
     path: '/progress',
+    keywords: [
+      'learning Korean',
+      'Korean language learning',
+      'how to learn Korean',
+      'learn Korean online',
+    ],
   }),
 })
 

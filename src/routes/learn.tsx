@@ -15,8 +15,16 @@ export const Route = createFileRoute('/learn')({
   component: LearnPage,
   head: () => createSeoHead({
     title: 'Guided Hangul Lessons',
-    description: 'Follow a beginner-friendly Hangul lesson path that introduces Korean letters in a practical reading order.',
+    description: 'Follow a beginner-friendly Hangul lesson path that introduces Korean letters in a practical reading order for learning Korean online.',
     path: '/learn',
+    keywords: [
+      'learn Korean',
+      'how to learn Korean',
+      'learning Korean',
+      'learn Korean online',
+      'best way to learn Korean',
+      'how to learn Korean language',
+    ],
   }),
 })
 

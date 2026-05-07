@@ -13,8 +13,14 @@ export const Route = createFileRoute('/stroke-order')({
   component: StrokeOrderPage,
   head: () => createSeoHead({
     title: 'Hangul Stroke Order',
-    description: 'Learn how to write Korean consonants and vowels with stroke order animations and practice guidance.',
+    description: 'Learn how to write Korean consonants and vowels with stroke order animations and practice guidance while learning Korean online.',
     path: '/stroke-order',
+    keywords: [
+      'learning Korean',
+      'how to learn Korean',
+      'Korean language learning',
+      'learn Korean online',
+    ],
   }),
 })
 

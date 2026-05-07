@@ -15,8 +15,15 @@ export const Route = createFileRoute('/builder')({
   component: BuilderPage,
   head: () => createSeoHead({
     title: 'Hangul Syllable Builder',
-    description: 'Build Korean syllable blocks from initial consonants, vowels, and final consonants, then hear the result aloud.',
+    description: 'Build Korean syllable blocks from initial consonants, vowels, and final consonants, then hear the result aloud as part of learning Korean.',
     path: '/builder',
+    keywords: [
+      'learn Korean',
+      'learning Korean',
+      'how to learn Korean language',
+      'Korean language learning',
+      'learn Korean online',
+    ],
   }),
 })
 
