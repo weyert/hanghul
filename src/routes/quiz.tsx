@@ -4,7 +4,7 @@ import { useBooleanFlagValue } from '@openfeature/react-sdk'
 import { FLAGS } from '../flags'
 import { consonants, vowels, allCharacters } from '../data/hangul'
 import type { HangulCharacter } from '../data/hangul'
-import { QUIZ_VOCAB } from '../data/vocabulary'
+import { QUIZ_VOCAB, getVocabMeaning } from '../data/vocabulary'
 import type { VocabEntry } from '../data/vocabulary'
 import { useLanguage } from '../contexts/LanguageContext'
 import { SpeakButton } from '../components/SpeakButton'
@@ -468,7 +468,7 @@ function QuizPage() {
                   subLabel="어휘 Eo-hwi"
                   count={copy.vocabularyCount}
                   accent="amber"
-                  char="가방→bag"
+                  char={language === 'nl' ? '물→water' : '가방→bag'}
                   onStart={startQuiz}
                 />
               )}
@@ -602,7 +602,7 @@ function QuizPage() {
             return (
               <button key={option.id} className={cls} style={style}
                 onClick={() => handleSelect(option.id)} disabled={isAnswered}>
-                {option.meaning}
+                {getVocabMeaning(option, language)}
               </button>
             )
           })}
@@ -620,7 +620,7 @@ function QuizPage() {
               ) : (
                 <div className="flex items-center justify-center gap-2 flex-wrap">
                   <p className="font-bold text-red-400">
-                    {copy.itMeans} <strong className="text-red-300">{wordQuestion.correct.meaning}</strong>
+                    {copy.itMeans} <strong className="text-red-300">{getVocabMeaning(wordQuestion.correct, language)}</strong>
                   </p>
                   <SpeakButton text={wordQuestion.correct.korean} size="sm" className="text-red-500 hover:text-red-300" />
                 </div>

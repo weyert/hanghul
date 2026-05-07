@@ -27,10 +27,10 @@ export function PronunciationModel({ compact = false }: { compact?: boolean }) {
     nl: {
       title: 'Kernmodel voor uitspraak',
       view: technical ? 'Technische weergave' : 'Beginnersweergave',
-      hint: 'schakel om als je meer of minder detail wilt.',
+      hint: 'Schakel om als je meer of minder detail wilt.',
       tabs: { beginner: 'Beginner', technical: 'Technisch' },
       technical: [
-        { title: 'Gewone / lax stops', text: 'ㄱ ㄷ ㅂ ㅈ vormen de gewone reeks. Aan het begin van een woord zijn ze meestal stemloos of zwak stemhebbend, met weinig aspiratie.' },
+        { title: 'Gewone stops', text: 'ㄱ ㄷ ㅂ ㅈ vormen de gewone reeks. Aan het begin van een woord zijn ze meestal stemloos of zwak stemhebbend, met weinig aspiratie.' },
         { title: 'Geaspireerde stops', text: 'ㅋ ㅌ ㅍ ㅊ voegen een duidelijke luchtstoot toe. Train eerst de luchtstroom.' },
         { title: 'Gespannen stops', text: 'ㄲ ㄸ ㅃ ㅆ ㅉ zijn strak, kort en ongeaspireerd. Denk aan spanning, niet aan volume.' },
         { title: 'Lettergreepblokken', text: 'Lees blokken als eenheden: beginmedeklinker + klinker + optionele batchim. Klankveranderingen gebeuren vaak over blokgrenzen heen.' },

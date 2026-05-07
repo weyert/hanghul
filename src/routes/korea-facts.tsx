@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useState, useCallback, useMemo } from 'react'
 import { useBooleanFlagValue } from '@openfeature/react-sdk'
 import { FLAGS } from '../flags'
-import { KOREA_FACTS, CATEGORY_META } from '../data/koreaFacts'
+import { KOREA_FACTS, CATEGORY_META, getKoreaFactText } from '../data/koreaFacts'
 import type { FactCategory } from '../data/koreaFacts'
 import { PageArtwork } from '../components/PageArtwork'
 import { useLanguage } from '../contexts/LanguageContext'
@@ -31,16 +31,40 @@ function shuffle<T>(arr: T[]): T[] {
   return out
 }
 
+function formatEra(era: string, language: 'en' | 'nl') {
+  if (language === 'en') return era
+
+  return era
+    .replaceAll('Ancient', 'Oudheid')
+    .replaceAll('Three Kingdoms', 'Drie Koninkrijken')
+    .replaceAll('Unified Silla', 'Verenigd Silla')
+    .replaceAll('Joseon Dynasty', 'Joseon-dynastie')
+    .replaceAll('Japanese Colonial Period', 'Japanse koloniale periode')
+    .replaceAll('March First Movement', '1 maart-beweging')
+    .replaceAll('Korean War', 'Koreaanse Oorlog')
+    .replaceAll('Modern', 'Modern')
+    .replaceAll('century', 'eeuw')
+    .replaceAll('June', 'juni')
+    .replaceAll('September', 'september')
+    .replaceAll('November', 'november')
+    .replaceAll('December', 'december')
+    .replaceAll('May', 'mei')
+    .replaceAll('c.', 'ca.')
+    .replaceAll('BC', 'v.Chr.')
+    .replaceAll('AD', 'n.Chr.')
+}
+
 // ─── Category pill ────────────────────────────────────────────────────
 
 function CategoryPill({
-  category, active, count, onClick,
+  category, active, count, onClick, allLabel, language,
 }: {
   category: FactCategory | 'all'
   active: boolean
   count: number
   onClick: () => void
   allLabel: string
+  language: 'en' | 'nl'
 }) {
   const meta = category === 'all' ? null : CATEGORY_META[category]
   return (
@@ -56,7 +80,7 @@ function CategoryPill({
       onMouseEnter={e => { if (!active) (e.currentTarget as HTMLElement).style.color = 'var(--c-1)' }}
       onMouseLeave={e => { if (!active) (e.currentTarget as HTMLElement).style.color = 'var(--c-3)' }}
     >
-      {category === 'all' ? allLabel : meta!.label}
+      {category === 'all' ? allLabel : (language === 'nl' ? meta!.labelNl : meta!.label)}
       {meta && <span className="ml-1 korean-text text-xs opacity-70">{meta.korean}</span>}
       <span className="ml-1.5 text-xs opacity-60">{count}</span>
     </button>
@@ -66,13 +90,14 @@ function CategoryPill({
 // ─── Fact card ────────────────────────────────────────────────────────
 
 function FactCard({
-  text, category, era, index, total,
+  text, category, era, index, total, language,
 }: {
   text: string
   category: FactCategory
   era?: string
   index: number
   total: number
+  language: 'en' | 'nl'
 }) {
   const meta = CATEGORY_META[category]
   return (
@@ -87,11 +112,11 @@ function FactCard({
             className="px-2.5 py-1 rounded-full text-xs font-bold"
             style={{ background: meta.bg, border: `1px solid ${meta.border}`, color: meta.color }}
           >
-            {meta.label}
+            {language === 'nl' ? meta.labelNl : meta.label}
             <span className="ml-1 korean-text opacity-75">{meta.korean}</span>
           </span>
           {era && (
-            <span className="text-xs" style={{ color: 'var(--c-4)' }}>{era}</span>
+            <span className="text-xs" style={{ color: 'var(--c-4)' }}>{formatEra(era, language)}</span>
           )}
         </div>
         <span className="text-xs font-semibold tabular-nums" style={{ color: 'var(--c-4)' }}>
@@ -258,6 +283,7 @@ function KoreaFactsPage() {
           count={categoryCounts.all ?? 0}
           onClick={() => handleCategoryChange('all')}
           allLabel={copy.all}
+          language={language}
         />
         {(Object.keys(CATEGORY_META) as FactCategory[]).map(cat => (
           <CategoryPill
@@ -267,6 +293,7 @@ function KoreaFactsPage() {
             count={categoryCounts[cat] ?? 0}
             onClick={() => handleCategoryChange(cat)}
             allLabel={copy.all}
+            language={language}
           />
         ))}
       </div>
@@ -274,11 +301,12 @@ function KoreaFactsPage() {
       {/* Fact card */}
       <FactCard
         key={currentIdx}
-        text={fact.text}
+        text={getKoreaFactText(fact, language)}
         category={fact.category}
         era={fact.era}
         index={cursor % factCount}
         total={factCount}
+        language={language}
       />
 
       {/* Navigation */}

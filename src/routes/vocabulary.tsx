@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useBooleanFlagValue } from '@openfeature/react-sdk'
 import { FLAGS } from '../flags'
-import { VOCAB_CATEGORIES } from '../data/vocabulary'
+import { VOCAB_CATEGORIES, getVocabCategoryLabel, getVocabMeaning } from '../data/vocabulary'
 import type { VocabEntry } from '../data/vocabulary'
 import { SpeakButton } from '../components/SpeakButton'
 import { SENTENCE_PATTERNS } from '../data/beginnerContent'
@@ -46,7 +46,20 @@ const ACCENT_COLORS: Record<string, { text: string; border: string; bg: string; 
   fuchsia: { text: '#e879f9', border: 'rgba(232,121,249,0.30)',bg: 'rgba(134,25,143,0.10)',  badge: 'rgba(134,25,143,0.18)',  num: '#86197f' },
 }
 
-function PhraseRow({ entry, accent }: { entry: VocabEntry; accent: string }) {
+const POLITENESS_LABELS = {
+  en: {
+    formal: 'formal',
+    polite: 'polite',
+    casual: 'casual',
+  },
+  nl: {
+    formal: 'formeel',
+    polite: 'beleefd',
+    casual: 'informeel',
+  },
+} satisfies Record<'en' | 'nl', Record<NonNullable<VocabEntry['politeness']>, string>>
+
+function PhraseRow({ entry, accent, language }: { entry: VocabEntry; accent: string; language: 'en' | 'nl' }) {
   const c = ACCENT_COLORS[accent]
   return (
     <tr
@@ -66,13 +79,13 @@ function PhraseRow({ entry, accent }: { entry: VocabEntry; accent: string }) {
               entry.politeness === 'polite' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30' :
               'bg-amber-500/10 text-amber-400 border border-amber-500/30'
             }`}>
-              {entry.politeness}
+              {POLITENESS_LABELS[language][entry.politeness]}
             </span>
           )}
         </div>
       </td>
       <td className="px-4 py-3 text-sm font-semibold" style={{ color: c.text }}>{entry.romanized}</td>
-      <td className="px-4 py-3 text-sm" style={{ color: 'var(--c-3)' }}>{entry.meaning}</td>
+      <td className="px-4 py-3 text-sm" style={{ color: 'var(--c-3)' }}>{getVocabMeaning(entry, language)}</td>
     </tr>
   )
 }
@@ -160,11 +173,11 @@ function VocabularyPage() {
                   <SpeakButton text={pattern.pattern} size="sm" />
                 </div>
                 <p className="text-sm font-mono font-bold" style={{ color: 'var(--c-accent-text)' }}>{pattern.romanized}</p>
-                <p className="text-sm" style={{ color: 'var(--c-2)' }}>{pattern.meaning}</p>
+                <p className="text-sm" style={{ color: 'var(--c-2)' }}>{language === 'nl' ? pattern.meaningNl : pattern.meaning}</p>
                 <div className="pt-2" style={{ borderTop: '1px solid var(--c-border-sub)' }}>
                   <p className="text-xs korean-text font-semibold" style={{ color: 'var(--c-1)' }}>{pattern.example}</p>
                   <p className="text-xs font-mono mt-1" style={{ color: 'var(--c-3)' }}>{pattern.exampleRomanized}</p>
-                  <p className="text-xs mt-1" style={{ color: 'var(--c-4)' }}>{pattern.exampleMeaning}</p>
+                  <p className="text-xs mt-1" style={{ color: 'var(--c-4)' }}>{language === 'nl' ? pattern.exampleMeaningNl : pattern.exampleMeaning}</p>
                 </div>
               </div>
             ))}
@@ -199,7 +212,7 @@ function VocabularyPage() {
               onMouseEnter={(e) => { if (!isActive) (e.currentTarget as HTMLElement).style.color = 'var(--c-1)' }}
               onMouseLeave={(e) => { if (!isActive) (e.currentTarget as HTMLElement).style.color = 'var(--c-3)' }}
             >
-              {cat.label}
+              {getVocabCategoryLabel(cat, language)}
               <span className="ml-1.5 korean-text text-xs opacity-70">{cat.korean}</span>
             </button>
           )
@@ -217,7 +230,7 @@ function VocabularyPage() {
                   style={{ background: c.badge, color: c.num, border: `1px solid ${c.border}` }}>
                   {cat.entries.length}
                 </span>
-                <span style={{ color: 'var(--c-1)' }}>{cat.label}</span>
+                <span style={{ color: 'var(--c-1)' }}>{getVocabCategoryLabel(cat, language)}</span>
                 <span className="korean-text font-normal text-xs" style={{ color: 'var(--c-3)' }}>{cat.korean}</span>
               </h2>
               <div className="glass-card rounded-2xl overflow-hidden" style={{ borderColor: c.border }}>
@@ -233,7 +246,7 @@ function VocabularyPage() {
                     {cat.entries.map((e) => {
                       const displayKorean = (showConjugated && e.politeForm) ? e.politeForm : e.korean
                       return (
-                        <PhraseRow key={e.id} entry={{ ...e, korean: displayKorean }} accent={cat.accent} />
+                        <PhraseRow key={e.id} entry={{ ...e, korean: displayKorean }} accent={cat.accent} language={language} />
                       )
                     })}
                   </tbody>

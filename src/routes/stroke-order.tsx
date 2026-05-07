@@ -26,10 +26,10 @@ export const Route = createFileRoute('/stroke-order')({
 })
 
 const RULES = [
-  { icon: '→', text: 'Left to right: horizontal strokes go left → right' },
-  { icon: '↓', text: 'Top to bottom: vertical strokes go top → bottom' },
-  { icon: '↺', text: 'Circles: written counterclockwise, starting from the top' },
-  { icon: '↙↘', text: 'Diagonals: both strokes of ㅅ/ㅈ written from the center outward' },
+  { icon: '→', text: { en: 'Left to right: horizontal strokes go left → right', nl: 'Van links naar rechts: horizontale streken gaan links → rechts' } },
+  { icon: '↓', text: { en: 'Top to bottom: vertical strokes go top → bottom', nl: 'Van boven naar beneden: verticale streken gaan boven → beneden' } },
+  { icon: '↺', text: { en: 'Circles: written counterclockwise, starting from the top', nl: 'Cirkels: tegen de klok in, beginnend bovenaan' } },
+  { icon: '↙↘', text: { en: 'Diagonals: both strokes of ㅅ/ㅈ written from the center outward', nl: 'Diagonalen: beide streken van ㅅ/ㅈ gaan vanuit het midden naar buiten' } },
 ]
 
 const CANVAS_SIZE = 240
@@ -65,12 +65,47 @@ function checkStroke(dir: StrokeDirection | null, pts: { x: number; y: number }[
   }
 }
 
-const DIR_HINT: Record<StrokeDirection, string> = {
-  horizontal:   '→ Draw left to right',
-  vertical:     '↓ Draw top to bottom',
-  'diagonal-sw':'↙ Draw from center down-left',
-  'diagonal-se':'↘ Draw from center down-right',
-  circle:       '↺ Draw a counterclockwise circle',
+const DIR_HINT: Record<StrokeDirection, Record<'en' | 'nl', string>> = {
+  horizontal:   { en: '→ Draw left to right', nl: '→ Teken van links naar rechts' },
+  vertical:     { en: '↓ Draw top to bottom', nl: '↓ Teken van boven naar beneden' },
+  'diagonal-sw':{ en: '↙ Draw from center down-left', nl: '↙ Teken vanuit het midden naar linksonder' },
+  'diagonal-se':{ en: '↘ Draw from center down-right', nl: '↘ Teken vanuit het midden naar rechtsonder' },
+  circle:       { en: '↺ Draw a counterclockwise circle', nl: '↺ Teken een cirkel tegen de klok in' },
+}
+
+function strokeStepText(step: string, language: 'en' | 'nl') {
+  if (language === 'en') return step
+
+  return step
+    .replaceAll('Horizontal', 'Horizontaal')
+    .replaceAll('Vertical', 'Verticaal')
+    .replaceAll('Diagonal', 'Diagonaal')
+    .replaceAll('Circle', 'Cirkel')
+    .replaceAll('Short horizontal tick', 'Korte horizontale streep')
+    .replaceAll('Short horizontal bar', 'Korte horizontale balk')
+    .replaceAll('then', 'daarna')
+    .replaceAll('in one fluid movement', 'in een vloeiende beweging')
+    .replaceAll('in one movement', 'in een beweging')
+    .replaceAll('starting from top, counterclockwise', 'begin bovenaan, tegen de klok in')
+    .replaceAll('top and right', 'bovenkant en rechterkant')
+    .replaceAll('top bar', 'bovenste balk')
+    .replaceAll('middle bar', 'middelste balk')
+    .replaceAll('bottom hook', 'onderste haak')
+    .replaceAll('bottom part', 'onderste deel')
+    .replaceAll('top part', 'bovenste deel')
+    .replaceAll('bottom closing bar', 'onderste sluitbalk')
+    .replaceAll('bottom bar', 'onderste balk')
+    .replaceAll('left side', 'linkerkant')
+    .replaceAll('right side', 'rechterkant')
+    .replaceAll('left leg', 'linkerbeen')
+    .replaceAll('right leg', 'rechterbeen')
+    .replaceAll('body', 'lichaam')
+    .replaceAll('like ㄱ', 'zoals ㄱ')
+    .replaceAll('like ㄴ', 'zoals ㄴ')
+    .replaceAll('Left', 'Links')
+    .replaceAll('Right', 'Rechts')
+    .replaceAll('Top bar', 'bovenste balk')
+    .replaceAll('One fluid movement', 'een vloeiende beweging')
 }
 
 function DrawingCanvas({ char, data, language }: { char: string; data: StrokeData; language: 'en' | 'nl' }) {
@@ -171,7 +206,7 @@ function DrawingCanvas({ char, data, language }: { char: string; data: StrokeDat
       const ctx = canvasRef.current?.getContext('2d')
       if (ctx && savedPixels.current) ctx.putImageData(savedPixels.current, 0, 0)
       setResults(prev => { const r = [...prev]; r[strokeIdx] = false; return r })
-      setFeedback({ msg: dir ? DIR_HINT[dir] : (language === 'nl' ? 'Probeer opnieuw' : 'Try again'), ok: false })
+      setFeedback({ msg: dir ? DIR_HINT[dir][language] : (language === 'nl' ? 'Probeer opnieuw' : 'Try again'), ok: false })
     }
 
     setTimeout(() => setFeedback(null), 2500)
@@ -190,7 +225,7 @@ function DrawingCanvas({ char, data, language }: { char: string; data: StrokeDat
             <span className="font-black shrink-0" style={{ color: 'var(--c-accent-text)' }}>
               {language === 'nl' ? 'Streek' : 'Stroke'} {strokeIdx + 1} / {data.strokes}
             </span>
-            <span style={{ color: 'var(--c-2)' }}>{data.steps[strokeIdx]}</span>
+            <span style={{ color: 'var(--c-2)' }}>{strokeStepText(data.steps[strokeIdx], language)}</span>
           </div>
         )}
       </div>
@@ -348,7 +383,7 @@ function StrokeOrderPage() {
           {RULES.map((r) => (
             <div key={r.icon} className="flex items-start gap-2.5">
               <span className="font-black text-sm w-8 flex-shrink-0" style={{ color: 'var(--c-accent-text)' }}>{r.icon}</span>
-              <span className="text-sm" style={{ color: 'var(--c-2)' }}>{r.text}</span>
+              <span className="text-sm" style={{ color: 'var(--c-2)' }}>{r.text[language]}</span>
             </div>
           ))}
         </div>
@@ -524,7 +559,7 @@ function StrokeOrderPage() {
                             >
                               {strokeNum}
                             </span>
-                            <span className="text-sm" style={{ color: isActive ? 'var(--c-1)' : 'var(--c-3)' }}>{s}</span>
+                            <span className="text-sm" style={{ color: isActive ? 'var(--c-1)' : 'var(--c-3)' }}>{strokeStepText(s, language)}</span>
                           </li>
                         )
                       })}

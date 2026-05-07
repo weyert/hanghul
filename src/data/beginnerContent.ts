@@ -3,9 +3,11 @@ export interface SentencePattern {
   pattern: string
   romanized: string
   meaning: string
+  meaningNl?: string
   example: string
   exampleRomanized: string
   exampleMeaning: string
+  exampleMeaningNl?: string
 }
 
 export interface ContrastPair {
@@ -31,36 +33,44 @@ export const SENTENCE_PATTERNS: SentencePattern[] = [
     pattern: '이거예요',
     romanized: 'i-geo-ye-yo',
     meaning: 'This is it / This one',
+    meaningNl: 'Dit is het / deze',
     example: '이거예요?',
     exampleRomanized: 'i-geo-ye-yo?',
     exampleMeaning: 'Is this the one?',
+    exampleMeaningNl: 'Is dit de juiste?',
   },
   {
     id: 'please-give',
     pattern: '... 주세요',
     romanized: '... ju-se-yo',
     meaning: 'Please give me ... / ... please',
+    meaningNl: 'Geef me alstublieft ... / ... graag',
     example: '물 주세요',
     exampleRomanized: 'mul ju-se-yo',
     exampleMeaning: 'Water, please',
+    exampleMeaningNl: 'Water graag',
   },
   {
     id: 'where-is',
     pattern: '... 어디예요?',
     romanized: '... eo-di-ye-yo?',
     meaning: 'Where is ... ?',
+    meaningNl: 'Waar is ...?',
     example: '화장실 어디예요?',
     exampleRomanized: 'hwa-jang-sil eo-di-ye-yo?',
     exampleMeaning: 'Where is the bathroom?',
+    exampleMeaningNl: 'Waar is het toilet?',
   },
   {
     id: 'exists',
     pattern: '... 있어요 / 없어요',
     romanized: '... i-sseo-yo / eop-seo-yo',
     meaning: 'There is ... / There is no ...',
+    meaningNl: 'Er is ... / er is geen ...',
     example: '와이파이 있어요?',
     exampleRomanized: 'wa-i-pa-i i-sseo-yo?',
     exampleMeaning: 'Is there Wi-Fi?',
+    exampleMeaningNl: 'Is er wifi?',
   },
 ]
 
