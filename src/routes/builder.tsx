@@ -32,9 +32,10 @@ export const Route = createFileRoute('/builder')({
 })
 
 function PickButton({
-  selected, onClick, char, label, accent,
+  selected, onClick, char, label, accent, title,
 }: {
   selected: boolean; onClick: () => void; char: string; label: string
+  title?: string
   accent: 'initial' | 'vowel' | 'final'
 }) {
   const vars = {
@@ -46,6 +47,8 @@ function PickButton({
   return (
     <button
       onClick={onClick}
+      title={title}
+      aria-label={title ?? `${char} ${label}`}
       className="rounded-lg py-2 flex flex-col items-center gap-0.5 transition-all cursor-pointer"
       style={selected
         ? { background: vars.activeBg, border: `1px solid ${vars.activeBorder}` }
@@ -64,14 +67,58 @@ function PickButton({
   )
 }
 
-function SectionHeader({ dot, title }: { dot: 'initial' | 'vowel' | 'final'; title: string; accent?: string }) {
+function SectionHeader({ dot, title, flush = false }: { dot: 'initial' | 'vowel' | 'final'; title: string; flush?: boolean }) {
   const dotColor = { initial: 'var(--c-initial)', vowel: 'var(--c-vowel)', final: 'var(--c-final)' }[dot]
   return (
-    <h2 className="text-xs font-bold uppercase tracking-widest mb-2.5 flex items-center gap-2" style={{ color: 'var(--c-3)' }}>
+    <h2 className={`text-xs font-bold uppercase tracking-widest flex items-center gap-2 ${flush ? '' : 'mb-2.5'}`} style={{ color: 'var(--c-3)' }}>
       <span className="w-2 h-2 rounded-full inline-block" style={{ background: dotColor }} />
       {title}
     </h2>
   )
+}
+
+const VOWEL_SOUND_LABELS = [
+  'a','eh','ya','yeh','uh','e','yuh','ye','o','wa',
+  'weh','weh','yo','oo','wuh','weh','wi','yoo','eu','ui','ee',
+] as const
+
+const VOWEL_SOUND_TIPS = [
+  'a as in father',
+  'eh as in bed',
+  'ya as in yard',
+  'yeh as in yes',
+  'uh as in sun',
+  'e as in get',
+  'yuh, like young without ng',
+  'ye as in yes',
+  'o as in go',
+  'wa as in water',
+  'weh as in wet',
+  'weh as in wet',
+  'yo as in yo-yo',
+  'oo as in moon',
+  'wuh as in won',
+  'weh as in wet',
+  'wi as in we',
+  'yoo as in you',
+  'eu, lips unrounded',
+  'ui, often said like ee',
+  'ee as in see',
+] as const
+
+function getVowelLabel(index: number, pronunciationFriendly: boolean) {
+  const official = JUNGSEONG_ROMAN[index]
+  const sound = VOWEL_SOUND_LABELS[index]
+  if (!pronunciationFriendly || official === sound) return official
+  return `${official} (${sound})`
+}
+
+function getVowelTitle(index: number) {
+  return `${JUNGSEONG[index]} - official RR: ${JUNGSEONG_ROMAN[index]}; pronunciation hint: ${VOWEL_SOUND_TIPS[index]}`
+}
+
+function getPronunciationFriendlyRomanization(initialIdx: number, vowelIdx: number, finalIdx: number) {
+  return (CHOSEONG_ROMAN[initialIdx] || '') + VOWEL_SOUND_LABELS[vowelIdx] + JONGSEONG_ROMAN[finalIdx]
 }
 
 export function BuilderPage() {
@@ -80,6 +127,7 @@ export function BuilderPage() {
   const [vowelIdx, setVowelIdx] = useState<number | null>(null)
   const [finalIdx, setFinalIdx] = useState<number>(0)
   const [showClusters, setShowClusters] = useState(false)
+  const [pronunciationFriendly, setPronunciationFriendly] = useState(true)
   const copy = language === 'nl'
     ? {
         title: 'Bouwer',
@@ -96,6 +144,10 @@ export function BuilderPage() {
         showClusters: 'Toon clusters',
         none: 'geen',
         preview: 'Voorbeeld',
+        pronunciationMode: 'Uitspraakhulp',
+        officialRomanization: 'Officiële romanisering',
+        soundsLike: 'Klinkt ongeveer als',
+        examples: 'Voorbeelden: 조 jo · 주 joo · 수 soo · 서 suh',
       }
     : {
         title: 'Builder',
@@ -112,12 +164,19 @@ export function BuilderPage() {
         showClusters: 'Show clusters',
         none: 'none',
         preview: 'Preview',
+        pronunciationMode: 'Pronunciation-friendly',
+        officialRomanization: 'Official romanization',
+        soundsLike: 'Sounds like',
+        examples: 'Examples: 조 jo · 주 joo · 수 soo · 서 suh',
       }
 
   const canCompose = initialIdx !== null && vowelIdx !== null
   const syllable    = canCompose ? composeSyllable(initialIdx, vowelIdx, finalIdx) : null
   const romanization = canCompose
     ? (CHOSEONG_ROMAN[initialIdx] || '') + JUNGSEONG_ROMAN[vowelIdx] + JONGSEONG_ROMAN[finalIdx]
+    : null
+  const pronunciationRomanization = canCompose
+    ? getPronunciationFriendlyRomanization(initialIdx, vowelIdx, finalIdx)
     : null
   const reset = () => { setInitialIdx(null); setVowelIdx(null); setFinalIdx(0) }
 
@@ -129,8 +188,25 @@ export function BuilderPage() {
       >
         {syllable}
       </div>
-      <div className="text-xl font-bold" style={{ color: 'var(--c-2)' }}>{romanization}</div>
+      <div className="text-center">
+        <div className="text-xl font-bold" style={{ color: 'var(--c-2)' }}>{romanization}</div>
+        {pronunciationRomanization && pronunciationRomanization !== romanization && (
+          <div className="text-sm font-semibold" style={{ color: 'var(--c-vowel-text)' }}>
+            {pronunciationRomanization}
+          </div>
+        )}
+      </div>
       <div className="w-full space-y-2.5 pt-4" style={{ borderTop: '1px solid var(--c-border-sub)' }}>
+        <div className="flex items-center justify-between text-xs">
+          <span className="font-semibold" style={{ color: 'var(--c-4)' }}>{copy.officialRomanization}</span>
+          <span className="font-bold" style={{ color: 'var(--c-2)' }}>{romanization}</span>
+        </div>
+        {pronunciationRomanization && pronunciationRomanization !== romanization && (
+          <div className="flex items-center justify-between text-xs">
+            <span className="font-semibold" style={{ color: 'var(--c-4)' }}>{copy.soundsLike}</span>
+            <span className="font-bold" style={{ color: 'var(--c-vowel-text)' }}>{pronunciationRomanization}</span>
+          </div>
+        )}
         <div className="flex items-center justify-between text-sm">
           <span className="font-bold text-xs" style={{ color: 'var(--c-initial-text)' }}>초성</span>
           <span className="korean-serif font-black text-xl" style={{ color: 'var(--c-initial-text)' }}>{CHOSEONG[initialIdx!]}</span>
@@ -139,7 +215,7 @@ export function BuilderPage() {
         <div className="flex items-center justify-between text-sm">
           <span className="font-bold text-xs" style={{ color: 'var(--c-vowel-text)' }}>중성</span>
           <span className="korean-serif font-black text-xl" style={{ color: 'var(--c-vowel-text)' }}>{JUNGSEONG[vowelIdx!]}</span>
-          <span className="text-xs" style={{ color: 'var(--c-vowel)' }}>{JUNGSEONG_ROMAN[vowelIdx!]}</span>
+          <span className="text-xs" style={{ color: 'var(--c-vowel)' }}>{getVowelLabel(vowelIdx!, pronunciationFriendly)}</span>
         </div>
         {finalIdx !== 0 && (
           <div className="flex items-center justify-between text-sm">
@@ -175,7 +251,7 @@ export function BuilderPage() {
       />
 
       {/* Mobile preview */}
-      <div className="lg:hidden glass-card rounded-2xl p-6 flex items-center justify-center gap-6 min-h-[7rem]">
+      <div className="lg:hidden glass-card rounded-2xl p-6 flex flex-col items-center justify-center gap-5 min-h-[7rem]">
         <PreviewContent />
       </div>
 
@@ -194,14 +270,31 @@ export function BuilderPage() {
           </section>
 
           <section>
-            <SectionHeader dot="vowel" title={copy.vowel} />
+            <div className="flex items-center justify-between gap-3 mb-2.5">
+              <SectionHeader dot="vowel" title={copy.vowel} flush />
+              <label className="flex items-center gap-2 text-xs font-semibold cursor-pointer" style={{ color: 'var(--c-4)' }}>
+                <input
+                  type="checkbox"
+                  checked={pronunciationFriendly}
+                  onChange={(e) => setPronunciationFriendly(e.currentTarget.checked)}
+                  className="h-4 w-4 accent-emerald-700 cursor-pointer"
+                />
+                {copy.pronunciationMode}
+              </label>
+            </div>
             <div className="grid grid-cols-5 sm:grid-cols-7 gap-1.5">
               {JUNGSEONG.map((ch, i) => (
-                <PickButton key={i} char={ch} label={JUNGSEONG_ROMAN[i]} accent="vowel"
+                <PickButton
+                  key={i}
+                  char={ch}
+                  label={getVowelLabel(i, pronunciationFriendly)}
+                  title={getVowelTitle(i)}
+                  accent="vowel"
                   selected={vowelIdx === i} onClick={() => setVowelIdx(vowelIdx === i ? null : i)}
                 />
               ))}
             </div>
+            <p className="mt-2 text-xs" style={{ color: 'var(--c-4)' }}>{copy.examples}</p>
           </section>
 
           <section>
