@@ -5,6 +5,7 @@ import { PronunciationModel } from '../components/PronunciationModel'
 import { createSeoHead } from '../seo'
 import { useLanguage } from '../contexts/LanguageContext'
 import { translations, tr } from '../i18n/translations'
+import { localePath } from '../utils/localizedRoutes'
 
 export const Route = createFileRoute('/')({
   component: HomePage,
@@ -95,7 +96,7 @@ function HomePage() {
     ? `/${language}/grammar`
     : batchimLesson
       ? `/${language}/batchim`
-      : '/quiz'
+      : localePath(language, '/quiz')
 
   const pathSteps = tr(t.learningPathSteps, language)
 
@@ -144,7 +145,7 @@ function HomePage() {
               {tr(t.startLearning, language)} <ArrowRight size={15} />
             </Link>
             <Link
-              to="/quiz"
+              to={localePath(language, '/quiz')}
               className="btn-ghost inline-flex items-center gap-2 font-semibold px-7 py-3 rounded-xl cursor-pointer text-sm"
               style={{ color: 'var(--c-1)' }}
             >
@@ -288,7 +289,7 @@ function HomePage() {
             studyLabel={tr(t.study, language)}
           />
           <FeatureCard
-            to="/quiz"
+            to={localePath(language, '/quiz')}
             char="연습"
             label={tr(t.quizCard.label, language)}
             subLabel={tr(t.quizCard.subLabel, language)}
@@ -306,7 +307,7 @@ function HomePage() {
         </div>
         <div className={`grid grid-cols-1 gap-4 ${contrastDrills ? 'sm:grid-cols-3' : 'sm:grid-cols-2'}`}>
           <ToolCard
-            to="/pronounce"
+            to={localePath(language, '/pronounce')}
             korean="발"
             label={tr(t.pronounceCard.label, language)}
             subLabel={tr(t.pronounceCard.subLabel, language)}
@@ -322,7 +323,7 @@ function HomePage() {
             />
           )}
           <ToolCard
-            to="/builder"
+            to={localePath(language, '/builder')}
             korean="조"
             label={tr(t.builderCard.label, language)}
             subLabel={tr(t.builderCard.subLabel, language)}
@@ -330,7 +331,7 @@ function HomePage() {
           />
           {contrastDrills && (
             <ToolCard
-              to="/contrast-drills"
+              to={localePath(language, '/contrast-drills')}
               korean="변"
               label={tr(t.contrastCard.label, language)}
               subLabel={tr(t.contrastCard.subLabel, language)}

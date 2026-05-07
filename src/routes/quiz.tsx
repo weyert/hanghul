@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import { useState, useCallback, useEffect } from 'react'
 import { useBooleanFlagValue } from '@openfeature/react-sdk'
 import { FLAGS } from '../flags'
@@ -17,6 +17,9 @@ import { PageArtwork } from '../components/PageArtwork'
 import { createSeoHead } from '../seo'
 
 export const Route = createFileRoute('/quiz')({
+  beforeLoad: () => {
+    throw redirect({ to: '/$locale/quiz', params: { locale: 'en' }, statusCode: 301 })
+  },
   component: QuizPage,
   head: () => createSeoHead({
     title: 'Hangul Quiz',
@@ -142,7 +145,7 @@ function ModeCard({ mode, label, subLabel, count, char, onStart }: ModeCardProps
 
 // ── QuizPage ───────────────────────────────────────────────────────
 
-function QuizPage() {
+export function QuizPage() {
   const srEnabled         = useBooleanFlagValue(FLAGS.SPACED_REPETITION, false)
   const listenEnabled     = useBooleanFlagValue(FLAGS.LISTEN_QUIZ, false)
   const wordEnabled       = useBooleanFlagValue(FLAGS.WORD_QUIZ, false)

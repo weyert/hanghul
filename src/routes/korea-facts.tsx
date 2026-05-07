@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import { useState, useCallback, useMemo } from 'react'
 import { useBooleanFlagValue } from '@openfeature/react-sdk'
 import { FLAGS } from '../flags'
@@ -9,6 +9,9 @@ import { useLanguage } from '../contexts/LanguageContext'
 import { createSeoHead } from '../seo'
 
 export const Route = createFileRoute('/korea-facts')({
+  beforeLoad: () => {
+    throw redirect({ to: '/$locale/korea-facts', params: { locale: 'en' }, statusCode: 301 })
+  },
   component: KoreaFactsPage,
   head: () => createSeoHead({
     title: 'Korea Facts',
@@ -156,7 +159,7 @@ function FactCard({
 
 // ─── Page ─────────────────────────────────────────────────────────────
 
-function KoreaFactsPage() {
+export function KoreaFactsPage() {
   const enabled = useBooleanFlagValue(FLAGS.KOREA_FACTS, false)
   const { language } = useLanguage()
 

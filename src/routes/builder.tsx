@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import { useState } from 'react'
 import {
   CHOSEONG, CHOSEONG_ROMAN,
@@ -13,6 +13,9 @@ import { useLanguage } from '../contexts/LanguageContext'
 import { createSeoHead } from '../seo'
 
 export const Route = createFileRoute('/builder')({
+  beforeLoad: () => {
+    throw redirect({ to: '/$locale/builder', params: { locale: 'en' }, statusCode: 301 })
+  },
   component: BuilderPage,
   head: () => createSeoHead({
     title: 'Hangul Syllable Builder',
@@ -71,7 +74,7 @@ function SectionHeader({ dot, title }: { dot: 'initial' | 'vowel' | 'final'; tit
   )
 }
 
-function BuilderPage() {
+export function BuilderPage() {
   const { language } = useLanguage()
   const [initialIdx, setInitialIdx] = useState<number | null>(null)
   const [vowelIdx, setVowelIdx] = useState<number | null>(null)

@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { useBooleanFlagValue } from '@openfeature/react-sdk'
 import { FLAGS } from '../flags'
@@ -11,6 +11,9 @@ import { useLanguage } from '../contexts/LanguageContext'
 import { createSeoHead } from '../seo'
 
 export const Route = createFileRoute('/stroke-order')({
+  beforeLoad: () => {
+    throw redirect({ to: '/$locale/stroke-order', params: { locale: 'en' }, statusCode: 301 })
+  },
   component: StrokeOrderPage,
   head: () => createSeoHead({
     title: 'Hangul Stroke Order',
@@ -304,7 +307,7 @@ function DrawingCanvas({ char, data, language }: { char: string; data: StrokeDat
   )
 }
 
-function StrokeOrderPage() {
+export function StrokeOrderPage() {
   const enabled         = useBooleanFlagValue(FLAGS.STROKE_ORDER, false)
   const practiceEnabled = useBooleanFlagValue(FLAGS.STROKE_PRACTICE, false)
   const { language } = useLanguage()

@@ -32,6 +32,17 @@ import { Route as BlocksRouteImport } from './routes/blocks'
 import { Route as BatchimRouteImport } from './routes/batchim'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LocaleVocabularyRouteImport } from './routes/$locale/vocabulary'
+import { Route as LocaleTypingRouteImport } from './routes/$locale/typing'
+import { Route as LocaleSyllableChartRouteImport } from './routes/$locale/syllable-chart'
+import { Route as LocaleStrokeOrderRouteImport } from './routes/$locale/stroke-order'
+import { Route as LocaleQuizRouteImport } from './routes/$locale/quiz'
+import { Route as LocalePronounceRouteImport } from './routes/$locale/pronounce'
+import { Route as LocaleProgressRouteImport } from './routes/$locale/progress'
+import { Route as LocaleLearnRouteImport } from './routes/$locale/learn'
+import { Route as LocaleKoreaFactsRouteImport } from './routes/$locale/korea-facts'
+import { Route as LocaleContrastDrillsRouteImport } from './routes/$locale/contrast-drills'
+import { Route as LocaleBuilderRouteImport } from './routes/$locale/builder'
 import { Route as LocaleSlugRouteImport } from './routes/$locale/$slug'
 
 const VowelsRoute = VowelsRouteImport.update({
@@ -149,6 +160,61 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LocaleVocabularyRoute = LocaleVocabularyRouteImport.update({
+  id: '/$locale/vocabulary',
+  path: '/$locale/vocabulary',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LocaleTypingRoute = LocaleTypingRouteImport.update({
+  id: '/$locale/typing',
+  path: '/$locale/typing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LocaleSyllableChartRoute = LocaleSyllableChartRouteImport.update({
+  id: '/$locale/syllable-chart',
+  path: '/$locale/syllable-chart',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LocaleStrokeOrderRoute = LocaleStrokeOrderRouteImport.update({
+  id: '/$locale/stroke-order',
+  path: '/$locale/stroke-order',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LocaleQuizRoute = LocaleQuizRouteImport.update({
+  id: '/$locale/quiz',
+  path: '/$locale/quiz',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LocalePronounceRoute = LocalePronounceRouteImport.update({
+  id: '/$locale/pronounce',
+  path: '/$locale/pronounce',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LocaleProgressRoute = LocaleProgressRouteImport.update({
+  id: '/$locale/progress',
+  path: '/$locale/progress',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LocaleLearnRoute = LocaleLearnRouteImport.update({
+  id: '/$locale/learn',
+  path: '/$locale/learn',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LocaleKoreaFactsRoute = LocaleKoreaFactsRouteImport.update({
+  id: '/$locale/korea-facts',
+  path: '/$locale/korea-facts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LocaleContrastDrillsRoute = LocaleContrastDrillsRouteImport.update({
+  id: '/$locale/contrast-drills',
+  path: '/$locale/contrast-drills',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LocaleBuilderRoute = LocaleBuilderRouteImport.update({
+  id: '/$locale/builder',
+  path: '/$locale/builder',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LocaleSlugRoute = LocaleSlugRouteImport.update({
   id: '/$locale/$slug',
   path: '/$locale/$slug',
@@ -180,6 +246,17 @@ export interface FileRoutesByFullPath {
   '/vocabulary': typeof VocabularyRoute
   '/vowels': typeof VowelsRoute
   '/$locale/$slug': typeof LocaleSlugRoute
+  '/$locale/builder': typeof LocaleBuilderRoute
+  '/$locale/contrast-drills': typeof LocaleContrastDrillsRoute
+  '/$locale/korea-facts': typeof LocaleKoreaFactsRoute
+  '/$locale/learn': typeof LocaleLearnRoute
+  '/$locale/progress': typeof LocaleProgressRoute
+  '/$locale/pronounce': typeof LocalePronounceRoute
+  '/$locale/quiz': typeof LocaleQuizRoute
+  '/$locale/stroke-order': typeof LocaleStrokeOrderRoute
+  '/$locale/syllable-chart': typeof LocaleSyllableChartRoute
+  '/$locale/typing': typeof LocaleTypingRoute
+  '/$locale/vocabulary': typeof LocaleVocabularyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -206,6 +283,17 @@ export interface FileRoutesByTo {
   '/vocabulary': typeof VocabularyRoute
   '/vowels': typeof VowelsRoute
   '/$locale/$slug': typeof LocaleSlugRoute
+  '/$locale/builder': typeof LocaleBuilderRoute
+  '/$locale/contrast-drills': typeof LocaleContrastDrillsRoute
+  '/$locale/korea-facts': typeof LocaleKoreaFactsRoute
+  '/$locale/learn': typeof LocaleLearnRoute
+  '/$locale/progress': typeof LocaleProgressRoute
+  '/$locale/pronounce': typeof LocalePronounceRoute
+  '/$locale/quiz': typeof LocaleQuizRoute
+  '/$locale/stroke-order': typeof LocaleStrokeOrderRoute
+  '/$locale/syllable-chart': typeof LocaleSyllableChartRoute
+  '/$locale/typing': typeof LocaleTypingRoute
+  '/$locale/vocabulary': typeof LocaleVocabularyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -233,6 +321,17 @@ export interface FileRoutesById {
   '/vocabulary': typeof VocabularyRoute
   '/vowels': typeof VowelsRoute
   '/$locale/$slug': typeof LocaleSlugRoute
+  '/$locale/builder': typeof LocaleBuilderRoute
+  '/$locale/contrast-drills': typeof LocaleContrastDrillsRoute
+  '/$locale/korea-facts': typeof LocaleKoreaFactsRoute
+  '/$locale/learn': typeof LocaleLearnRoute
+  '/$locale/progress': typeof LocaleProgressRoute
+  '/$locale/pronounce': typeof LocalePronounceRoute
+  '/$locale/quiz': typeof LocaleQuizRoute
+  '/$locale/stroke-order': typeof LocaleStrokeOrderRoute
+  '/$locale/syllable-chart': typeof LocaleSyllableChartRoute
+  '/$locale/typing': typeof LocaleTypingRoute
+  '/$locale/vocabulary': typeof LocaleVocabularyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -261,6 +360,17 @@ export interface FileRouteTypes {
     | '/vocabulary'
     | '/vowels'
     | '/$locale/$slug'
+    | '/$locale/builder'
+    | '/$locale/contrast-drills'
+    | '/$locale/korea-facts'
+    | '/$locale/learn'
+    | '/$locale/progress'
+    | '/$locale/pronounce'
+    | '/$locale/quiz'
+    | '/$locale/stroke-order'
+    | '/$locale/syllable-chart'
+    | '/$locale/typing'
+    | '/$locale/vocabulary'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -287,6 +397,17 @@ export interface FileRouteTypes {
     | '/vocabulary'
     | '/vowels'
     | '/$locale/$slug'
+    | '/$locale/builder'
+    | '/$locale/contrast-drills'
+    | '/$locale/korea-facts'
+    | '/$locale/learn'
+    | '/$locale/progress'
+    | '/$locale/pronounce'
+    | '/$locale/quiz'
+    | '/$locale/stroke-order'
+    | '/$locale/syllable-chart'
+    | '/$locale/typing'
+    | '/$locale/vocabulary'
   id:
     | '__root__'
     | '/'
@@ -313,6 +434,17 @@ export interface FileRouteTypes {
     | '/vocabulary'
     | '/vowels'
     | '/$locale/$slug'
+    | '/$locale/builder'
+    | '/$locale/contrast-drills'
+    | '/$locale/korea-facts'
+    | '/$locale/learn'
+    | '/$locale/progress'
+    | '/$locale/pronounce'
+    | '/$locale/quiz'
+    | '/$locale/stroke-order'
+    | '/$locale/syllable-chart'
+    | '/$locale/typing'
+    | '/$locale/vocabulary'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -340,6 +472,17 @@ export interface RootRouteChildren {
   VocabularyRoute: typeof VocabularyRoute
   VowelsRoute: typeof VowelsRoute
   LocaleSlugRoute: typeof LocaleSlugRoute
+  LocaleBuilderRoute: typeof LocaleBuilderRoute
+  LocaleContrastDrillsRoute: typeof LocaleContrastDrillsRoute
+  LocaleKoreaFactsRoute: typeof LocaleKoreaFactsRoute
+  LocaleLearnRoute: typeof LocaleLearnRoute
+  LocaleProgressRoute: typeof LocaleProgressRoute
+  LocalePronounceRoute: typeof LocalePronounceRoute
+  LocaleQuizRoute: typeof LocaleQuizRoute
+  LocaleStrokeOrderRoute: typeof LocaleStrokeOrderRoute
+  LocaleSyllableChartRoute: typeof LocaleSyllableChartRoute
+  LocaleTypingRoute: typeof LocaleTypingRoute
+  LocaleVocabularyRoute: typeof LocaleVocabularyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -505,6 +648,83 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$locale/vocabulary': {
+      id: '/$locale/vocabulary'
+      path: '/$locale/vocabulary'
+      fullPath: '/$locale/vocabulary'
+      preLoaderRoute: typeof LocaleVocabularyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$locale/typing': {
+      id: '/$locale/typing'
+      path: '/$locale/typing'
+      fullPath: '/$locale/typing'
+      preLoaderRoute: typeof LocaleTypingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$locale/syllable-chart': {
+      id: '/$locale/syllable-chart'
+      path: '/$locale/syllable-chart'
+      fullPath: '/$locale/syllable-chart'
+      preLoaderRoute: typeof LocaleSyllableChartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$locale/stroke-order': {
+      id: '/$locale/stroke-order'
+      path: '/$locale/stroke-order'
+      fullPath: '/$locale/stroke-order'
+      preLoaderRoute: typeof LocaleStrokeOrderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$locale/quiz': {
+      id: '/$locale/quiz'
+      path: '/$locale/quiz'
+      fullPath: '/$locale/quiz'
+      preLoaderRoute: typeof LocaleQuizRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$locale/pronounce': {
+      id: '/$locale/pronounce'
+      path: '/$locale/pronounce'
+      fullPath: '/$locale/pronounce'
+      preLoaderRoute: typeof LocalePronounceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$locale/progress': {
+      id: '/$locale/progress'
+      path: '/$locale/progress'
+      fullPath: '/$locale/progress'
+      preLoaderRoute: typeof LocaleProgressRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$locale/learn': {
+      id: '/$locale/learn'
+      path: '/$locale/learn'
+      fullPath: '/$locale/learn'
+      preLoaderRoute: typeof LocaleLearnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$locale/korea-facts': {
+      id: '/$locale/korea-facts'
+      path: '/$locale/korea-facts'
+      fullPath: '/$locale/korea-facts'
+      preLoaderRoute: typeof LocaleKoreaFactsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$locale/contrast-drills': {
+      id: '/$locale/contrast-drills'
+      path: '/$locale/contrast-drills'
+      fullPath: '/$locale/contrast-drills'
+      preLoaderRoute: typeof LocaleContrastDrillsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$locale/builder': {
+      id: '/$locale/builder'
+      path: '/$locale/builder'
+      fullPath: '/$locale/builder'
+      preLoaderRoute: typeof LocaleBuilderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/$locale/$slug': {
       id: '/$locale/$slug'
       path: '/$locale/$slug'
@@ -540,6 +760,17 @@ const rootRouteChildren: RootRouteChildren = {
   VocabularyRoute: VocabularyRoute,
   VowelsRoute: VowelsRoute,
   LocaleSlugRoute: LocaleSlugRoute,
+  LocaleBuilderRoute: LocaleBuilderRoute,
+  LocaleContrastDrillsRoute: LocaleContrastDrillsRoute,
+  LocaleKoreaFactsRoute: LocaleKoreaFactsRoute,
+  LocaleLearnRoute: LocaleLearnRoute,
+  LocaleProgressRoute: LocaleProgressRoute,
+  LocalePronounceRoute: LocalePronounceRoute,
+  LocaleQuizRoute: LocaleQuizRoute,
+  LocaleStrokeOrderRoute: LocaleStrokeOrderRoute,
+  LocaleSyllableChartRoute: LocaleSyllableChartRoute,
+  LocaleTypingRoute: LocaleTypingRoute,
+  LocaleVocabularyRoute: LocaleVocabularyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

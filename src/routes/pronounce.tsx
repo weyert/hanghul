@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import { useState, useRef } from 'react'
 import { useBooleanFlagValue } from '@openfeature/react-sdk'
 import { FLAGS } from '../flags'
@@ -32,6 +32,9 @@ function buildIpaTranscription(analyzed: Array<SyllableAnalysis | OtherChar>): s
 }
 
 export const Route = createFileRoute('/pronounce')({
+  beforeLoad: () => {
+    throw redirect({ to: '/$locale/pronounce', params: { locale: 'en' }, statusCode: 301 })
+  },
   component: PronouncePage,
   head: () => createSeoHead({
     title: 'Korean Pronunciation Tool',
@@ -104,7 +107,7 @@ function SyllableCard({ item }: { item: SyllableAnalysis | OtherChar }) {
   )
 }
 
-function PronouncePage() {
+export function PronouncePage() {
   const { language } = useLanguage()
   const [input, setInput] = useState('')
   const [analyzed, setAnalyzed] = useState<Array<SyllableAnalysis | OtherChar>>([])

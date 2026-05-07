@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import { useBooleanFlagValue } from '@openfeature/react-sdk'
 import { FLAGS } from '../flags'
 import { CONTRAST_DRILLS } from '../data/beginnerContent'
@@ -9,6 +9,9 @@ import { useLanguage } from '../contexts/LanguageContext'
 import { createSeoHead } from '../seo'
 
 export const Route = createFileRoute('/contrast-drills')({
+  beforeLoad: () => {
+    throw redirect({ to: '/$locale/contrast-drills', params: { locale: 'en' }, statusCode: 301 })
+  },
   component: ContrastDrillsPage,
   head: () => createSeoHead({
     title: 'Korean Sound Contrast Drills',
@@ -23,7 +26,7 @@ export const Route = createFileRoute('/contrast-drills')({
   }),
 })
 
-function ContrastDrillsPage() {
+export function ContrastDrillsPage() {
   const enabled = useBooleanFlagValue(FLAGS.CONTRAST_DRILLS, false)
   const pronunciationModel = useBooleanFlagValue(FLAGS.PRONUNCIATION_MODEL, false)
   const { language } = useLanguage()

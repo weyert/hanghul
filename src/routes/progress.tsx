@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import { useState, useEffect } from 'react'
 import { useBooleanFlagValue } from '@openfeature/react-sdk'
 import { FLAGS } from '../flags'
@@ -10,6 +10,9 @@ import { useLanguage } from '../contexts/LanguageContext'
 import { createSeoHead } from '../seo'
 
 export const Route = createFileRoute('/progress')({
+  beforeLoad: () => {
+    throw redirect({ to: '/$locale/progress', params: { locale: 'en' }, statusCode: 301 })
+  },
   component: ProgressPage,
   head: () => createSeoHead({
     title: 'Hangul Progress',
@@ -77,7 +80,7 @@ function StatPill({ value, label, color }: { value: number; label: string; color
   )
 }
 
-function ProgressPage() {
+export function ProgressPage() {
   const enabled = useBooleanFlagValue(FLAGS.PROGRESS_DASHBOARD, false)
   const { language } = useLanguage()
   const [statsMap, setStatsMap] = useState<Record<string, CardStats>>({})

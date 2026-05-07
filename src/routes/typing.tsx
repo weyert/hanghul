@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useBooleanFlagValue } from '@openfeature/react-sdk'
 import { FLAGS } from '../flags'
@@ -11,6 +11,9 @@ import { useLanguage } from '../contexts/LanguageContext'
 import { createSeoHead } from '../seo'
 
 export const Route = createFileRoute('/typing')({
+  beforeLoad: () => {
+    throw redirect({ to: '/$locale/typing', params: { locale: 'en' }, statusCode: 301 })
+  },
   component: TypingPracticePage,
   head: () => createSeoHead({
     title: 'Hangul Typing Practice',
@@ -47,7 +50,7 @@ function checkRomanization(input: string, romanization: string): boolean {
   return variants.some((v) => v === input.toLowerCase().trim())
 }
 
-function TypingPracticePage() {
+export function TypingPracticePage() {
   const enabled              = useBooleanFlagValue(FLAGS.TYPING_PRACTICE, false)
   const beginnerFlagEnabled  = useBooleanFlagValue(FLAGS.TYPING_BEGINNER, false)
   const { language } = useLanguage()

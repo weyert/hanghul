@@ -9,6 +9,7 @@ import type { HangulCharacter } from '../../data/hangul'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useAnalytics } from '../../hooks/useAnalytics'
 import { FLAGS } from '../../flags'
+import { localePath } from '../../utils/localizedRoutes'
 export { PronunciationModel }
 
 export type { FeatureFlag }
@@ -216,6 +217,10 @@ interface CtaCardProps {
 }
 
 export function CtaCard({ title, description, primaryTo, primaryLabel, secondaryTo, secondaryLabel }: CtaCardProps) {
+  const { language } = useLanguage()
+  const localizedPrimaryTo = localePath(language, primaryTo)
+  const localizedSecondaryTo = secondaryTo ? localePath(language, secondaryTo) : undefined
+
   return (
     <div className="rounded-2xl p-6 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between"
       style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
@@ -224,12 +229,12 @@ export function CtaCard({ title, description, primaryTo, primaryLabel, secondary
         <p className="text-sm mt-0.5" style={{ color: 'var(--c-3)' }}>{description}</p>
       </div>
       <div className="flex gap-2 flex-wrap">
-        <Link to={primaryTo}
+        <Link to={localizedPrimaryTo}
           className="btn-primary whitespace-nowrap inline-flex items-center text-white font-bold px-4 py-2.5 rounded-xl text-sm cursor-pointer">
           {primaryLabel}
         </Link>
         {secondaryTo && secondaryLabel && (
-          <Link to={secondaryTo}
+          <Link to={localizedSecondaryTo}
             className="btn-ghost whitespace-nowrap inline-flex items-center font-bold px-4 py-2.5 rounded-xl text-sm cursor-pointer"
             style={{ color: 'var(--c-1)' }}>
             {secondaryLabel}
@@ -510,9 +515,10 @@ interface NavCardProps {
 }
 
 export function NavCard({ to, korean, label, description }: NavCardProps) {
+  const { language } = useLanguage()
   return (
     <Link
-      to={to}
+      to={localePath(language, to)}
       className="glass-card glass-card-hover rounded-2xl p-5 flex items-start gap-4 cursor-pointer"
     >
       <div

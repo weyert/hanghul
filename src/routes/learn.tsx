@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, redirect } from '@tanstack/react-router'
 import { useState, useEffect } from 'react'
 import { useBooleanFlagValue } from '@openfeature/react-sdk'
 import { FLAGS } from '../flags'
@@ -10,8 +10,12 @@ import { PageArtwork } from '../components/PageArtwork'
 import { useLanguage } from '../contexts/LanguageContext'
 import { useAnalytics } from '../hooks/useAnalytics'
 import { createSeoHead } from '../seo'
+import { localePath } from '../utils/localizedRoutes'
 
 export const Route = createFileRoute('/learn')({
+  beforeLoad: () => {
+    throw redirect({ to: '/$locale/learn', params: { locale: 'en' }, statusCode: 301 })
+  },
   component: LearnPage,
   head: () => createSeoHead({
     title: 'Guided Hangul Lessons',
@@ -424,7 +428,7 @@ function FinishedScreen({
           {language === 'nl' ? 'Opnieuw' : 'Try Again'}
         </button>
         <Link
-          to="/quiz"
+          to={localePath(language, '/quiz')}
           className="btn-ghost px-6 py-3 rounded-xl font-bold cursor-pointer text-sm"
           style={{ color: 'var(--c-1)' }}
         >
@@ -437,7 +441,7 @@ function FinishedScreen({
 
 // ─── Page ─────────────────────────────────────────────────────────────
 
-function LearnPage() {
+export function LearnPage() {
   const enabled      = useBooleanFlagValue(FLAGS.GUIDED_LEARN, false)
   const hangulFirst  = useBooleanFlagValue(FLAGS.HANGUL_FIRST, false)
   const { language } = useLanguage()

@@ -17,6 +17,7 @@ import { FLAGS } from '../flags'
 import { CONTENT_NAV_ITEMS } from '../content/registry'
 import type { ContentNavItem } from '../content/registry'
 import { SITE_URL, SITE_NAME } from '../seo'
+import { localePath } from '../utils/localizedRoutes'
 import { translations, tr } from '../i18n/translations'
 import '../styles.css'
 
@@ -117,14 +118,14 @@ function MobileNavLink({ to, children, onClick }: { to: string; children: ReactN
 
 function getFlaggedRoutes(locale: Locale) {
   return [
-    { flag: FLAGS.GUIDED_LEARN,       to: '/learn',          label: tr(translations.flaggedRoutes.lessons, locale)        },
-    { flag: FLAGS.SYLLABLE_CHART,     to: '/syllable-chart', label: tr(translations.flaggedRoutes.syllableChart, locale)  },
-    { flag: FLAGS.VOCABULARY,         to: '/vocabulary',     label: tr(translations.flaggedRoutes.vocabulary, locale)     },
-    { flag: FLAGS.STROKE_ORDER,       to: '/stroke-order',   label: tr(translations.flaggedRoutes.strokeOrder, locale)    },
-    { flag: FLAGS.TYPING_PRACTICE,    to: '/typing',         label: tr(translations.flaggedRoutes.typing, locale)         },
-    { flag: FLAGS.PROGRESS_DASHBOARD, to: '/progress',       label: tr(translations.flaggedRoutes.progress, locale)       },
-    { flag: FLAGS.KOREA_FACTS,        to: '/korea-facts',    label: tr(translations.flaggedRoutes.koreaFacts, locale)     },
-    { flag: FLAGS.CONTRAST_DRILLS,    to: '/contrast-drills',label: tr(translations.flaggedRoutes.contrastDrills, locale) },
+    { flag: FLAGS.GUIDED_LEARN,       to: localePath(locale, '/learn'),           label: tr(translations.flaggedRoutes.lessons, locale)        },
+    { flag: FLAGS.SYLLABLE_CHART,     to: localePath(locale, '/syllable-chart'),  label: tr(translations.flaggedRoutes.syllableChart, locale)  },
+    { flag: FLAGS.VOCABULARY,         to: localePath(locale, '/vocabulary'),      label: tr(translations.flaggedRoutes.vocabulary, locale)     },
+    { flag: FLAGS.STROKE_ORDER,       to: localePath(locale, '/stroke-order'),    label: tr(translations.flaggedRoutes.strokeOrder, locale)    },
+    { flag: FLAGS.TYPING_PRACTICE,    to: localePath(locale, '/typing'),          label: tr(translations.flaggedRoutes.typing, locale)         },
+    { flag: FLAGS.PROGRESS_DASHBOARD, to: localePath(locale, '/progress'),        label: tr(translations.flaggedRoutes.progress, locale)       },
+    { flag: FLAGS.KOREA_FACTS,        to: localePath(locale, '/korea-facts'),     label: tr(translations.flaggedRoutes.koreaFacts, locale)     },
+    { flag: FLAGS.CONTRAST_DRILLS,    to: localePath(locale, '/contrast-drills'), label: tr(translations.flaggedRoutes.contrastDrills, locale) },
   ]
 }
 
@@ -490,9 +491,9 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
             <nav className="hidden md:flex items-center gap-0.5">
               <NavLink to={`/${language}/consonants`}>{tr(translations.nav.consonants, language)}</NavLink>
               <NavLink to={`/${language}/vowels`}>{tr(translations.nav.vowels, language)}</NavLink>
-              <NavLink to="/quiz">{tr(translations.nav.quiz, language)}</NavLink>
-              <NavLink to="/pronounce">{tr(translations.nav.pronounce, language)}</NavLink>
-              <NavLink to="/builder">{tr(translations.nav.builder, language)}</NavLink>
+              <NavLink to={localePath(language, '/quiz')}>{tr(translations.nav.quiz, language)}</NavLink>
+              <NavLink to={localePath(language, '/pronounce')}>{tr(translations.nav.pronounce, language)}</NavLink>
+              <NavLink to={localePath(language, '/builder')}>{tr(translations.nav.builder, language)}</NavLink>
               <MoreDropdown />
               <div className="w-px h-4 mx-2" style={{ background: 'var(--c-divider)' }} />
               <ThemeToggle />
@@ -523,9 +524,9 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
             >
               <MobileNavLink to={`/${language}/consonants`} onClick={closeMenu}>{tr(translations.nav.consonants, language)}</MobileNavLink>
               <MobileNavLink to={`/${language}/vowels`} onClick={closeMenu}>{tr(translations.nav.vowels, language)}</MobileNavLink>
-              <MobileNavLink to="/quiz" onClick={closeMenu}>{tr(translations.nav.quiz, language)}</MobileNavLink>
-              <MobileNavLink to="/pronounce" onClick={closeMenu}>{tr(translations.nav.pronounce, language)}</MobileNavLink>
-              <MobileNavLink to="/builder" onClick={closeMenu}>{tr(translations.nav.builder, language)}</MobileNavLink>
+              <MobileNavLink to={localePath(language, '/quiz')} onClick={closeMenu}>{tr(translations.nav.quiz, language)}</MobileNavLink>
+              <MobileNavLink to={localePath(language, '/pronounce')} onClick={closeMenu}>{tr(translations.nav.pronounce, language)}</MobileNavLink>
+              <MobileNavLink to={localePath(language, '/builder')} onClick={closeMenu}>{tr(translations.nav.builder, language)}</MobileNavLink>
               <FlaggedMobileNavLinks onLinkClick={closeMenu} />
               <div className="pt-2 mt-1" style={{ borderTop: '1px solid var(--c-border-sub)' }}>
                 <LanguageSwitcher />

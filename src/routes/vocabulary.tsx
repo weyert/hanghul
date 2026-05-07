@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useBooleanFlagValue } from '@openfeature/react-sdk'
 import { FLAGS } from '../flags'
@@ -11,6 +11,9 @@ import { useLanguage } from '../contexts/LanguageContext'
 import { createSeoHead } from '../seo'
 
 export const Route = createFileRoute('/vocabulary')({
+  beforeLoad: () => {
+    throw redirect({ to: '/$locale/vocabulary', params: { locale: 'en' }, statusCode: 301 })
+  },
   component: VocabularyPage,
   head: () => createSeoHead({
     title: 'Korean Vocabulary',
@@ -90,7 +93,7 @@ function PhraseRow({ entry, accent, language }: { entry: VocabEntry; accent: str
   )
 }
 
-function VocabularyPage() {
+export function VocabularyPage() {
   const enabled = useBooleanFlagValue(FLAGS.VOCABULARY, false)
   const sentencePatterns = useBooleanFlagValue(FLAGS.SENTENCE_PATTERNS, false)
   const conjugationEnabled = useBooleanFlagValue(FLAGS.VERB_CONJUGATION, false)

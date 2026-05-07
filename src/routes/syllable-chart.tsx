@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, redirect } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useBooleanFlagValue } from '@openfeature/react-sdk'
 import { FLAGS } from '../flags'
@@ -7,8 +7,12 @@ import { SpeakButton } from '../components/SpeakButton'
 import { PageArtwork } from '../components/PageArtwork'
 import { useLanguage } from '../contexts/LanguageContext'
 import { createSeoHead } from '../seo'
+import { localePath } from '../utils/localizedRoutes'
 
 export const Route = createFileRoute('/syllable-chart')({
+  beforeLoad: () => {
+    throw redirect({ to: '/$locale/syllable-chart', params: { locale: 'en' }, statusCode: 301 })
+  },
   component: SyllableChartPage,
   head: () => createSeoHead({
     title: 'Hangul Syllable Chart',
@@ -23,7 +27,7 @@ export const Route = createFileRoute('/syllable-chart')({
   }),
 })
 
-function SyllableChartPage() {
+export function SyllableChartPage() {
   const enabled = useBooleanFlagValue(FLAGS.SYLLABLE_CHART, false)
   const { language } = useLanguage()
   const [highlighted, setHighlighted] = useState<{ row: number; col: number } | null>(null)
@@ -139,7 +143,7 @@ function SyllableChartPage() {
 
       <p className="text-xs text-zinc-600">
         {copy.noteStart}{' '}
-        <Link to="/builder" className="underline underline-offset-2" style={{ color: 'var(--c-accent-text)' }}>{copy.builder}</Link>.
+        <Link to={localePath(language, '/builder')} className="underline underline-offset-2" style={{ color: 'var(--c-accent-text)' }}>{copy.builder}</Link>.
       </p>
     </div>
   )
