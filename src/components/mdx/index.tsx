@@ -3,6 +3,7 @@ import { Link } from '@tanstack/react-router'
 import { FeatureFlag, useBooleanFlagValue } from '@openfeature/react-sdk'
 import { SpeakButton } from '../SpeakButton'
 import { PronunciationModel } from '../PronunciationModel'
+import { PageArtwork } from '../PageArtwork'
 import { consonants, vowels } from '../../data/hangul'
 import type { HangulCharacter } from '../../data/hangul'
 import { useLanguage } from '../../contexts/LanguageContext'
@@ -846,6 +847,7 @@ export const MDX_COMPONENTS = {
   FeatureFlag,
   Link,
   PronunciationModel,
+  PageArtwork,
   BatchimExample,
   LiaisonDemo,
   Jamo,

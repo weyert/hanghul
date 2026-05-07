@@ -6,6 +6,7 @@ import { allCharacters } from '../data/hangul'
 import type { HangulCharacter } from '../data/hangul'
 import { useSpeech } from '../hooks/useSpeech'
 import { SpeakButton } from '../components/SpeakButton'
+import { PageArtwork } from '../components/PageArtwork'
 import { useLanguage } from '../contexts/LanguageContext'
 import { useAnalytics } from '../hooks/useAnalytics'
 import { createSeoHead } from '../seo'
@@ -78,6 +79,10 @@ function LandingScreen({ onStart }: { onStart: () => void }) {
         <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Guided Lessons</h1>
         <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>배우기 — Meet each character, then test yourself right away</p>
       </div>
+      <PageArtwork
+        src="/artwork/learn-path.jpg"
+        alt="A step-by-step Hangul lesson path with simple cards leading into more advanced tiles."
+      />
 
       <div className="glass-card rounded-2xl p-8 space-y-5">
         <div className="flex items-center gap-5">

@@ -4,6 +4,7 @@ import { FLAGS } from '../flags'
 import { CONTRAST_DRILLS } from '../data/beginnerContent'
 import { SpeakButton } from '../components/SpeakButton'
 import { PronunciationModel } from '../components/PronunciationModel'
+import { PageArtwork } from '../components/PageArtwork'
 import { createSeoHead } from '../seo'
 
 export const Route = createFileRoute('/contrast-drills')({
@@ -29,6 +30,10 @@ function ContrastDrillsPage() {
         <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Contrast Drills</h1>
         <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>변별 연습 — Train the sounds beginners confuse most often.</p>
       </div>
+      <PageArtwork
+        src="/artwork/contrast-drills.jpg"
+        alt="Paired Hangul letter tiles set side by side for pronunciation contrast practice."
+      />
 
       {pronunciationModel && <PronunciationModel compact />}
 

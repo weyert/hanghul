@@ -6,6 +6,7 @@ import { analyzeText } from '../utils/hangul'
 import type { SyllableAnalysis, OtherChar } from '../utils/hangul'
 import { SpeakButton } from '../components/SpeakButton'
 import { useSpeech } from '../hooks/useSpeech'
+import { PageArtwork } from '../components/PageArtwork'
 import { createSeoHead } from '../seo'
 
 function buildIpaTranscription(analyzed: Array<SyllableAnalysis | OtherChar>): string {
@@ -164,6 +165,10 @@ function PronouncePage() {
         <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Pronounce</h1>
         <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>발음 Bal-eum — Enter Korean text to see its syllable-by-syllable breakdown</p>
       </div>
+      <PageArtwork
+        src="/artwork/ipa-guide.jpg"
+        alt="Hangul tiles with abstract pronunciation waveform and phonetic study marks."
+      />
 
       {/* Input */}
       <div className="space-y-3">

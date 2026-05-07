@@ -13,6 +13,7 @@ import { useSpacedRepetition } from '../hooks/useSpacedRepetition'
 import { useAnalytics } from '../hooks/useAnalytics'
 import { PronunciationModel } from '../components/PronunciationModel'
 import { getWrongAnswerHint } from '../data/beginnerContent'
+import { PageArtwork } from '../components/PageArtwork'
 import { createSeoHead } from '../seo'
 
 export const Route = createFileRoute('/quiz')({
@@ -270,16 +271,25 @@ function QuizPage() {
   if (!mode) {
     return (
       <div className="space-y-8 max-w-2xl mx-auto">
-        <div className="flex items-start justify-between">
-          <div>
-            <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Quiz</h1>
-            <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>연습 Yeon-seup — Choose what to practice</p>
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+            <div>
+              <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Quiz</h1>
+              <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>연습 Yeon-seup — Choose what to practice</p>
+            </div>
+            {srEnabled && (
+              <button
+                onClick={resetSRS}
+                className="text-xs text-zinc-600 hover:text-red-400 transition-colors cursor-pointer sm:mt-2 sm:ml-auto"
+              >
+                Reset progress
+              </button>
+            )}
           </div>
-          {srEnabled && (
-            <button onClick={resetSRS} className="text-xs text-zinc-600 hover:text-red-400 transition-colors mt-1 cursor-pointer">
-              Reset progress
-            </button>
-          )}
+          <PageArtwork
+            src="/artwork/quiz.jpg"
+            alt="Hangul quiz answer cards with a selected gold check token."
+          />
         </div>
 
         {srEnabled && (

@@ -6,6 +6,7 @@ import { consonants, vowels } from '../data/hangul'
 import { STROKE_ORDER, type StrokeData } from '../data/strokeOrder'
 import { SpeakButton } from '../components/SpeakButton'
 import { useAnalytics } from '../hooks/useAnalytics'
+import { PageArtwork } from '../components/PageArtwork'
 import { createSeoHead } from '../seo'
 
 export const Route = createFileRoute('/stroke-order')({
@@ -290,6 +291,10 @@ function StrokeOrderPage() {
         <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Stroke Order</h1>
         <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>획순 Hoek-sun — Select any character to see how it is written stroke by stroke</p>
       </div>
+      <PageArtwork
+        src="/artwork/writing-practice.jpg"
+        alt="Hangul stroke practice sheet with writing tools and directional marks."
+      />
 
       {/* Universal rules */}
       <div className="glass-card rounded-2xl p-5">

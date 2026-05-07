@@ -6,6 +6,7 @@ import { allCharacters } from '../data/hangul'
 import type { HangulCharacter } from '../data/hangul'
 import { SpeakButton } from '../components/SpeakButton'
 import { useAnalytics } from '../hooks/useAnalytics'
+import { PageArtwork } from '../components/PageArtwork'
 import { createSeoHead } from '../seo'
 
 export const Route = createFileRoute('/typing')({
@@ -126,6 +127,10 @@ function TypingPracticePage() {
             <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Typing Practice</h1>
             <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>타이핑 연습 — See a character, type its romanization</p>
           </div>
+          <PageArtwork
+            src="/artwork/typing.jpg"
+            alt="Hangul practice tiles and keyboard-like input pieces arranged for typing practice."
+          />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <button
@@ -179,6 +184,10 @@ function TypingPracticePage() {
           <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Typing Practice</h1>
           <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>타이핑 연습 — See a character, type its romanization</p>
         </div>
+        <PageArtwork
+          src="/artwork/typing.jpg"
+          alt="Hangul practice tiles and keyboard-like input pieces arranged for typing practice."
+        />
         <div className="glass-card rounded-2xl p-8 space-y-4">
           <div className="text-6xl korean-text font-black" style={{ color: 'var(--c-1)', textShadow: '0 0 40px rgba(167,139,250,0.3)' }}>ㄱ→g</div>
           <p className="text-sm" style={{ color: 'var(--c-2)' }}>

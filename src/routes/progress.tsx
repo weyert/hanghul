@@ -5,6 +5,7 @@ import { FLAGS } from '../flags'
 import { allCharacters, consonants, vowels } from '../data/hangul'
 import type { HangulCharacter } from '../data/hangul'
 import { SpeakButton } from '../components/SpeakButton'
+import { PageArtwork } from '../components/PageArtwork'
 import { createSeoHead } from '../seo'
 
 export const Route = createFileRoute('/progress')({
@@ -110,6 +111,10 @@ function ProgressPage() {
         <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Progress</h1>
         <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>진행 Jin-haeng — Your quiz performance across all 40 characters</p>
       </div>
+      <PageArtwork
+        src="/artwork/progress.jpg"
+        alt="Grouped Hangul tiles and mastery markers arranged like a learning progress dashboard."
+      />
 
       {/* Summary stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">

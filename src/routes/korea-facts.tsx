@@ -4,6 +4,7 @@ import { useBooleanFlagValue } from '@openfeature/react-sdk'
 import { FLAGS } from '../flags'
 import { KOREA_FACTS, CATEGORY_META } from '../data/koreaFacts'
 import type { FactCategory } from '../data/koreaFacts'
+import { PageArtwork } from '../components/PageArtwork'
 import { createSeoHead } from '../seo'
 
 export const Route = createFileRoute('/korea-facts')({
@@ -211,6 +212,10 @@ function KoreaFactsPage() {
           Shuffle
         </button>
       </div>
+      <PageArtwork
+        src="/artwork/korea-facts.jpg"
+        alt="A curated editorial collage of Korean cultural, historical, and modern study objects."
+      />
 
       {/* Category filter */}
       <div className="flex gap-2 flex-wrap">

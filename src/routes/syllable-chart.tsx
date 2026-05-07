@@ -4,6 +4,7 @@ import { useBooleanFlagValue } from '@openfeature/react-sdk'
 import { FLAGS } from '../flags'
 import { CHOSEONG, CHOSEONG_ROMAN, JUNGSEONG, JUNGSEONG_ROMAN, composeSyllable } from '../utils/hangul'
 import { SpeakButton } from '../components/SpeakButton'
+import { PageArtwork } from '../components/PageArtwork'
 import { createSeoHead } from '../seo'
 
 export const Route = createFileRoute('/syllable-chart')({
@@ -33,6 +34,10 @@ function SyllableChartPage() {
         <h1 className="text-3xl sm:text-4xl font-black" style={{ color: 'var(--c-1)' }}>Syllable Chart</h1>
         <p className="mt-1.5 text-sm" style={{ color: 'var(--c-3)' }}>음절표 — Every initial consonant × vowel combination. Click a cell to hear it.</p>
       </div>
+      <PageArtwork
+        src="/artwork/syllable-chart.jpg"
+        alt="A grid of Hangul consonant and vowel combinations arranged like a syllable chart."
+      />
 
       <div className="overflow-x-auto -mx-4 px-4">
         <div className="inline-block min-w-full">

@@ -94,7 +94,9 @@ function ContentPage() {
 
   const meta = getContentPageMeta(slug, locale as Locale)
   const MDXContent = result.module.default
-  const artwork = CONTENT_ARTWORK[slug]
+  const artwork = slug === 'consonants' || slug === 'vowels'
+    ? null
+    : CONTENT_ARTWORK[slug]
 
   return (
     <div className="space-y-10 max-w-3xl mx-auto">
