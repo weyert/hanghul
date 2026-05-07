@@ -22,6 +22,8 @@ import '../styles.css'
 
 // Runs before any CSS to avoid flash of wrong theme
 const THEME_SCRIPT = `(function(){try{var t=localStorage.getItem('theme');if(t){document.documentElement.setAttribute('data-theme',t);}else if(window.matchMedia('(prefers-color-scheme: light)').matches){document.documentElement.setAttribute('data-theme','light');}}catch(e){}})();`
+const ACKEE_SERVER = 'https://ackee.youcanlearn.it'
+const ACKEE_DOMAIN_ID = '37cb3d52-17f6-4b71-b624-fb9234e9a078'
 const STRUCTURED_DATA = JSON.stringify({
   '@context': 'https://schema.org',
   '@type': 'WebSite',
@@ -198,7 +200,7 @@ function MoreDropdown() {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
   const { location } = useRouterState()
-  const { language } = useLanguage()
+  const { language, setLanguage } = useLanguage()
   const routes = useNavItems()
 
   useEffect(() => { setOpen(false) }, [location.pathname])
@@ -386,9 +388,13 @@ function ThemeToggle() {
 // ─── Root ─────────────────────────────────────────────────────────────
 
 function RootComponent() {
+  const { location } = useRouterState()
+  const localeMatch = location.pathname.match(/^\/(en|nl)(?:\/|$)/)
+  const routeLocale = localeMatch?.[1] as Locale | undefined
+
   return (
     <OpenFeatureProvider>
-      <LanguageProvider>
+      <LanguageProvider initialLanguage={routeLocale}>
         <RootDocument>
           <Outlet />
         </RootDocument>
@@ -419,7 +425,7 @@ function MenuIcon({ open }: { open: boolean }) {
 function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
   const [menuOpen, setMenuOpen]       = useState(false)
   const [menuMounted, setMenuMounted] = useState(false)
-  const { language } = useLanguage()
+  const { language, setLanguage } = useLanguage()
   const { location } = useRouterState()
   const { track } = useAnalytics()
 
@@ -440,16 +446,29 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
   useEffect(() => { closeMenu() }, [location.pathname, closeMenu])
 
   useEffect(() => {
+    const localeMatch = location.pathname.match(/^\/(en|nl)(?:\/|$)/)
+    const routeLocale = localeMatch?.[1] as Locale | undefined
+    if (routeLocale && routeLocale !== language) {
+      setLanguage(routeLocale)
+      return
+    }
+
     if (typeof document !== 'undefined') {
       document.documentElement.setAttribute('lang', language)
     }
-  }, [language])
+  }, [language, location.pathname, setLanguage])
 
   return (
     <html lang={language} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
         <HeadContent />
+        <script
+          async
+          src={`${ACKEE_SERVER}/tracker.js`}
+          data-ackee-server={ACKEE_SERVER}
+          data-ackee-domain-id={ACKEE_DOMAIN_ID}
+        />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: STRUCTURED_DATA }} />
       </head>
       <body

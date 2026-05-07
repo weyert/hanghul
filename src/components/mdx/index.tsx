@@ -541,6 +541,8 @@ function CharacterCard({ char, ipaEnabled, type }: {
   const [flipped, setFlipped] = useState(false)
   const { language } = useLanguage()
   const { track } = useAnalytics()
+  const tapToFlip = language === 'nl' ? 'tik om te draaien' : 'tap to flip'
+  const revealLabel = language === 'nl' ? 'tik om details te tonen' : 'click to reveal'
 
   const toggle = () => setFlipped((f) => {
     if (!f) track('card_flipped', { character: char.char, id: char.id, type })
@@ -567,7 +569,7 @@ function CharacterCard({ char, ipaEnabled, type }: {
       tabIndex={0}
       role="button"
       aria-pressed={flipped}
-      aria-label={`${char.char} — click to reveal`}
+      aria-label={`${char.char}: ${revealLabel}`}
     >
       <div className={`flip-card-inner ${flipped ? 'flipped' : ''}`}>
         <div
@@ -579,7 +581,7 @@ function CharacterCard({ char, ipaEnabled, type }: {
           <div className="text-5xl font-black korean-serif leading-none" style={{ color: 'var(--c-1)' }}>
             {char.char}
           </div>
-          <div className="text-xs mt-2" style={{ color: 'var(--c-4)' }}>tap to flip</div>
+          <div className="text-xs mt-2" style={{ color: 'var(--c-4)' }}>{tapToFlip}</div>
           <div className="absolute bottom-2 right-2" onClick={(e) => e.stopPropagation()}>
             <SpeakButton text={char.char} />
           </div>
@@ -617,8 +619,8 @@ function CharacterCard({ char, ipaEnabled, type }: {
 }
 
 const DIFFICULTY_STYLES = {
-  beginner: { bg: 'rgba(16,185,129,0.12)', border: 'rgba(16,185,129,0.3)', text: '#6ee7b7', label: 'Beginner' },
-  advanced: { bg: 'rgba(245,158,11,0.12)', border: 'rgba(245,158,11,0.3)', text: '#fcd34d',  label: 'Advanced' },
+  beginner: { bg: 'rgba(16,185,129,0.12)', border: 'rgba(16,185,129,0.3)', text: '#6ee7b7', label: { en: 'Beginner', nl: 'Beginner' } },
+  advanced: { bg: 'rgba(245,158,11,0.12)', border: 'rgba(245,158,11,0.3)', text: '#fcd34d',  label: { en: 'Advanced', nl: 'Gevorderd' } },
 }
 
 function SectionLabel({ count, label, difficulty }: {
@@ -627,6 +629,7 @@ function SectionLabel({ count, label, difficulty }: {
   difficulty?: keyof typeof DIFFICULTY_STYLES
 }) {
   const d = difficulty ? DIFFICULTY_STYLES[difficulty] : null
+  const { language } = useLanguage()
   return (
     <h2 className="text-sm font-bold mb-4 flex items-center gap-2.5" style={{ color: 'var(--c-2)' }}>
       <span className="px-2 py-0.5 rounded-full text-xs font-black tag-badge">{count}</span>
@@ -634,7 +637,7 @@ function SectionLabel({ count, label, difficulty }: {
       {d && (
         <span className="px-2 py-0.5 rounded-full text-xs font-bold"
           style={{ background: d.bg, border: `1px solid ${d.border}`, color: d.text }}>
-          {d.label}
+          {d.label[language]}
         </span>
       )}
     </h2>
@@ -642,13 +645,14 @@ function SectionLabel({ count, label, difficulty }: {
 }
 
 function CulturalNote({ children }: { children: React.ReactNode }) {
+  const { language } = useLanguage()
   return (
     <div className="rounded-xl p-4 flex gap-3 items-start" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
       <svg className="flex-shrink-0 mt-0.5" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--c-accent-text)' }}>
         <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
       </svg>
       <div>
-        <p className="text-xs font-bold mb-1" style={{ color: 'var(--c-2)' }}>Did you know?</p>
+        <p className="text-xs font-bold mb-1" style={{ color: 'var(--c-2)' }}>{language === 'nl' ? 'Wist je dit?' : 'Did you know?'}</p>
         <p className="text-xs leading-relaxed" style={{ color: 'var(--c-3)' }}>{children}</p>
       </div>
     </div>
@@ -659,13 +663,16 @@ function CharRefTable({ chars, type }: { chars: HangulCharacter[]; type: 'conson
   const { language } = useLanguage()
   const ipaEnabled   = useBooleanFlagValue(FLAGS.IPA_DISPLAY, false)
   const romanColor   = type === 'vowel' ? 'var(--c-vowel-text)' : 'var(--c-accent-text)'
+  const headers = language === 'nl'
+    ? ['Teken', 'Roman.', 'Naam', 'Klank', 'Voorbeeld']
+    : ['Char', 'Roman.', 'Name', 'Sound', 'Example']
   return (
     <div className="glass-card rounded-2xl overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             <tr style={{ borderBottom: '1px solid var(--c-border-sub)' }}>
-              {['Char','Roman.','Name','Sound','Example'].map((h, i) => (
+              {headers.map((h, i) => (
                 <th key={h} className={`text-left px-5 py-3 text-xs font-bold text-zinc-600 uppercase tracking-wide${i >= 2 ? ' hidden sm:table-cell' : ''}${i >= 3 ? ' hidden md:table-cell' : ''}${i >= 4 ? ' hidden lg:table-cell' : ''}`}>{h}</th>
               ))}
             </tr>
@@ -707,33 +714,51 @@ function CharRefTable({ chars, type }: { chars: HangulCharacter[]; type: 'conson
 }
 
 export function ConsonantsCards() {
+  const { language } = useLanguage()
   const ipaEnabled        = useBooleanFlagValue(FLAGS.IPA_DISPLAY, false)
   const culturalEnabled   = useBooleanFlagValue(FLAGS.CULTURAL_CONTEXT, false)
   const pronunciationModel = useBooleanFlagValue(FLAGS.PRONUNCIATION_MODEL, false)
   const basic = consonants.filter((c) => c.category === 'basic-consonant')
   const tense = consonants.filter((c) => c.category === 'tense-consonant')
 
+  const copy = {
+    en: {
+      cultural: <>Each consonant shape was designed to mirror the position of the tongue and lips when producing the sound. ㅁ traces closed lips, ㄴ shows the tongue tip touching the palate, ㄱ depicts the back of the tongue raised toward the throat. King Sejong&apos;s 1443 commission made Hangul one of the most scientifically designed writing systems ever created.</>,
+      basic: 'Basic Consonants',
+      tense: 'Tense Consonants: 쌍자음',
+      tenseIntro: 'Doubled consonants with a tense, unaspirated quality. Hold tension just before the sound.',
+      reference: 'Full Reference',
+    },
+    nl: {
+      cultural: <>Elke medeklinkervorm verwijst naar de stand van tong en lippen bij het maken van de klank. ㅁ tekent gesloten lippen, ㄴ toont de tongpunt tegen het gehemelte, ㄱ toont de achterkant van de tong richting keel. Koning Sejongs opdracht uit 1443 maakte Hangul tot een van de meest doordachte schriftsystemen.</>,
+      basic: 'Basismedeklinkers',
+      tense: 'Gespannen medeklinkers: 쌍자음',
+      tenseIntro: 'Dubbele medeklinkers met een gespannen, ongeaspireerde klank. Zet spanning vast vlak voor de klank.',
+      reference: 'Volledige referentie',
+    },
+  }[language]
+
   return (
     <div className="space-y-12">
       {culturalEnabled && (
         <CulturalNote>
-          Each consonant shape was designed to mirror the position of the tongue and lips when producing the sound — ㅁ traces closed lips, ㄴ shows the tongue tip touching the palate, ㄱ depicts the back of the tongue raised toward the throat. King Sejong&apos;s 1443 commission made Hangul one of the most scientifically designed writing systems ever created.
+          {copy.cultural}
         </CulturalNote>
       )}
 
       {pronunciationModel && <PronunciationModel compact />}
 
       <section>
-        <SectionLabel count={14} label="Basic Consonants" difficulty="beginner" />
+        <SectionLabel count={14} label={copy.basic} difficulty="beginner" />
         <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-7 gap-2.5">
           {basic.map((char) => <CharacterCard key={char.id} char={char} ipaEnabled={ipaEnabled} type="consonant" />)}
         </div>
       </section>
 
       <section>
-        <SectionLabel count={5} label="Tense Consonants — 쌍자음" difficulty="advanced" />
+        <SectionLabel count={5} label={copy.tense} difficulty="advanced" />
         <p className="text-sm mb-4" style={{ color: 'var(--c-3)' }}>
-          Doubled consonants with a tense, unaspirated quality — like holding tension just before the sound.
+          {copy.tenseIntro}
         </p>
         <div className="grid grid-cols-3 sm:grid-cols-5 gap-2.5">
           {tense.map((char) => <CharacterCard key={char.id} char={char} ipaEnabled={ipaEnabled} type="consonant" />)}
@@ -741,7 +766,7 @@ export function ConsonantsCards() {
       </section>
 
       <section>
-        <h2 className="text-sm font-bold mb-4" style={{ color: 'var(--c-2)' }}>Full Reference</h2>
+        <h2 className="text-sm font-bold mb-4" style={{ color: 'var(--c-2)' }}>{copy.reference}</h2>
         <CharRefTable chars={consonants} type="consonant" />
       </section>
     </div>
@@ -749,33 +774,51 @@ export function ConsonantsCards() {
 }
 
 export function VowelsCards() {
+  const { language } = useLanguage()
   const ipaEnabled        = useBooleanFlagValue(FLAGS.IPA_DISPLAY, false)
   const culturalEnabled   = useBooleanFlagValue(FLAGS.CULTURAL_CONTEXT, false)
   const pronunciationModel = useBooleanFlagValue(FLAGS.PRONUNCIATION_MODEL, false)
   const basic   = vowels.filter((v) => v.category === 'basic-vowel')
   const compound = vowels.filter((v) => v.category === 'compound-vowel')
 
+  const copy = {
+    en: {
+      cultural: <>The ten basic vowels are built from three philosophical symbols: ㆍ (sky/heaven), ㅡ (earth), and ㅣ (human standing between them). Their combinations reflect the Neo-Confucian cosmology of 15th-century Korea, where harmony between heaven, earth, and humanity was a guiding principle. You can see this logic in ㅏ (ㅣ + ㆍ to the right) and ㅓ (ㆍ to the left of ㅣ).</>,
+      basic: 'Basic Vowels',
+      compound: 'Compound Vowels: 이중모음',
+      compoundIntro: 'Built by combining two basic vowels. The sound glides from one to the other.',
+      reference: 'Full Reference',
+    },
+    nl: {
+      cultural: <>De tien basisklinkers zijn opgebouwd uit drie filosofische symbolen: ㆍ (hemel), ㅡ (aarde) en ㅣ (de mens ertussen). Hun combinaties weerspiegelen de neoconfucianistische kosmologie van Korea in de 15e eeuw. Je ziet die logica in ㅏ (ㅣ + ㆍ rechts) en ㅓ (ㆍ links van ㅣ).</>,
+      basic: 'Basisklinkers',
+      compound: 'Samengestelde klinkers: 이중모음',
+      compoundIntro: 'Gebouwd door twee basisklinkers te combineren. De klank glijdt van de ene naar de andere.',
+      reference: 'Volledige referentie',
+    },
+  }[language]
+
   return (
     <div className="space-y-12">
       {culturalEnabled && (
         <CulturalNote>
-          The ten basic vowels are built from three philosophical symbols: ㆍ (sky/heaven), ㅡ (earth), and ㅣ (human standing between them). Their combinations reflect the Neo-Confucian cosmology of 15th-century Korea, where harmony between heaven, earth, and humanity was a guiding principle. You can see this logic in ㅏ (ㅣ + ㆍ to the right) and ㅓ (ㆍ to the left of ㅣ).
+          {copy.cultural}
         </CulturalNote>
       )}
 
       {pronunciationModel && <PronunciationModel compact />}
 
       <section>
-        <SectionLabel count={10} label="Basic Vowels" difficulty="beginner" />
+        <SectionLabel count={10} label={copy.basic} difficulty="beginner" />
         <div className="grid grid-cols-3 sm:grid-cols-5 gap-2.5">
           {basic.map((char) => <CharacterCard key={char.id} char={char} ipaEnabled={ipaEnabled} type="vowel" />)}
         </div>
       </section>
 
       <section>
-        <SectionLabel count={11} label="Compound Vowels — 이중모음" difficulty="advanced" />
+        <SectionLabel count={11} label={copy.compound} difficulty="advanced" />
         <p className="text-sm mb-4" style={{ color: 'var(--c-3)' }}>
-          Formed by combining two basic vowels — the sound glides from one to the other.
+          {copy.compoundIntro}
         </p>
         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2.5">
           {compound.map((char) => <CharacterCard key={char.id} char={char} ipaEnabled={ipaEnabled} type="vowel" />)}
@@ -783,7 +826,7 @@ export function VowelsCards() {
       </section>
 
       <section>
-        <h2 className="text-sm font-bold mb-4" style={{ color: 'var(--c-2)' }}>Full Reference</h2>
+        <h2 className="text-sm font-bold mb-4" style={{ color: 'var(--c-2)' }}>{copy.reference}</h2>
         <CharRefTable chars={vowels} type="vowel" />
       </section>
     </div>

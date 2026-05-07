@@ -20,15 +20,27 @@ const LanguageContext = createContext<LanguageContextValue>({
 
 const STORAGE_KEY = 'hangul-language'
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<Locale>('en')
+export function LanguageProvider({
+  children,
+  initialLanguage,
+}: {
+  children: ReactNode
+  initialLanguage?: Locale
+}) {
+  const [language, setLanguageState] = useState<Locale>(initialLanguage ?? 'en')
 
   useEffect(() => {
+    if (initialLanguage) {
+      setLanguageState(initialLanguage)
+      localStorage.setItem(STORAGE_KEY, initialLanguage)
+      return
+    }
+
     const saved = localStorage.getItem(STORAGE_KEY)
     if (saved === 'en' || saved === 'nl') {
       setLanguageState(saved)
     }
-  }, [])
+  }, [initialLanguage])
 
   function setLanguage(lang: Locale) {
     setLanguageState(lang)
