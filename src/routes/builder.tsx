@@ -10,6 +10,7 @@ import {
 import { SpeakButton } from '../components/SpeakButton'
 import { PageArtwork } from '../components/PageArtwork'
 import { useLanguage } from '../contexts/LanguageContext'
+import { getPronunciationHints, type PronunciationHints } from '../data/pronunciationHints'
 import { createSeoHead } from '../seo'
 
 export const Route = createFileRoute('/builder')({
@@ -77,52 +78,27 @@ function SectionHeader({ dot, title, flush = false }: { dot: 'initial' | 'vowel'
   )
 }
 
-const VOWEL_SOUND_LABELS = [
-  'a','eh','ya','yeh','uh','e','yuh','ye','o','wa',
-  'weh','weh','yo','oo','wuh','weh','wi','yoo','eu','ui','ee',
-] as const
-
-const VOWEL_SOUND_TIPS = [
-  'a as in father',
-  'eh as in bed',
-  'ya as in yard',
-  'yeh as in yes',
-  'uh as in sun',
-  'e as in get',
-  'yuh, like young without ng',
-  'ye as in yes',
-  'o as in go',
-  'wa as in water',
-  'weh as in wet',
-  'weh as in wet',
-  'yo as in yo-yo',
-  'oo as in moon',
-  'wuh as in won',
-  'weh as in wet',
-  'wi as in we',
-  'yoo as in you',
-  'eu, lips unrounded',
-  'ui, often said like ee',
-  'ee as in see',
-] as const
-
-function getVowelLabel(index: number, pronunciationFriendly: boolean) {
+function getVowelLabel(index: number, pronunciationFriendly: boolean, hints: PronunciationHints) {
   const official = JUNGSEONG_ROMAN[index]
-  const sound = VOWEL_SOUND_LABELS[index]
+  const sound = hints.vowelLabels[index]
   if (!pronunciationFriendly || official === sound) return official
   return `${official} (${sound})`
 }
 
-function getVowelTitle(index: number) {
-  return `${JUNGSEONG[index]} - official RR: ${JUNGSEONG_ROMAN[index]}; pronunciation hint: ${VOWEL_SOUND_TIPS[index]}`
+function getVowelTitle(index: number, hints: PronunciationHints, language: 'en' | 'nl') {
+  const labels = language === 'nl'
+    ? { official: 'officiële RR', hint: 'uitspraakhulp' }
+    : { official: 'official RR', hint: 'pronunciation hint' }
+  return `${JUNGSEONG[index]} - ${labels.official}: ${JUNGSEONG_ROMAN[index]}; ${labels.hint}: ${hints.vowelTips[index]}`
 }
 
-function getPronunciationFriendlyRomanization(initialIdx: number, vowelIdx: number, finalIdx: number) {
-  return (CHOSEONG_ROMAN[initialIdx] || '') + VOWEL_SOUND_LABELS[vowelIdx] + JONGSEONG_ROMAN[finalIdx]
+function getPronunciationFriendlyRomanization(initialIdx: number, vowelIdx: number, finalIdx: number, hints: PronunciationHints) {
+  return (CHOSEONG_ROMAN[initialIdx] || '') + hints.vowelLabels[vowelIdx] + JONGSEONG_ROMAN[finalIdx]
 }
 
 export function BuilderPage() {
   const { language } = useLanguage()
+  const pronunciationHints = getPronunciationHints(language)
   const [initialIdx, setInitialIdx] = useState<number | null>(null)
   const [vowelIdx, setVowelIdx] = useState<number | null>(null)
   const [finalIdx, setFinalIdx] = useState<number>(0)
@@ -147,7 +123,6 @@ export function BuilderPage() {
         pronunciationMode: 'Uitspraakhulp',
         officialRomanization: 'Officiële romanisering',
         soundsLike: 'Klinkt ongeveer als',
-        examples: 'Voorbeelden: 조 jo · 주 joo · 수 soo · 서 suh',
       }
     : {
         title: 'Builder',
@@ -167,7 +142,6 @@ export function BuilderPage() {
         pronunciationMode: 'Pronunciation-friendly',
         officialRomanization: 'Official romanization',
         soundsLike: 'Sounds like',
-        examples: 'Examples: 조 jo · 주 joo · 수 soo · 서 suh',
       }
 
   const canCompose = initialIdx !== null && vowelIdx !== null
@@ -175,8 +149,8 @@ export function BuilderPage() {
   const romanization = canCompose
     ? (CHOSEONG_ROMAN[initialIdx] || '') + JUNGSEONG_ROMAN[vowelIdx] + JONGSEONG_ROMAN[finalIdx]
     : null
-  const pronunciationRomanization = canCompose
-    ? getPronunciationFriendlyRomanization(initialIdx, vowelIdx, finalIdx)
+  const pronunciationRomanization = canCompose && pronunciationFriendly
+    ? getPronunciationFriendlyRomanization(initialIdx, vowelIdx, finalIdx, pronunciationHints)
     : null
   const reset = () => { setInitialIdx(null); setVowelIdx(null); setFinalIdx(0) }
 
@@ -215,7 +189,7 @@ export function BuilderPage() {
         <div className="flex items-center justify-between text-sm">
           <span className="font-bold text-xs" style={{ color: 'var(--c-vowel-text)' }}>중성</span>
           <span className="korean-serif font-black text-xl" style={{ color: 'var(--c-vowel-text)' }}>{JUNGSEONG[vowelIdx!]}</span>
-          <span className="text-xs" style={{ color: 'var(--c-vowel)' }}>{getVowelLabel(vowelIdx!, pronunciationFriendly)}</span>
+          <span className="text-xs" style={{ color: 'var(--c-vowel)' }}>{getVowelLabel(vowelIdx!, pronunciationFriendly, pronunciationHints)}</span>
         </div>
         {finalIdx !== 0 && (
           <div className="flex items-center justify-between text-sm">
@@ -287,14 +261,14 @@ export function BuilderPage() {
                 <PickButton
                   key={i}
                   char={ch}
-                  label={getVowelLabel(i, pronunciationFriendly)}
-                  title={getVowelTitle(i)}
+                  label={getVowelLabel(i, pronunciationFriendly, pronunciationHints)}
+                  title={getVowelTitle(i, pronunciationHints, language)}
                   accent="vowel"
                   selected={vowelIdx === i} onClick={() => setVowelIdx(vowelIdx === i ? null : i)}
                 />
               ))}
             </div>
-            <p className="mt-2 text-xs" style={{ color: 'var(--c-4)' }}>{copy.examples}</p>
+            <p className="mt-2 text-xs" style={{ color: 'var(--c-4)' }}>{pronunciationHints.builderExamples}</p>
           </section>
 
           <section>
