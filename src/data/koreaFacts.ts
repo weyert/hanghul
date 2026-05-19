@@ -189,13 +189,13 @@ export const KOREA_FACTS: KoreaFact[] = [
     id: 'h001',
     category: 'history',
     era: 'Ancient',
-    text: 'According to legend, Korea was founded in 2333 BC by Dangun, who was said to be the son of the god Hwanung and a bear-woman who transformed into a human after 100 days of eating garlic and mugwort.',
+    text: 'Korea was founded in 2333 BC, according to legend, when Dangun—son of the god Hwanung and a bear-woman who became human after 100 days of eating garlic and mugwort—established the first Korean kingdom.',
   },
   {
     id: 'h002',
     category: 'history',
     era: 'Ancient',
-    text: 'Korea\'s first kingdom, Gojoseon, is considered one of the earliest states in East Asia and gives the peninsula one of the longest continuous histories of any nation.',
+    text: 'Gojoseon, Korea\'s first kingdom and one of East Asia\'s earliest states, gave the peninsula one of the longest continuous histories of any nation.',
   },
   {
     id: 'h003',
@@ -303,13 +303,13 @@ export const KOREA_FACTS: KoreaFact[] = [
     id: 'h020',
     category: 'history',
     era: 'Korean War (1950–1953)',
-    text: 'The Korean War began on June 25, 1950, when North Korean forces crossed the 38th parallel. More than 36,000 Americans, 137,000 South Koreans, and millions of civilians died before an armistice was signed in 1953 — technically, the war has never officially ended.',
+    text: 'The Korean War began June 25, 1950, when North Korean forces crossed the 38th parallel. Over 3 million died before the 1953 armistice—and technically, the war never officially ended.',
   },
   {
     id: 'h021',
     category: 'history',
     era: 'Modern',
-    text: 'South Korea transformed from one of the world\'s poorest countries after the Korean War (with a per-capita income of about $67 in 1953) to the 10th largest economy in the world by the 2000s — a rise economists call the "Miracle on the Han River."',
+    text: 'South Korea went from one of the world\'s poorest countries in 1953 (per-capita income: $67) to the 10th largest economy by the 2000s—a transformation economists call the "Miracle on the Han River."',
   },
   {
     id: 'h022',
@@ -924,7 +924,7 @@ export const KOREA_FACTS: KoreaFact[] = [
     id: 'h051',
     category: 'history',
     era: '1945 AD',
-    text: 'At the end of World War II, the Soviet Union and the United States divided Korea along the 38th parallel in just 30 minutes of improvised planning. Two young U.S. Army officers — Dean Rusk and Charles Bonesteel — drew the line with a National Geographic map, splitting a nation that had been unified for over 1,300 years.',
+    text: 'At the end of World War II, two young U.S. officers—Dean Rusk and Charles Bonesteel—drew a line on a National Geographic map dividing Korea along the 38th parallel in 30 minutes of improvised planning, splitting a unified nation of 1,300+ years.',
   },
   {
     id: 'h052',

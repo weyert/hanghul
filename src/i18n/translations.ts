@@ -42,20 +42,20 @@ export const translations = {
     badge:         { en: 'Korean Writing System · 한국어 학습', nl: 'Koreaans schriftsysteem · 한국어 학습' } as LocaleRecord,
     heroTitle:     { en: 'Learn the Korean Alphabet',  nl: 'Leer het Koreaanse alfabet'  } as LocaleRecord,
     heroSubtitle:  {
-      en: 'Start with 24 letters: 14 consonants and 10 vowels. Combine them into syllable blocks and start reading Korean in days.',
-      nl: 'Begin met 24 letters: 14 medeklinkers en 10 klinkers. Combineer ze tot lettergreepblokken en lees binnen een paar dagen je eerste Koreaans.',
+      en: 'Learn 24 letters—14 consonants and 10 vowels—then stack them into syllable blocks. You\'ll read Korean in days.',
+      nl: 'Leer 24 letters—14 medeklinkers en 10 klinkers—stapel ze tot lettergreepblokken en lees na een paar dagen je eerste Koreaans.',
     } as LocaleRecord,
     startLearning: { en: 'Start Learning',   nl: 'Begin met leren'   } as LocaleRecord,
     testYourself:  { en: 'Test Yourself',    nl: 'Test jezelf'        } as LocaleRecord,
     seoNote:       {
-      en: 'Start with Hangul. It gives you reading, pronunciation, and early vocabulary in one script.',
-      nl: 'Begin met Hangul. Je oefent lezen, uitspraak en vroege woordenschat in één schrift.',
+      en: 'Start with Hangul and get reading, pronunciation, and early vocabulary all in one script.',
+      nl: 'Begin met Hangul en oefen tegelijk lezen, uitspraak en woordenschat.',
     } as LocaleRecord,
     howHangulClicks:{ en: 'How Hangul Works', nl: 'Hoe Hangul werkt'  } as LocaleRecord,
     lettersToBlocks:{ en: 'Letters stack into blocks. Blocks form words.', nl: 'Letters worden blokken. Blokken worden woorden.' } as LocaleRecord,
     lettersDesc:   {
-      en: 'Hangul uses a small set of shapes that stack into compact syllables. The lessons, builder, and drills keep the structure visible.',
-      nl: 'Hangul gebruikt een kleine set vormen die stapelen tot compacte lettergrepen. De lessen, de bouwer en de oefeningen houden de structuur zichtbaar.',
+      en: 'Hangul stacks a small set of shapes into compact syllables. The lessons, builder, and drills all keep the structure in view.',
+      nl: 'Hangul stapelt een kleine set vormen tot compacte lettergrepen. De lessen, bouwer en oefeningen houden de structuur zichtbaar.',
     } as LocaleRecord,
     initial:       { en: 'Initial',       nl: 'Begin'         } as LocaleRecord,
     vowelLabel:    { en: 'Vowel',         nl: 'Klinker'       } as LocaleRecord,
@@ -84,16 +84,16 @@ export const translations = {
       label:    { en: 'Consonants',  nl: 'Medeklinkers'  } as LocaleRecord,
       subLabel: { en: '자음 Ja-eum', nl: '자음 Ja-eum'   } as LocaleRecord,
       desc:     {
-        en: '14 basic consonants and 5 tense consonants. Flip each card for its name, romanization, and example word.',
-        nl: '14 basismedeklinkers en 5 gespannen medeklinkers. Draai een kaart om voor naam, romanisering en voorbeeldwoord.',
+        en: '14 basic and 5 tense consonants. Tap a card to see the name, romanization, and an example word.',
+        nl: '14 basis- en 5 gespannen medeklinkers. Tik een kaart aan voor de naam, romanisering en voorbeeldwoord.',
       } as LocaleRecord,
     },
     vowelsCard: {
       label:    { en: 'Vowels',      nl: 'Klinkers'      } as LocaleRecord,
       subLabel: { en: '모음 Mo-eum', nl: '모음 Mo-eum'   } as LocaleRecord,
       desc:     {
-        en: '10 basic vowels and 11 compound vowels. Each card gives the sound and an example word.',
-        nl: '10 basisklinkers en 11 samengestelde klinkers. Elke kaart geeft de klank en een voorbeeldwoord.',
+        en: '10 basic and 11 compound vowels. Each card shows the sound and a word example.',
+        nl: '10 basis- en 11 samengestelde klinkers. Elke kaart toont de klank en een voorbeeldwoord.',
       } as LocaleRecord,
     },
     quizCard: {
@@ -137,25 +137,25 @@ export const translations = {
       } as LocaleRecord,
     },
     stat1: {
-      year:  { en: '1443',                nl: '1443'                  } as LocaleRecord,
-      title: { en: 'Created by King Sejong', nl: 'Gemaakt door Koning Sejong' } as LocaleRecord,
+      year:  { en: ‘1443’,                nl: ‘1443’                  } as LocaleRecord,
+      title: { en: ‘Created by King Sejong’, nl: ‘Gemaakt door Koning Sejong’ } as LocaleRecord,
       desc:  {
-        en: 'King Sejong created Hangul to spread literacy. Before Hangul, Koreans wrote with Chinese characters beyond most people’s reach.',
-        nl: 'Koning Sejong liet Hangul maken om meer mensen te leren lezen. Vóór Hangul schreven Koreanen met Chinese karakters die voor de meeste mensen buiten bereik lagen.',
+        en: ‘King Sejong created Hangul to spread literacy. Before it, Koreans wrote in Chinese characters—accessible only to the elite.’,
+        nl: ‘Koning Sejong maakte Hangul om lezen voor iedereen mogelijk te maken. Daarvoor schreven Koreanen alleen in Chinese karakters.’,
       } as LocaleRecord,
     },
     stat2: {
       title: { en: 'Syllable Blocks',   nl: 'Lettergreepblokken' } as LocaleRecord,
       desc:  {
-        en: 'Each character is a square block combining an initial consonant, a vowel, and an optional final consonant.',
-        nl: 'Elk karakter is een vierkant blok dat een beginmedeklinker, een klinker en een optionele eindmedeklinker combineert.',
+        en: 'One character = one square block with an initial consonant, vowel, and optional final consonant.',
+        nl: 'Eén teken = één blok met beginmedeklinker, klinker en optionele eindmedeklinker.',
       } as LocaleRecord,
     },
     stat3: {
       title: { en: 'Phonetically Designed', nl: 'Fonetisch ontworpen' } as LocaleRecord,
       desc:  {
-        en: 'Many letter shapes point to the position of your mouth and tongue. Shape carries sound.',
-        nl: 'Veel lettervormen wijzen naar de stand van je mond en tong. Vorm draagt klank.',
+        en: 'Letter shapes echo mouth and tongue position. The shape teaches the sound.',
+        nl: 'Lettervormen reflecteren mond- en tongpositie. De vorm bepaalt de klank.',
       } as LocaleRecord,
     },
     learningPathSteps: {
